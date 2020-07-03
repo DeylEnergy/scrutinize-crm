@@ -1,31 +1,49 @@
 import React from 'react'
-import './index.css'
-import AppStyles from './AppStyles.styles.tw'
+import Header from './layouts/Header'
+import MerchandisePage from './routes/merchandise'
+import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
+import GlobalContext from './contexts/globalContext'
+// @ts-ignore
+import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
+
+const worker = workerize()
+
+console.log(worker)
 
 const App = () => {
   return (
-    <AppStyles>
-      <h1>Greetings Earthling</h1>
-      <p>
-        Welcome to your Create-React-App / TailwindCSS / Styled Components
-        template
-      </p>
-      <h2>Resources / Documentation</h2>
-      <ul>
-        <li>
-          <a href="https://reactjs.org/docs/create-a-new-react-app.html">
-            ReactJS
-          </a>
-        </li>
-        <li>
-          <a href="https://tailwindcss.com/">TailwindCSS</a>
-        </li>
-        <li>
-          <a href="https://styled-components.com/">Styled Components</a>
-        </li>
-      </ul>
-    </AppStyles>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}
+    >
+      <Router>
+        <Header />
+        <Switch>
+          <Route path="/merchandise">
+            <MerchandisePage />
+          </Route>
+          <Route path="/">
+            <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
+          </Route>
+        </Switch>
+      </Router>
+    </div>
   )
 }
 
-export default App
+function AppProvider() {
+  const globalContextValue = React.useRef({worker})
+
+  return (
+    <GlobalContext.Provider value={globalContextValue.current}>
+      <App />
+    </GlobalContext.Provider>
+  )
+}
+
+export default AppProvider
