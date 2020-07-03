@@ -116,11 +116,20 @@ export function getAllFromIndexStore({
 export function getRowFromStore(storeName, id) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(storeName)
-    console.time('strt')
     tx.objectStore(storeName).get(id).onsuccess = function(event) {
-      console.timeEnd('strt')
       resolve(event.target.result)
     }
+  })
+}
+
+export function getAcquisitions(params) {
+  return getAllFromIndexStore(params).then(async acquisitions => {
+    for (const acquisition of acquisitions) {
+      const _product = await getRowFromStore('products', acquisition._productId)
+      acquisition._product = _product
+    }
+
+    return acquisitions
   })
 }
 
