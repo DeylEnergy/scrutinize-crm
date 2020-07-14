@@ -3,6 +3,7 @@ import React from 'react'
 import {Pane, Tablist, Tab} from 'evergreen-ui'
 import Block from '../../../components/Block'
 import Products from '../products/Products'
+import ToBuy from '../to-buy/ToBuy'
 import Acquisitions from '../acquisitions/Acquisitions'
 
 const TABS = {
@@ -12,7 +13,7 @@ const TABS = {
       label: 'Products',
       component: <Products />,
     },
-    {label: 'To Buy List', component: <>To buy List Content</>},
+    {label: 'To Buy List', component: <ToBuy />},
     {label: 'Acquisitions', component: <Acquisitions />},
   ],
 }
