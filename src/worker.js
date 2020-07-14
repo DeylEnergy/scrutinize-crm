@@ -55,15 +55,83 @@ function setupTransaction(storeName) {
   }
 }
 
-export function putRow(storeName, row, i) {
+export function getRowFromStore(storeName, id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(storeName)
+    tx.objectStore(storeName).get(id).onsuccess = function(event) {
+      resolve(event.target.result)
+    }
+  })
+}
+
+async function acquisitionsActions(acquisition) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {_product, _supplier, ...serverSide} = acquisition
+
+  let _supplierUpdated
+
+  if (acquisition._supplierId) {
+    _supplierUpdated = await getRowFromStore(
+      'suppliers',
+      acquisition._supplierId,
+    )
+  }
+
+  let _userUpdated
+
+  if (acquisition._userId) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {secretKey, ...userData} = await getRowFromStore(
+      'users',
+      acquisition._userId,
+    )
+    _userUpdated = userData
+  }
+
+  let {price, count} = acquisition
+
+  price = Number(price)
+  count = Number(count)
+  const sum = price * count
+
+  const computed = {price, count, sum}
+
+  const server = {...serverSide, ...computed}
+  const client = {
+    ...acquisition,
+    _supplier: _supplierUpdated,
+    _user: _userUpdated,
+    ...computed,
+  }
+
+  return {server, client}
+}
+
+async function applyActionsOn(storeName, row) {
+  const actions = {
+    acquisitions: acquisitionsActions,
+  }
+
+  const applyAction = actions[storeName]
+
+  if (!applyAction) {
+    return {server: row, client: row}
+  }
+
+  return applyAction(row)
+}
+
+export async function putRow(storeName, row, i) {
+  const finalRow = await applyActionsOn(storeName, row)
+
   return new Promise((resolve, reject) => {
     const {store, tx} = setupTransaction(storeName)
 
-    store.put(row)
+    store.put(finalRow.server)
 
     tx.oncomplete = function() {
-      console.log('put row', i ? i : row)
-      resolve(row)
+      console.log('put finalRow', i ? i : finalRow)
+      resolve(finalRow.client)
     }
 
     tx.onerror = function(event) {
@@ -113,20 +181,24 @@ export function getAllFromIndexStore({
   })
 }
 
-export function getRowFromStore(storeName, id) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName)
-    tx.objectStore(storeName).get(id).onsuccess = function(event) {
-      resolve(event.target.result)
-    }
-  })
-}
-
 export function getAcquisitions(params) {
   return getAllFromIndexStore(params).then(async acquisitions => {
     for (const acquisition of acquisitions) {
       const _product = await getRowFromStore('products', acquisition._productId)
       acquisition._product = _product
+
+      if (acquisition._supplierId) {
+        const _supplier = await getRowFromStore(
+          'suppliers',
+          acquisition._supplierId,
+        )
+        acquisition._supplier = _supplier
+      }
+
+      if (acquisition._userId) {
+        const _user = await getRowFromStore('users', acquisition._userId)
+        acquisition._user = _user
+      }
     }
 
     return acquisitions
