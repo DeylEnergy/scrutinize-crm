@@ -5,6 +5,7 @@ import {VariableSizeGrid as Grid, GridChildComponentProps} from 'react-window'
 import {Divider, DIVIDER_VARIANT, Small, Subtitle} from '../elements'
 // @ts-ignore
 import InfiniteLoader from 'react-window-infinite-loader'
+import Tooltip from './Tooltip'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
@@ -40,9 +41,6 @@ const TableCellContent = styled.div`
   height: 100%;
   /* spacing is 8 * 1.5 */
   padding: 10px 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const Header = styled.div`
@@ -131,13 +129,23 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
   const cellData = rows[rowIndex]
   const cellContent = !isItemAvailable ? '...' : cellData.cells[columnIndex]
 
-  const cellOnDoubleClick = isItemAvailable ? cellData.onDoubleClick : null
+  const isCellContentObject =
+    cellContent !== null && typeof cellContent === 'object'
+
+  const cellOnDoubleClick = isItemAvailable
+    ? isCellContentObject
+      ? cellContent.onDoubleClick
+      : cellData.onDoubleClick
+    : null
   const columnLabel = columns[columnIndex].label
+
+  const customCellContentStyle =
+    (isCellContentObject && cellContent.style) || {}
 
   return (
     <TableCell
       // @ts-ignore
-      onClick={() => tableContext.setSelectedRow(style.top)}
+      // onClick={() => tableContext.setSelectedRow(style.top)}
       onDoubleClick={cellOnDoubleClick}
       // @ts-ignore
       selected={tableContext.selectedRow === style.top}
@@ -145,12 +153,18 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         ...style,
       }}
     >
-      <TableCellContent>
-        <Small variant="SECONDARY">
-          {isItemAvailable && columnLabel === 'OPTIONS' && cellData.optionsMenu
-            ? cellData.optionsMenu
-            : cellContent}
-        </Small>
+      <TableCellContent style={customCellContentStyle}>
+        <Tooltip content={isCellContentObject && cellContent.tooltipContent}>
+          <Small variant="SECONDARY">
+            {isItemAvailable &&
+            columnLabel === 'OPTIONS' &&
+            cellData.optionsMenu
+              ? cellData.optionsMenu
+              : isCellContentObject
+              ? cellContent.value
+              : cellContent}
+          </Small>
+        </Tooltip>
       </TableCellContent>
 
       <CellDividers />
@@ -224,7 +238,7 @@ function StickyColumn({
       {stickyColumnRows.map(({label, top}, i) => (
         <TableCell
           // @ts-ignore
-          onClick={() => tableContext.setSelectedRow(top)}
+          // onClick={() => tableContext.setSelectedRow(top)}
           onDoubleClick={() =>
             console.log('Hey dude i am gonna open modal for rowId', top)
           }
