@@ -67,8 +67,8 @@ function UpdateProduct({
     lowestBoundCount: doc.lowestBoundCount || '',
   })
 
-  const handleInput = React.useCallback((e: any) => {
-    setInput({[e.target.name]: e.target.value})
+  const handleInput = React.useCallback((value, e) => {
+    setInput({[e.target.name]: value})
   }, [])
 
   const canSave = React.useCallback(
@@ -167,6 +167,7 @@ function UpdateProduct({
         required
       />
       <TextInputField
+        type="number"
         name="realPrice"
         value={input.realPrice}
         // @ts-ignore
@@ -176,6 +177,7 @@ function UpdateProduct({
         required
       />
       <TextInputField
+        type="number"
         name="salePrice"
         value={input.salePrice}
         // @ts-ignore
@@ -185,6 +187,7 @@ function UpdateProduct({
         required
       />
       <TextInputField
+        type="number"
         name="inStockCount"
         value={input.inStockCount}
         // @ts-ignore
@@ -194,6 +197,7 @@ function UpdateProduct({
         required
       />
       <TextInputField
+        type="number"
         name="soldCount"
         value={input.soldCount}
         // @ts-ignore
@@ -203,6 +207,7 @@ function UpdateProduct({
         required
       />
       <TextInputField
+        type="number"
         name="lowestBoundCount"
         value={input.lowestBoundCount}
         // @ts-ignore
