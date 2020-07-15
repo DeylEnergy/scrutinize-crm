@@ -42,6 +42,7 @@ const TooltipBody = styled.div`
 `
 
 const TextWrapper = styled.span`
+  width: 100%;
   max-width: 100%;
   display: inline-block;
   white-space: nowrap;
