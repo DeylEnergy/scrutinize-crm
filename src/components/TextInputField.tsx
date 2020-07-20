@@ -69,7 +69,7 @@ function TextInputFieldComponent({
   }
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (type === 'number' && !leadingZeros) {
+    if (value && type === 'number' && !leadingZeros) {
       onChange(Number(value), e)
     }
     onBlur(e)
