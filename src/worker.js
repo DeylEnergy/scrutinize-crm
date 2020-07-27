@@ -3,12 +3,13 @@ import {v4 as uuidv4} from 'uuid'
 const PRODUCTS_STORE_NAME = 'products'
 const SALES_STORE_NAME = 'sales'
 const ACQUISITIONS_STORE_NAME = 'acquisitions'
+const BUDGET_STORE_NAME = 'budget'
 const CUSTOMERS_STORE_NAME = 'customers'
 const USERS_STORE_NAME = 'users'
 const SUPPLIERS_STORE_NAME = 'suppliers'
 const STATS_STORE_NAME = 'stats'
 
-const currentVersion = 1
+const currentVersion = 9
 
 let db
 let dbReq = indexedDB.open('mydbx', currentVersion)
@@ -26,14 +27,17 @@ dbReq.onupgradeneeded = e => {
       'datetime',
       'datetime',
     )
-    db.createObjectStore(ACQUISITIONS_STORE_NAME, keyPath).createIndex(
-      'datetime',
-      'datetime',
+    const acquisitionsStore = db.createObjectStore(
+      ACQUISITIONS_STORE_NAME,
+      keyPath,
     )
+    acquisitionsStore.createIndex('datetime', 'datetime')
+    acquisitionsStore.createIndex('neededSinceDatetime', 'neededSinceDatetime')
     db.createObjectStore(CUSTOMERS_STORE_NAME, keyPath)
     db.createObjectStore(USERS_STORE_NAME, keyPath)
     db.createObjectStore(SUPPLIERS_STORE_NAME, keyPath)
     db.createObjectStore(STATS_STORE_NAME, keyPath)
+    db.createObjectStore(BUDGET_STORE_NAME, {keyPath: 'id'})
   }
 }
 
@@ -64,7 +68,68 @@ export function getRowFromStore(storeName, id) {
   })
 }
 
+const acquisitionsFilters = {
+  active: x => !x.isFrozen,
+  haveToBuy: x => !x.isDone && !x.isFrozen,
+  bought: x => x.isDone,
+  frozen: x => x.isFrozen,
+}
+
+const filters = {
+  acquisitions: acquisitionsFilters,
+}
+
+const PROFIT_PERCENTAGE = 20
+
 async function acquisitionsActions(acquisition) {
+  if (!acquisition.id) {
+    acquisition.id = uuidv4()
+    if (acquisition._productId) {
+      const _product = await getRowFromStore('products', acquisition._productId)
+
+      acquisition.price = _product.realPrice
+      acquisition.count = _product.lowestBoundCount
+
+      acquisition._product = _product
+    }
+  }
+
+  let {price, count} = acquisition
+
+  price = Number(price)
+  count = Number(count)
+  const sum = price * count
+
+  const computed = {price, count, sum}
+
+  const isNewProduct = !acquisition._productId
+
+  // if new product was added and has no salePrice
+  if (isNewProduct && !acquisition.salePrice) {
+    const profitSum = (price / 100) * PROFIT_PERCENTAGE
+    acquisition.salePrice = price + profitSum
+  }
+
+  if (
+    isNewProduct &&
+    !acquisition.lowestBoundCount &&
+    acquisition.lowestBoundCount !== 0
+  ) {
+    acquisition.lowestBoundCount = Math.floor(count / 2)
+  }
+
+  // stickers number aren't specified
+  if (
+    !acquisition.toPrintStickersCount &&
+    acquisition.toPrintStickersCount !== 0
+  ) {
+    acquisition.toPrintStickersCount = count
+  }
+
+  if (acquisition.isDone === undefined) {
+    acquisition.isDone = false
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {_product, _supplier, ...serverSide} = acquisition
 
@@ -87,14 +152,6 @@ async function acquisitionsActions(acquisition) {
     )
     _userUpdated = userData
   }
-
-  let {price, count} = acquisition
-
-  price = Number(price)
-  count = Number(count)
-  const sum = price * count
-
-  const computed = {price, count, sum}
 
   const server = {...serverSide, ...computed}
   const client = {
@@ -150,42 +207,83 @@ export function getAllFromStore(storeName) {
   })
 }
 
+function withoutFilter() {
+  return true
+}
+
 export function getAllFromIndexStore({
   storeName,
   indexName,
   limit,
-  lowerBoundKey,
+  lastKey,
+  direction = 'next',
+  filterBy,
 }) {
   return new Promise(resolve => {
     const tx = db.transaction([storeName], 'readonly')
 
     const indexStore = tx.objectStore(storeName).index(indexName)
 
+    const keyBound =
+      lastKey && (direction === 'next' ? 'lowerBound' : 'upperBound')
+    const keyRange = keyBound && IDBKeyRange[keyBound](lastKey, true)
+
     let count = 0
     const result = []
-    const keyRange =
-      lowerBoundKey && IDBKeyRange.lowerBound(lowerBoundKey, true)
 
-    indexStore.openCursor(keyRange).onsuccess = event => {
+    indexStore.openCursor(keyRange, direction).onsuccess = event => {
       const cursor = event.target.result
 
       if (!cursor || count === limit) {
         return resolve(result)
       }
 
-      result.push(cursor.value)
-      count += 1
+      const applyFilter = filterBy
+        ? filters[storeName][filterBy]
+        : withoutFilter
+
+      const {value} = cursor
+      if (applyFilter(value)) {
+        result.push(value)
+        count += 1
+      }
 
       cursor.continue()
     }
   })
 }
 
+export function getFullIndexStore({storeName, indexName, direction = 'next'}) {
+  return new Promise(resolve => {
+    const tx = db.transaction([storeName], 'readonly')
+
+    const indexStore = tx.objectStore(storeName).index(indexName)
+
+    indexStore.getAll().onsuccess = event => {
+      const result = event.target.result
+      if (direction === 'prev') {
+        result.reverse()
+      }
+      resolve(result)
+    }
+  })
+}
+
 export function getAcquisitions(params) {
-  return getAllFromIndexStore(params).then(async acquisitions => {
+  let fetcher = getFullIndexStore
+  if (params.lowerBound || params.limit || params.filterBy) {
+    fetcher = getAllFromIndexStore
+  }
+
+  return fetcher(params).then(async acquisitions => {
     for (const acquisition of acquisitions) {
-      const _product = await getRowFromStore('products', acquisition._productId)
-      acquisition._product = _product
+      if (acquisition._productId) {
+        const _product = await getRowFromStore(
+          'products',
+          acquisition._productId,
+        )
+        acquisition._product = _product
+      }
 
       if (acquisition._supplierId) {
         const _supplier = await getRowFromStore(
@@ -203,6 +301,178 @@ export function getAcquisitions(params) {
 
     return acquisitions
   })
+}
+
+export async function computeBuyList() {
+  const buyList = await getAcquisitions({
+    storeName: 'acquisitions',
+    indexName: 'neededSinceDatetime',
+    limit: 10000,
+  })
+
+  let budget = await getAllFromStore('budget')
+  budget = budget[0].value
+
+  let needed = 0
+  let spent = 0
+  let remains = budget
+
+  for (const item of buyList) {
+    const {sum, isDone} = item
+    needed += sum
+
+    if (isDone && sum) {
+      spent += sum
+      remains -= sum
+    }
+  }
+
+  return {
+    budget,
+    needed,
+    spent,
+    remains,
+  }
+}
+
+const store = {}
+
+export async function searchInProducts({type, query, filterFor}) {
+  if (type === 'init') {
+    const products = await getFullIndexStore({
+      storeName: 'products',
+      indexName: 'nameModel',
+    })
+
+    const filtersStore = {}
+
+    if (filterFor === 'toBuyList') {
+      filtersStore.toBuyList = await getFullIndexStore({
+        storeName: 'acquisitions',
+        indexName: 'neededSinceDatetime',
+      })
+    }
+
+    const keys = []
+    for (const product of products) {
+      const {toBuyList} = filtersStore
+
+      if (toBuyList) {
+        const isInToBuyList = Boolean(
+          toBuyList.find(x => x._productId === product.id),
+        )
+
+        if (isInToBuyList) {
+          continue
+        }
+      }
+
+      const name = product.nameModel[0].toLowerCase()
+      const model = product.nameModel[1].toLowerCase()
+
+      keys.push({key: [name, model, product.id].join('__'), data: product})
+    }
+    store.products = keys
+
+    return keys.map(x => ({
+      label: x.data.nameModel.join(' '),
+      value: x.data.id,
+    }))
+  }
+
+  if (type === 'search' && store.products && (query || query === '')) {
+    const result = []
+    for (const product of store.products) {
+      if (product.key.includes(query.toLowerCase())) {
+        result.push({
+          value: product.data.id,
+          label: product.data.nameModel.join(' '),
+        })
+      }
+    }
+
+    return result
+  }
+
+  if (type === 'discard') {
+    delete store.products
+  }
+}
+
+export async function searchInSuppliers({type, query}) {
+  if (type === 'init') {
+    const suppliers = await getAllFromStore('suppliers')
+
+    const keys = []
+    for (const supplier of suppliers) {
+      const name = supplier.name.toLowerCase()
+
+      keys.push({key: name, data: supplier})
+    }
+    store.suppliers = keys
+
+    return keys.map(x => ({
+      label: x.data.name,
+      value: x.data.id,
+    }))
+  }
+
+  if (type === 'search' && store.suppliers && (query || query === '')) {
+    const result = []
+    for (const supplier of store.suppliers) {
+      if (supplier.key.includes(query.toLowerCase())) {
+        result.push({
+          value: supplier.data.id,
+          label: supplier.data.name,
+        })
+      }
+    }
+
+    return result
+  }
+
+  if (type === 'discard') {
+    delete store.suppliers
+  }
+}
+
+export async function searchInUsers({type, query}) {
+  if (type === 'init') {
+    const users = await getAllFromStore('users')
+
+    const keys = []
+    for (const user of users) {
+      const name = user.name.toLowerCase()
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {secretKey, ...userData} = user
+      keys.push({key: name, data: userData})
+    }
+    store.users = keys
+
+    return keys.map(x => ({
+      label: x.data.name,
+      value: x.data.id,
+    }))
+  }
+
+  if (type === 'search' && store.users && (query || query === '')) {
+    const result = []
+    for (const user of store.users) {
+      if (user.key.includes(query.toLowerCase())) {
+        result.push({
+          value: user.data.id,
+          label: user.data.name,
+        })
+      }
+    }
+
+    return result
+  }
+
+  if (type === 'discard') {
+    delete store.users
+  }
 }
 
 export async function asyncCountThing(cb) {
