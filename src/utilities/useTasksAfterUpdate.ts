@@ -1,6 +1,6 @@
 import React from 'react'
 
-function useTasksAfterUpdate(initTasks: any[], deps: any[]) {
+export default function useTasksAfterUpdate(initTasks: any[], deps: any[]) {
   const tasks = React.useRef(initTasks)
 
   const addTask = (newTask: any) => {
@@ -19,5 +19,3 @@ function useTasksAfterUpdate(initTasks: any[], deps: any[]) {
 
   return [addTask]
 }
-
-export default useTasksAfterUpdate

@@ -33,13 +33,13 @@ function serializeItem(item: any) {
       item.price,
       item.count,
       item.sum,
-      item._supplierId,
-      item._userId,
+      item._supplier?.name,
+      item._user?.name,
     ],
   }
 }
 
-export default function Products() {
+export default function Acquisitions() {
   const {worker} = React.useContext(GlobalContext)
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -49,18 +49,19 @@ export default function Products() {
 
   const isItemLoaded = React.useCallback(
     index => {
-      return !loadedItems.hasNextPage || !!loadedItems.items[index]
+      return !loadedItems.hasNextPage || Boolean(loadedItems.items[index])
     },
     [loadedItems.hasNextPage, loadedItems.items],
   )
 
   const loadMoreItems = React.useCallback(() => {
     worker
-      .getAcquisitions({
+      .getRows({
         storeName: 'acquisitions',
         indexName: 'datetime',
+        direction: 'prev',
         limit: FETCH_ITEM_LIMIT,
-        lowerBoundKey: loadedItems.lastKey,
+        lastKey: loadedItems.lastKey,
       })
       .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
@@ -69,7 +70,7 @@ export default function Products() {
           ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
           items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems && newItems[newItems.length - 1].datetime,
+          lastKey: newItems.length && newItems[newItems.length - 1].datetime,
         })
       })
   }, [loadedItems.items])

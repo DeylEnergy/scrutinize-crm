@@ -1,88 +1,183 @@
 import React from 'react'
-import {SelectMenu, Button, Position} from 'evergreen-ui'
+// @ts-ignore
+import arrify from 'arrify'
+import {
+  Position,
+  Pane,
+  SelectMenuContent,
+  Heading,
+  TableHead,
+  SearchTableHeaderCell,
+  IconButton,
+} from 'evergreen-ui'
+import Popover from './Popover'
+import {debounce} from '../utilities'
 
-function makeBackdrop() {
-  const backdrop = document.createElement('div')
-  backdrop.style.pointerEvents = 'all'
-  backdrop.style.position = 'absolute'
-  backdrop.style.top = '0px'
-  backdrop.style.height = '100vh'
-  backdrop.style.width = '100vw'
+function getEmptyView(close: any, emptyView: any) {
+  if (typeof emptyView === 'function') {
+    return {
+      emptyView: emptyView({close}),
+    }
+  }
 
-  return backdrop
+  if (emptyView) {
+    return {emptyView}
+  }
+
+  return {}
 }
 
-const SELECT_MENU_STYLE = {
-  maxWidth: '100%',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  display: 'block',
-}
+function noop() {}
 
-function SelectMenuComponent({
-  options,
-  selected,
+function Header({
   title,
-  buttonLabel,
-  onClose,
-  buttonProps = {},
-  position = Position.BOTTOM_LEFT,
+  filterIcon,
+  filterPlaceholder,
+  asyncSearch = noop,
+  asyncSearchDebounceTimeMs = 166,
+  onFilterChangeHandler = noop,
+  close,
 }: any) {
-  const [state, setState] = React.useState<any>({selected: selected.value})
-  const refs = React.useRef<any>({})
+  const [searchValue, setSearchValue] = React.useState('')
+  const searchRef = React.useRef<any>()
 
-  const handleOpen = () => {
-    const body: HTMLBodyElement | null = document.querySelector('body')
-    if (body) {
-      body.style.pointerEvents = 'none'
-      refs.current = {...refs.current, body}
-    }
-  }
-
-  const handleOpenComplete = () => {
-    const portal: HTMLBodyElement | null = document.querySelector(
-      'div[evergreen-portal-container]',
-    )
-    const backdrop: HTMLDivElement | null = makeBackdrop()
-
-    if (portal && backdrop) {
-      portal.style.pointerEvents = 'all'
-      portal.insertAdjacentElement('afterend', backdrop)
-
-      refs.current = {...refs.current, portal, backdrop}
-    }
-  }
-
-  const handleClose = () => {
-    const {body, backdrop} = refs.current
-    if (backdrop) {
-      backdrop.remove()
+  React.useEffect(() => {
+    let requestId: any
+    if (searchRef.current) {
+      requestId = requestAnimationFrame(() => {
+        searchRef.current.querySelector('input').focus()
+      })
     }
 
-    if (body) {
-      body.style.pointerEvents = 'all'
+    return () => {
+      cancelAnimationFrame(requestId)
     }
+  }, [])
 
-    onClose(state.selected)
-  }
+  const debouncedAsyncSearch = React.useMemo(() => {
+    return debounce(asyncSearch, asyncSearchDebounceTimeMs)
+  }, [asyncSearch])
+
+  const handleChange = React.useCallback(
+    (value: any) => {
+      setSearchValue(value)
+      onFilterChangeHandler(value)
+      debouncedAsyncSearch(value)
+    },
+    [setSearchValue, onFilterChangeHandler, debouncedAsyncSearch],
+  )
 
   return (
-    <SelectMenu
-      onOpen={handleOpen}
-      onOpenComplete={handleOpenComplete}
-      onClose={handleClose}
-      title={title}
-      options={options}
-      selected={state.selected}
-      onSelect={item => setState({selected: item.value, label: item.label})}
-      position={position}
-    >
-      <Button style={SELECT_MENU_STYLE} {...buttonProps}>
-        {state.label || selected.label || buttonLabel}
-      </Button>
-    </SelectMenu>
+    <>
+      <Pane
+        display="flex"
+        alignItems="center"
+        borderBottom="default"
+        padding={8}
+        height={40}
+        boxSizing="border-box"
+      >
+        <Pane flex="1" display="flex" alignItems="center">
+          <Heading size={400}>{title}</Heading>
+        </Pane>
+        <IconButton
+          icon="cross"
+          appearance="minimal"
+          height={24}
+          onClick={close}
+        />
+      </Pane>
+      <TableHead>
+        <SearchTableHeaderCell
+          innerRef={(ref: React.ReactNode) => (searchRef.current = ref)}
+          value={searchValue}
+          onChange={handleChange}
+          borderRight={null}
+          height={32}
+          placeholder={filterPlaceholder}
+          icon={filterIcon}
+        />
+      </TableHead>
+    </>
   )
 }
 
-export default SelectMenuComponent
+function SelectMenu({
+  title,
+  width = 240,
+  height = 200,
+  options,
+  selected,
+  position = Position.BOTTOM_LEFT,
+  hasTitle,
+  hasFilter = false,
+  filterPlaceholder = 'Filter...',
+  filterIcon = 'search',
+  detailView,
+  emptyView,
+  titleView,
+  isMultiSelect = false,
+  closeOnSelect = false,
+  onSelect: onSelectHandler = noop,
+  onDeselect: onDeselectHandler = noop,
+  onFilterChange: onFilterChangeHandler = noop,
+  asyncSearch,
+  asyncSearchDebounceTimeMs,
+  ...popoverProps
+}: any) {
+  const listProps = React.useMemo(
+    () => ({
+      onSelect: (item: any) => {
+        onSelectHandler(item)
+      },
+      onDeselect: (item: any) => {
+        onDeselectHandler(item)
+      },
+      onFilterChange: onFilterChangeHandler,
+      selected: arrify(selected),
+    }),
+    [onSelectHandler, onDeselectHandler, onFilterChangeHandler],
+  )
+
+  return (
+    <Popover
+      minWidth={width}
+      position={position}
+      minHeight={height}
+      content={({close}: any) => (
+        <Pane display="flex" flexDirection="column">
+          <Header
+            title={title}
+            filterIcon={filterIcon}
+            filterPlaceholder={filterPlaceholder}
+            onFilterChangeHandler={onFilterChangeHandler}
+            asyncSearch={asyncSearch}
+            asyncSearchDebounceTimeMs={asyncSearchDebounceTimeMs}
+            close={close}
+          />
+          <SelectMenuContent
+            width={width}
+            height={height}
+            options={options}
+            title={title}
+            hasFilter={hasFilter}
+            filterPlaceholder={filterPlaceholder}
+            filterIcon={filterIcon}
+            hasTitle={false}
+            isMultiSelect={isMultiSelect}
+            titleView={titleView}
+            listProps={listProps}
+            close={close}
+            // {...getDetailView(close, detailView)}
+            {...getEmptyView(close, emptyView)}
+            // @ts-ignore
+            closeOnSelect={closeOnSelect}
+          />
+        </Pane>
+      )}
+      {...popoverProps}
+    />
+  )
+}
+
+export default SelectMenu

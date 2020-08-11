@@ -419,7 +419,7 @@ function Table({
             isItemLoaded={isItemLoaded}
             itemCount={itemCount}
             loadMoreItems={loadMoreItems}
-            minimumBatchSize={20}
+            // minimumBatchSize={20}
           >
             {({onItemsRendered, ref}: any) => (
               <Grid

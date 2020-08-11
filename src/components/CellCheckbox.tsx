@@ -12,9 +12,10 @@ const StyledCheckbox = styled(Checkbox)`
 interface Props {
   initState: boolean
   onUpdate: (e: React.ChangeEvent<HTMLInputElement>) => any
+  disabled?: boolean
 }
 
-function CellCheckbox({initState, onUpdate}: Props) {
+function CellCheckbox({initState, onUpdate, disabled}: Props) {
   const [checked, setChecked] = React.useState(initState)
   return (
     <StyledCheckbox
@@ -24,6 +25,7 @@ function CellCheckbox({initState, onUpdate}: Props) {
         setChecked(e.target.checked)
         onUpdate(e)
       }}
+      disabled={disabled}
     />
   )
 }

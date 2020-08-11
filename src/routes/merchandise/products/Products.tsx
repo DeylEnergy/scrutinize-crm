@@ -109,6 +109,7 @@ const SIDE_SHEET_DEFAULT = {
 
 export default function Products() {
   const {worker} = React.useContext(GlobalContext)
+
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => ({...s, ...v}),
@@ -139,7 +140,7 @@ export default function Products() {
         item.inStockCount,
         item.soldCount,
         item.datetime, // last sold
-        item.acquisitions?.[0]?.datetime, // last acquisition
+        new Date(item.lastAcquiredDatetime).toLocaleDateString(), // last acquisition
         item.lowestBoundCount,
       ],
       onDoubleClick: editSideSheet,
@@ -150,9 +151,6 @@ export default function Products() {
               <Menu.Group>
                 <Menu.Item onSelect={editSideSheet} icon="edit">
                   Edit
-                </Menu.Item>
-                <Menu.Item intent="danger" icon="trash">
-                  Delete
                 </Menu.Item>
               </Menu.Group>
             </Menu>
@@ -174,15 +172,14 @@ export default function Products() {
 
   const loadMoreItems = React.useCallback(() => {
     worker
-      .getAllFromIndexStore({
+      .getRows({
         storeName: 'products',
         indexName: 'nameModel',
         limit: FETCH_ITEM_LIMIT,
-        lowerBoundKey: loadedItems.lastKey,
+        lastKey: loadedItems.lastKey,
       })
       .then(newItems => {
         const newItemsSerialized = newItems.map(serializeItem)
-
         setLoadedItems({
           ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,

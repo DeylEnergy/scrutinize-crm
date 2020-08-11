@@ -1,20 +1,53 @@
 import React from 'react'
+import styled from 'styled-components'
+import {
+  useTasksAfterUpdate,
+  useLocalStorage,
+  useUpdate,
+} from '../../../utilities'
+import {Button} from 'evergreen-ui'
+import {TO_BUY_FILTER_OPTIONS as FILTER_OPTIONS} from '../../../constants'
+import {PUT_ACQUISITION} from '../../../constants/events'
 import Table from '../../../components/Table'
+import CellCheckbox from '../../../components/CellCheckbox'
 import EditableCellInput from '../../../components/EditableCellInput'
-import SelectMenu from '../../../components/SelectMenu'
+import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
+import FundPanel from './FundPanel'
+import AddProduct from './AddProduct'
+import Filters from './Filters'
+import Options from './Options'
+import UpdateProduct from '../products/UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 
+const Wrapper = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  position: relative;
+`
+
+const Control = styled.div`
+  position: absolute;
+  top: -30px;
+  right: 0;
+  display: flex;
+`
+
 const columns = [
-  {label: 'Date', width: 100},
+  {label: 'Done', width: 50},
   {label: 'Name', width: 150},
   {label: 'Model', width: 170},
   {label: 'Price', width: 120},
   {label: 'Count', width: 70},
   {label: 'Sum', width: 90},
+  {label: 'Sale Price', width: 100},
   {label: 'Lowest Bound', width: 120},
+  {label: 'Stickers', width: 100},
   {label: 'Supplier', width: 150},
   {label: 'Executor', width: 150},
-  {label: 'Product Id', width: 250},
+  {label: 'Frozen', width: 65},
+  {label: 'Date', width: 190},
+  {label: 'Product Id', width: 270},
 ]
 
 const FETCH_ITEM_LIMIT = 10000
@@ -25,32 +58,22 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
-function useTasksAfterUpdate(initTasks: any[], deps: any[]) {
-  const tasks = React.useRef(initTasks)
-
-  const addTask = (newTask: any) => {
-    tasks.current = [...tasks.current, newTask]
-  }
-
-  React.useEffect(() => {
-    const availableTasks = tasks.current
-    if (availableTasks.length) {
-      for (const task of availableTasks) {
-        task()
-      }
-    }
-  }, deps)
-
-  return [addTask]
+const SIDE_SHEET_DEFAULT = {
+  value: null,
+  isShown: false,
 }
 
-export default function ToBuy() {
+const SELECT_MENU_STYLE = {
+  maxWidth: '100%',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: 'block',
+}
+
+function ToBuy() {
   const {worker} = React.useContext(GlobalContext)
   const itemsRef = React.useRef<any>(null)
-  const store = React.useRef<any>({
-    suppliers: [],
-    users: [],
-  })
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -62,200 +85,296 @@ export default function ToBuy() {
     LOADED_ITEMS_DEFAULT,
   )
 
+  const [filterBy, setFilterBy] = useLocalStorage(
+    'TO_BUY_FILTERS',
+    FILTER_OPTIONS.ACTIVE,
+  )
+
   const [editCell, setEditCell] = React.useState<any>(null)
+
+  const [computedBuyList, setComputedBuyList] = React.useState<any>({})
+
+  const [sideSheet, setSideSheet] = React.useReducer(
+    // @ts-ignore
+    (s, v) => ({...s, ...v}),
+    SIDE_SHEET_DEFAULT,
+  )
 
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
-  React.useEffect(() => {
-    // fetch all suppliers
-    worker.getAllFromStore('suppliers').then((suppliers: any) => {
-      const options: any = suppliers.map((supplier: any) => ({
-        label: supplier.name,
-        value: supplier.id,
-      }))
-
-      store.current = {...store.current, suppliers: options.slice(0, 1000)}
-    })
-
-    // fetch all users
-    worker.getAllFromStore('users').then((users: any) => {
-      const options = users.map((user: any) => ({
-        label: user.name,
-        value: user.id,
-      }))
-
-      store.current = {...store.current, users: options.slice(0, 1000)}
-    })
+  const fetchComputedOfToBuyList = React.useCallback(() => {
+    worker
+      .perform({storeName: 'acquisitions', action: 'computeBuyList'})
+      .then(setComputedBuyList)
   }, [worker])
 
-  const serializeItem = React.useCallback((item: any) => {
-    function updateItem(cellUpdate: any) {
-      const updatedItem = {...item, ...cellUpdate}
+  React.useEffect(() => {
+    // fetch computation of buy list
+    fetchComputedOfToBuyList()
+  }, [worker])
 
-      const key = Object.keys(cellUpdate)[0]
+  const serializeItem = React.useCallback(
+    (item: any) => {
+      function updateItem(cellUpdate: any) {
+        const updatedItem = {...item, ...cellUpdate}
 
-      if (key === 'price' || key === 'count' || key === 'lowestBoundCount') {
-        updatedItem[key] = Number(updatedItem[key])
+        const key = Object.keys(cellUpdate)[0]
+
+        if (key === 'price' || key === 'count' || key === 'lowestBoundCount') {
+          updatedItem[key] = Number(updatedItem[key])
+        }
+
+        // in case nothing changed
+        if (item[key] === cellUpdate[key]) {
+          return setEditCell(null)
+        }
+
+        worker
+          .sendEvent({
+            type: PUT_ACQUISITION,
+            payload: updatedItem,
+            consumer: 'client',
+          })
+          .then((result: any) => {
+            const items = itemsRef.current
+            const foundIndex = items.findIndex((x: any) => x.id === item.id)
+            if (result.isFrozen && filterBy !== FILTER_OPTIONS.FROZEN) {
+              items.splice(foundIndex, 1)
+            } else if (!result.isFrozen && filterBy === FILTER_OPTIONS.FROZEN) {
+              items.splice(foundIndex, 1)
+            } else if (
+              result.isDone &&
+              filterBy === FILTER_OPTIONS.HAVE_TO_BUY
+            ) {
+              items.splice(foundIndex, 1)
+            } else if (!result.isDone && filterBy === FILTER_OPTIONS.BOUGHT) {
+              items.splice(foundIndex, 1)
+            } else {
+              items[foundIndex] = serializeItem({
+                ...result,
+                _product: updatedItem._product,
+              })
+            }
+
+            const updatedItems = {items: [...items]}
+            setLoadedItems(updatedItems)
+            addTask(() => setEditCell(null))
+
+            // schedule update for footer computed values
+            if (key === 'price' || key === 'count' || key === 'isDone') {
+              addTask(fetchComputedOfToBuyList)
+            }
+          })
       }
 
-      // in case nothing changed
-      if (item[key] === cellUpdate[key]) {
-        return setEditCell(null)
-      }
-
-      worker.putRow('acquisitions', updatedItem).then((result: any) => {
-        const items = itemsRef.current
-        const foundIndex = items.findIndex((x: any) => x.id === item.id)
-        items[foundIndex] = serializeItem({
-          ...result,
-          _product: updatedItem._product,
-        })
-        const updatedItems = {items: [...items]}
-        setLoadedItems(updatedItems)
-        addTask(() => setEditCell(null))
-      })
-    }
-
-    const handleCellDblClick = (
-      cellName: string,
-      value: string,
-      valueType: string,
-      e: React.MouseEvent,
-    ) => {
-      const {top, left, height, width} = e.currentTarget.getBoundingClientRect()
-
-      setEditCell({
-        style: {
+      const handleCellDblClick = (
+        cellName: string,
+        value: string,
+        valueType: string,
+        e: React.MouseEvent,
+      ) => {
+        const {
           top,
           left,
           height,
           width,
-        },
-        value,
-        valueType,
-        updateItem,
-        cellName,
-      })
-    }
+        } = e.currentTarget.getBoundingClientRect()
 
-    const handleSupplierPick = (_supplierId: number) => {
-      if (_supplierId !== item._supplierId) {
-        updateItem({_supplierId})
+        setEditCell({
+          style: {
+            top,
+            left,
+            height,
+            width,
+          },
+          value,
+          valueType,
+          updateItem,
+          cellName,
+        })
       }
-    }
 
-    const handleExecutorPick = (_userId: number) => {
-      if (_userId !== item._userId) {
-        updateItem({_userId})
+      const handleSupplierPick = (item: any) => {
+        const _supplierId: number = item.value
+        if (_supplierId !== item._supplierId) {
+          updateItem({_supplierId})
+        }
       }
-    }
 
-    const name = item.name || item._product.nameModel[0]
-    const nameCell = {
-      value: name,
-      onDoubleClick: handleCellDblClick.bind(null, 'name', name, 'string'),
-      tooltipContent: item.name && (
-        <>
-          <b>Before:</b> {item._product.nameModel[0]}
-        </>
-      ),
-    }
+      const handleExecutorPick = (item: any) => {
+        const _userId: number = item.value
+        if (_userId !== item._userId) {
+          updateItem({_userId})
+        }
+      }
 
-    const model = item.model || item._product.nameModel[1]
-    const modelCell = {
-      value: model,
-      onDoubleClick: handleCellDblClick.bind(null, 'model', model, 'string'),
-      tooltipContent: item.model && (
-        <>
-          <b>Before:</b> {item._product.nameModel[1]}
-        </>
-      ),
-    }
+      const doneCell = {
+        value: (
+          <CellCheckbox
+            initState={item.isDone}
+            onUpdate={(e: React.ChangeEvent<HTMLInputElement>) => {
+              updateItem({isDone: e.target.checked})
+            }}
+            disabled={item.isFrozen}
+          />
+        ),
+      }
 
-    const price = item.price
-    const priceCell = {
-      value: price,
-      onDoubleClick: handleCellDblClick.bind(null, 'price', price, 'number'),
-      tooltipContent: (
-        <>
-          <b>Previous price:</b> {item._product.realPrice}
-        </>
-      ),
-    }
+      const name = item.name || item._product.nameModel[0]
+      const nameCell = {
+        value: name,
+        onDoubleClick: handleCellDblClick.bind(null, 'name', name, 'string'),
+        tooltipContent: item.name && item._productId && (
+          <>
+            <b>Before:</b> {item._product.nameModel[0]}
+          </>
+        ),
+      }
 
-    const count = item.count
-    const countCell = {
-      value: count,
-      onDoubleClick: handleCellDblClick.bind(null, 'count', count, 'number'),
-      tooltipContent: (
-        <>
-          <b>In stock:</b> {item._product.inStockCount}
-        </>
-      ),
-    }
+      const model = item.model || item._product.nameModel[1]
+      const modelCell = {
+        value: model,
+        onDoubleClick: handleCellDblClick.bind(null, 'model', model, 'string'),
+        tooltipContent: item.model && item._productId && (
+          <>
+            <b>Before:</b> {item._product.nameModel[1]}
+          </>
+        ),
+      }
 
-    const lowestBoundCount =
-      item.lowestBoundCount || item._product.lowestBoundCount
-    const lowestBoundCountCell = {
-      value: lowestBoundCount,
-      onDoubleClick: handleCellDblClick.bind(
-        null,
-        'lowestBoundCount',
-        lowestBoundCount,
-        'number',
-      ),
-    }
+      const price = item.price
+      const priceCell = {
+        value: price,
+        onDoubleClick: handleCellDblClick.bind(null, 'price', price, 'number'),
+        tooltipContent: item._productId && (
+          <>
+            <b>Previous price:</b> {item._product.realPrice}
+          </>
+        ),
+      }
 
-    const supplierCell = {
-      value: (
-        <SelectMenu
-          options={store.current.suppliers}
-          selected={
-            item._supplier
-              ? {value: item._supplierId, label: item._supplier.name}
-              : {value: null, label: null}
-          }
-          title="Select Supplier"
-          buttonLabel="Select supplier.."
-          onClose={handleSupplierPick}
-        />
-      ),
-      style: {paddingTop: 4},
-    }
+      const count = item.count
+      const countCell = {
+        value: count,
+        onDoubleClick: handleCellDblClick.bind(null, 'count', count, 'number'),
+        tooltipContent: item._productId && (
+          <>
+            <b>In stock:</b> {item._product.inStockCount}
+          </>
+        ),
+      }
 
-    const executorCell = {
-      value: (
-        <SelectMenu
-          options={store.current.users}
-          selected={
-            item._user
-              ? {value: item._userId, label: item._user.name}
-              : {value: null, label: null}
-          }
-          title="Select Executor"
-          buttonLabel="Select executor.."
-          onClose={handleExecutorPick}
-        />
-      ),
-      style: {paddingTop: 4},
-    }
+      const salePrice =
+        item.salePrice || (item._productId && item._product.salePrice)
+      const salePriceCell = {
+        value: salePrice,
+        onDoubleClick: handleCellDblClick.bind(
+          null,
+          'salePrice',
+          salePrice,
+          'number',
+        ),
+      }
 
-    return {
-      id: item.id,
-      cells: [
-        new Date(item.datetime).toLocaleDateString(),
-        nameCell,
-        modelCell,
-        priceCell,
-        countCell,
-        item.sum,
-        lowestBoundCountCell,
-        supplierCell,
-        executorCell,
-        item._productId,
-      ],
-    }
-  }, [])
+      const lowestBoundCount =
+        item.lowestBoundCount ||
+        (item._productId && item._product.lowestBoundCount)
+      const lowestBoundCountCell = {
+        value: lowestBoundCount,
+        onDoubleClick: handleCellDblClick.bind(
+          null,
+          'lowestBoundCount',
+          lowestBoundCount,
+          'number',
+        ),
+      }
+
+      const toPrintStickersCount = item.toPrintStickersCount
+      const toPrintStickersCountCell = {
+        value: toPrintStickersCount,
+        onDoubleClick: handleCellDblClick.bind(
+          null,
+          'toPrintStickersCount',
+          toPrintStickersCount,
+          'number',
+        ),
+      }
+
+      const supplierCell = {
+        value: (
+          <AsyncSelectMenu
+            selected={
+              item._supplier
+                ? {value: item._supplierId, label: item._supplier.name}
+                : {value: null, label: null}
+            }
+            title="Select Supplier"
+            onSelect={handleSupplierPick}
+            storeName="suppliers"
+          >
+            <Button style={SELECT_MENU_STYLE}>
+              {item._supplier ? item._supplier.name : 'Select supplier..'}
+            </Button>
+          </AsyncSelectMenu>
+        ),
+
+        style: {paddingTop: 4},
+      }
+
+      const executorCell = {
+        value: (
+          <AsyncSelectMenu
+            selected={
+              item._supplier
+                ? {value: item._supplierId, label: item._supplier.name}
+                : {value: null, label: null}
+            }
+            title="Select Executor"
+            onSelect={handleExecutorPick}
+            storeName="users"
+          >
+            <Button style={SELECT_MENU_STYLE}>
+              {item._user ? item._user.name : 'Select executor...'}
+            </Button>
+          </AsyncSelectMenu>
+        ),
+        style: {paddingTop: 4},
+      }
+
+      const frozenCell = {
+        value: (
+          <CellCheckbox
+            initState={item.isFrozen}
+            onUpdate={(e: React.ChangeEvent<HTMLInputElement>) =>
+              updateItem({isFrozen: e.target.checked})
+            }
+          />
+        ),
+      }
+
+      return {
+        id: item.id,
+        cells: [
+          doneCell,
+          nameCell,
+          modelCell,
+          priceCell,
+          countCell,
+          item.sum,
+          salePriceCell,
+          lowestBoundCountCell,
+          toPrintStickersCountCell,
+          supplierCell,
+          executorCell,
+          frozenCell,
+          // new Date(item.neededSinceDatetime).toLocaleDateString(),
+          item.neededSinceDatetime,
+          item._productId,
+        ],
+      }
+    },
+    [filterBy],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {
@@ -264,38 +383,139 @@ export default function ToBuy() {
     [loadedItems.hasNextPage, loadedItems.items],
   )
 
-  const loadMoreItems = React.useCallback(() => {
+  const fetchAcquisitions = React.useCallback(() => {
     worker
-      .getAcquisitions({
+      .getRows({
         storeName: 'acquisitions',
-        indexName: 'datetime',
-        limit: FETCH_ITEM_LIMIT,
-        lowerBoundKey: loadedItems.lastKey,
+        indexName: 'neededSinceDatetime',
+        direction: 'prev',
+        filterBy,
       })
       .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
 
         const updatedLoadedItems = {
           ...loadedItems,
-          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-          items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems && newItems[newItems.length - 1].datetime,
+          hasNextPage: false,
+          items: newItemsSerialized,
         }
 
         setLoadedItems(updatedLoadedItems)
       })
-  }, [loadedItems.items])
+  }, [loadedItems.items, filterBy])
+
+  const handleSlideSheetCloseComplete = React.useCallback(() => {
+    setSideSheet(SIDE_SHEET_DEFAULT)
+  }, [])
+
+  const handleNewProductDrawer = React.useCallback(searchValue => {
+    setSideSheet({
+      value: {name: searchValue},
+      isShown: true,
+    })
+  }, [])
+
+  const handleSelectedProduct = React.useCallback(
+    (item: any) => {
+      const productToAdd = {
+        neededSinceDatetime: Date.now(),
+        _productId: item.value,
+      }
+      worker
+        .sendEvent({
+          type: PUT_ACQUISITION,
+          payload: productToAdd,
+          consumer: 'client',
+        })
+        .then((product: any) => {
+          const items = itemsRef.current
+          const serializedProduct = serializeItem(product)
+          setLoadedItems({items: [serializedProduct, ...items]})
+          fetchComputedOfToBuyList()
+        })
+    },
+    [itemsRef],
+  )
+
+  const handleNewProduct = React.useCallback(
+    input => {
+      const updatedRow = {
+        neededSinceDatetime: Date.now(),
+        _productId: null,
+        _supplierId: null,
+        ...input,
+      }
+
+      worker
+        .sendEvent({
+          type: PUT_ACQUISITION,
+          payload: updatedRow,
+          consumer: 'client',
+        })
+        .then((result: any) => {
+          const items = itemsRef.current
+          const newProduct = serializeItem(result)
+          setLoadedItems({items: [newProduct, ...items]})
+          fetchComputedOfToBuyList()
+          requestAnimationFrame(() => {
+            setSideSheet({isShown: false})
+          })
+        })
+    },
+    [worker],
+  )
+
+  const handleFilterChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setFilterBy(e.target.value)
+    },
+    [setFilterBy],
+  )
+
+  useUpdate(() => {
+    fetchAcquisitions()
+  }, [filterBy])
+
+  const refetchAll = () => {
+    fetchAcquisitions()
+    fetchComputedOfToBuyList()
+  }
 
   return (
-    <>
+    <Wrapper>
+      <Control>
+        <FundPanel
+          computedBuyList={computedBuyList}
+          fetchComputedOfToBuyList={fetchComputedOfToBuyList}
+        />
+        <AddProduct
+          handleSelectedProduct={handleSelectedProduct}
+          handleNewProductDrawer={handleNewProductDrawer}
+        />
+        <Filters value={filterBy} handleFilterChange={handleFilterChange} />
+        <Options refetchAll={refetchAll} />
+      </Control>
       <Table
         columns={columns}
         rows={loadedItems.items}
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
-        loadMoreItems={loadMoreItems}
+        loadMoreItems={fetchAcquisitions}
       />
       <EditableCellInput anchor={editCell} />
-    </>
+      {sideSheet.value && (
+        <UpdateProduct
+          items={loadedItems.items}
+          setLoadedItems={setLoadedItems}
+          serializeItem={serializeItem}
+          sideSheet={sideSheet}
+          setSideSheet={setSideSheet}
+          onSave={handleNewProduct}
+          onCloseComplete={handleSlideSheetCloseComplete}
+        />
+      )}
+    </Wrapper>
   )
 }
+
+export default ToBuy

@@ -2,6 +2,7 @@ import React from 'react'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import GlobalContext from '../../../contexts/globalContext'
+import {PUT_PRODUCT} from '../../../constants/events'
 
 type SideSheetType = {
   value: any
@@ -43,12 +44,41 @@ function isValidNumber(
   return true
 }
 
+function defineInputValues(doc: any) {
+  if (doc.id) {
+    return {
+      name: doc.nameModel[0] || '',
+      model: doc.nameModel[1] || '',
+      realPrice: doc.realPrice || '',
+      salePrice: doc.salePrice || '',
+      inStockCount: doc.inStockCount || '',
+      soldCount: doc.soldCount || '',
+      lowestBoundCount: doc.lowestBoundCount || '',
+    }
+  }
+
+  return {
+    name: doc.name || '',
+    model: '',
+    price: '',
+    count: '',
+  }
+}
+
+function doesPropertyExist(prop: any) {
+  if (typeof prop !== 'undefined') {
+    return true
+  }
+  return false
+}
+
 function UpdateProduct({
   items,
   setLoadedItems,
   serializeItem,
   sideSheet,
   setSideSheet,
+  onSave = null,
   onCloseComplete,
 }: any) {
   // console.log('<UpdateProduct />')
@@ -56,16 +86,12 @@ function UpdateProduct({
   const {worker} = React.useContext(GlobalContext)
 
   const doc = sideSheet.value
-  // @ts-ignore
-  const [input, setInput] = React.useReducer((s, v) => ({...s, ...v}), {
-    name: doc.nameModel[0],
-    model: doc.nameModel[1],
-    realPrice: doc.realPrice || '',
-    salePrice: doc.salePrice || '',
-    inStockCount: doc.inStockCount || '',
-    soldCount: doc.soldCount || '',
-    lowestBoundCount: doc.lowestBoundCount || '',
-  })
+
+  const [input, setInput] = React.useReducer(
+    // @ts-ignore
+    (s, v) => ({...s, ...v}),
+    defineInputValues(doc),
+  )
 
   const handleInput = React.useCallback((value, e) => {
     setInput({[e.target.name]: value})
@@ -76,9 +102,11 @@ function UpdateProduct({
       name,
       model,
       realPrice,
+      price,
       salePrice,
       inStockCount,
       soldCount,
+      count,
       lowestBoundCount,
     }) => {
       if (name.length < 3) {
@@ -89,23 +117,52 @@ function UpdateProduct({
         return false
       }
 
-      if (!isValidNumber(realPrice, {isZero: false, isInteger: true})) {
+      if (
+        doesPropertyExist(realPrice) &&
+        !isValidNumber(realPrice, {isZero: false, isInteger: true})
+      ) {
         return false
       }
 
-      if (!isValidNumber(salePrice, {isZero: false, isInteger: true})) {
+      if (
+        doesPropertyExist(price) &&
+        !isValidNumber(price, {isZero: false, isInteger: true})
+      ) {
         return false
       }
 
-      if (!isValidNumber(inStockCount, {isInteger: true})) {
+      if (
+        doesPropertyExist(salePrice) &&
+        !isValidNumber(salePrice, {isZero: false, isInteger: true})
+      ) {
         return false
       }
 
-      if (!isValidNumber(soldCount, {isInteger: true})) {
+      if (
+        doesPropertyExist(inStockCount) &&
+        !isValidNumber(inStockCount, {isInteger: true})
+      ) {
         return false
       }
 
-      if (!isValidNumber(lowestBoundCount, {isInteger: true})) {
+      if (
+        doesPropertyExist(count) &&
+        !isValidNumber(count, {isInteger: true})
+      ) {
+        return false
+      }
+
+      if (
+        doesPropertyExist(soldCount) &&
+        !isValidNumber(soldCount, {isInteger: true})
+      ) {
+        return false
+      }
+
+      if (
+        doesPropertyExist(lowestBoundCount) &&
+        !isValidNumber(lowestBoundCount, {isInteger: true})
+      ) {
         return false
       }
 
@@ -115,20 +172,31 @@ function UpdateProduct({
   )
 
   const saveChanges = () => {
+    if (onSave) {
+      return onSave(input)
+    }
+
     const {name, model, ...rest} = input
     const nameModel = [name, model]
-    const updateRow = {...sideSheet.value, ...rest, nameModel}
-    worker.putRow('products', updateRow).then(() => {
-      const foundIndex = items.findIndex((x: any) => x.id === updateRow.id)
-      items[foundIndex] = serializeItem(updateRow)
-      setLoadedItems({items: [...items]})
-      setTimeout(() => setSideSheet({isShown: false}))
-    })
+    const updatedRow = {...sideSheet.value, ...rest, nameModel}
+    worker
+      .sendEvent({
+        type: PUT_PRODUCT,
+        payload: updatedRow,
+      })
+      .then(() => {
+        const foundIndex = items.findIndex((x: any) => x.id === updatedRow.id)
+        items[foundIndex] = serializeItem(updatedRow)
+        setLoadedItems({items: [...items]})
+        setTimeout(() => setSideSheet({isShown: false}))
+      })
   }
+
+  const productExists = Boolean(doc.id)
 
   return (
     <SideSheet
-      title="Edit product"
+      title={productExists ? 'Edit product' : 'Add product'}
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onCloseComplete={onCloseComplete}
@@ -168,54 +236,60 @@ function UpdateProduct({
       />
       <TextInputField
         type="number"
-        name="realPrice"
-        value={input.realPrice}
+        name={productExists ? 'realPrice' : 'price'}
+        value={productExists ? input.realPrice : input.price}
         // @ts-ignore
         onChange={handleInput}
-        label="Real price"
+        label={productExists ? 'Real price' : 'Expected cost'}
         placeholder="1000"
         required
       />
+      {productExists && (
+        <TextInputField
+          type="number"
+          name="salePrice"
+          value={input.salePrice}
+          // @ts-ignore
+          onChange={handleInput}
+          label="Sale price"
+          placeholder="1000"
+          required
+        />
+      )}
       <TextInputField
         type="number"
-        name="salePrice"
-        value={input.salePrice}
+        name={productExists ? 'inStockCount' : 'count'}
+        value={productExists ? input.inStockCount : input.count}
         // @ts-ignore
         onChange={handleInput}
-        label="Sale price"
-        placeholder="1000"
-        required
-      />
-      <TextInputField
-        type="number"
-        name="inStockCount"
-        value={input.inStockCount}
-        // @ts-ignore
-        onChange={handleInput}
-        label="In stock"
+        label={productExists ? 'In stock' : 'Count'}
         placeholder="99"
         required
       />
-      <TextInputField
-        type="number"
-        name="soldCount"
-        value={input.soldCount}
-        // @ts-ignore
-        onChange={handleInput}
-        label="Sold"
-        placeholder="99"
-        required
-      />
-      <TextInputField
-        type="number"
-        name="lowestBoundCount"
-        value={input.lowestBoundCount}
-        // @ts-ignore
-        onChange={handleInput}
-        label="Lowest Bound"
-        placeholder="10"
-        required
-      />
+      {productExists && (
+        <TextInputField
+          type="number"
+          name="soldCount"
+          value={input.soldCount}
+          // @ts-ignore
+          onChange={handleInput}
+          label="Sold"
+          placeholder="99"
+          required
+        />
+      )}
+      {productExists && (
+        <TextInputField
+          type="number"
+          name="lowestBoundCount"
+          value={input.lowestBoundCount}
+          // @ts-ignore
+          onChange={handleInput}
+          label="Lowest Bound"
+          placeholder="10"
+          required
+        />
+      )}
     </SideSheet>
   )
 }
