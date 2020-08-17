@@ -50,8 +50,6 @@ const columns = [
   {label: 'Product Id', width: 270},
 ]
 
-const FETCH_ITEM_LIMIT = 10000
-
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
   items: [],

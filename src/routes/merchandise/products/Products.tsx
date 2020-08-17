@@ -4,7 +4,7 @@ import {Popover, Menu, IconButton, Position} from 'evergreen-ui'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
-import worker from './worker' // eslint-disable-line import/no-webpack-loader-syntax
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 interface Supplier {
   id: number
@@ -56,30 +56,6 @@ interface ProductsShape {
   sales: [SaleShape] | []
   acquisitions: [AcquisitionShape] | []
 }
-
-// const products: [ProductsShape] = [
-//   {
-//     id: 0,
-//     name: 'Name #0',
-//     model: 'Model #0',
-//     inStockCount: 1,
-//     soldCount: 1,
-//     lowestBoundCount: 3,
-//     isFrozen: false,
-//     image: null,
-//     sales: [],
-//     acquisitions: [],
-//   },
-// ]
-
-// for (let i = 1; i < 1000; i++) {
-//   products.push({
-//     ...products[0],
-//     id: i,
-//     name: `Name #${i}`,
-//     model: `Model #${i}`,
-//   })
-// }
 
 const columns = [
   {label: 'Name', width: 150},
@@ -173,8 +149,8 @@ export default function Products() {
   const loadMoreItems = React.useCallback(() => {
     worker
       .getRows({
-        storeName: 'products',
-        indexName: 'nameModel',
+        storeName: SN.PRODUCTS,
+        indexName: IN.NAME_MODEL,
         limit: FETCH_ITEM_LIMIT,
         lastKey: loadedItems.lastKey,
       })
@@ -195,15 +171,13 @@ export default function Products() {
 
   return (
     <>
-      {
-        <Table
-          columns={columns}
-          rows={loadedItems.items}
-          hasNextPage={loadedItems.hasNextPage}
-          isItemLoaded={isItemLoaded}
-          loadMoreItems={loadMoreItems}
-        />
-      }
+      <Table
+        columns={columns}
+        rows={loadedItems.items}
+        hasNextPage={loadedItems.hasNextPage}
+        isItemLoaded={isItemLoaded}
+        loadMoreItems={loadMoreItems}
+      />
       {sideSheet.value && (
         <UpdateProduct
           items={loadedItems.items}

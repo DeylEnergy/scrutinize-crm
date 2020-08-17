@@ -65,9 +65,7 @@ export default function Acquisitions() {
       })
       .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
-
         setLoadedItems({
-          ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
           items: [...loadedItems.items, ...newItemsSerialized],
           lastKey: newItems.length && newItems[newItems.length - 1].datetime,
