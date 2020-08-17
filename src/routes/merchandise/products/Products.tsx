@@ -1,6 +1,8 @@
-// @ts-nocheck
 import React from 'react'
 import {Popover, Menu, IconButton, Position} from 'evergreen-ui'
+import ModuleWrapper from '../../../components/ModuleWrapper'
+import ControlWrapper from '../../../components/ControlWrapper'
+import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
@@ -154,7 +156,7 @@ export default function Products() {
         limit: FETCH_ITEM_LIMIT,
         lastKey: loadedItems.lastKey,
       })
-      .then(newItems => {
+      .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
         setLoadedItems({
           ...loadedItems,
@@ -169,8 +171,36 @@ export default function Products() {
     setSideSheet(SIDE_SHEET_DEFAULT)
   }, [])
 
+  const handleSearchResult = React.useCallback(
+    (foundProducts: any[], isEmptyQuery: boolean) => {
+      let foundItems = foundProducts
+      if (isEmptyQuery) {
+        foundItems = foundProducts.slice(0, FETCH_ITEM_LIMIT)
+      }
+
+      const foundItemsSerialized = foundItems.map((product: any) =>
+        serializeItem(product.value),
+      )
+      setLoadedItems({
+        hasNextPage: foundProducts.length > foundItems.length,
+        items: foundItemsSerialized,
+        lastKey:
+          foundProducts && foundProducts[foundProducts.length - 1].nameModel,
+      })
+    },
+    [setLoadedItems],
+  )
+
   return (
-    <>
+    <ModuleWrapper>
+      <ControlWrapper>
+        <SearchInput
+          width={210}
+          storeName={SN.PRODUCTS}
+          placeholder="Name or Model and tap Enter..."
+          onSearchResult={handleSearchResult}
+        />
+      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}
@@ -188,6 +218,6 @@ export default function Products() {
           onCloseComplete={handleSlideSheetCloseComplete}
         />
       )}
-    </>
+    </ModuleWrapper>
   )
 }
