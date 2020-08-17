@@ -40,7 +40,6 @@ function makePage(items) {
       justify-content: flex-start;
       align-items: center;
       width: 210mm;
-      height: 297mm;
     }
     table {
       border-collapse: collapse;
