@@ -4,7 +4,6 @@ import GlobalContext from '../../../contexts/globalContext'
 
 const columns = [
   {label: 'Date', width: 150},
-  {label: 'Product Id', width: 250},
   {label: 'Name', width: 150},
   {label: 'Model', width: 150},
   {label: 'Price', width: 150},
@@ -12,6 +11,7 @@ const columns = [
   {label: 'Sum', width: 150},
   {label: 'Supplier', width: 150},
   {label: 'Buyer', width: 150},
+  {label: 'Product Id', width: 250},
 ]
 
 const FETCH_ITEM_LIMIT = 20
@@ -27,7 +27,6 @@ function serializeItem(item: any) {
     id: item.id,
     cells: [
       new Date(item.datetime).toLocaleDateString(),
-      item._productId,
       item._product.nameModel[0],
       item._product.nameModel[1],
       item.price,
@@ -35,6 +34,7 @@ function serializeItem(item: any) {
       item.sum,
       item._supplier?.name,
       item._user?.name,
+      item._productId,
     ],
   }
 }
