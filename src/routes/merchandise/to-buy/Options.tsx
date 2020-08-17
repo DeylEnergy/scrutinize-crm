@@ -5,6 +5,7 @@ import {Menu, Button, Position, Pane, Dialog, Spinner} from 'evergreen-ui'
 import Popover from '../../../components/Popover'
 import GlobalContext from '../../../contexts/globalContext'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 const columns = [
   {title: 'OK', width: 50},
@@ -104,8 +105,8 @@ function DialogCustom({isShown, setIsShown, refetchAll}) {
     if (isShown) {
       worker
         .getRows({
-          storeName: 'acquisitions',
-          indexName: 'neededSinceDatetime',
+          storeName: SN.ACQUISITIONS,
+          indexName: IN.NEEDED_SINCE_DATETIME,
           direction: 'prev',
           filterBy: 'bought',
           format: 'process',
@@ -172,9 +173,9 @@ function Options({refetchAll}) {
   const handlePrint = async close => {
     close()
 
-    const items = await worker.getAcquisitions({
-      storeName: 'acquisitions',
-      indexName: 'neededSinceDatetime',
+    const items = await worker.getRows({
+      storeName: SN.ACQUISITIONS,
+      indexName: IN.NEEDED_SINCE_DATETIME,
       direction: 'prev',
       filterBy: 'haveToBuy',
       format: 'print',
