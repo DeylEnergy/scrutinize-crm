@@ -9,6 +9,6 @@ export default function useUpdate(cb: () => any, deps: any[]) {
       return
     }
 
-    cb()
+    return cb()
   }, deps)
 }
