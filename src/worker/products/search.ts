@@ -7,10 +7,12 @@ export default async function searchInProducts({
   type,
   query,
   filterFor,
+  fullResult = false,
 }: {
   type: string
   query: string
   filterFor: string
+  fullResult: boolean
 }) {
   if (type === 'init') {
     const products = await getFullIndexStore({
@@ -59,7 +61,7 @@ export default async function searchInProducts({
     for (const product of store.products) {
       if (product.key.includes(query.toLowerCase())) {
         result.push({
-          value: product.data.id,
+          value: fullResult ? product.data : product.data.id,
           label: product.data.nameModel.join(' '),
         })
       }
