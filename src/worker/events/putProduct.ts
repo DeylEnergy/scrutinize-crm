@@ -9,7 +9,7 @@ export default async function putProduct({
   store = null,
   type,
   payload,
-  emitEvent = false,
+  emitEvent = true,
 }: any) {
   let product: any = {}
 
