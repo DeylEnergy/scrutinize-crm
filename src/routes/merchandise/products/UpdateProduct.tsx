@@ -52,7 +52,7 @@ function defineInputValues(doc: any) {
       realPrice: doc.realPrice || '',
       salePrice: doc.salePrice || '',
       inStockCount: doc.inStockCount || '',
-      soldCount: doc.soldCount || '',
+      soldCount: doc.soldCount || String(doc.soldCount),
       lowestBoundCount: doc.lowestBoundCount || '',
     }
   }
@@ -211,7 +211,7 @@ function UpdateProduct({
             'realPrice',
             'inStockCount',
             'soldCount',
-            'lowestBorderCount',
+            'lowestBoundCount',
           ],
           2,
         )}
