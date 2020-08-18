@@ -1,4 +1,5 @@
 import React from 'react'
+import {toaster} from 'evergreen-ui'
 import Header from './layouts/Header'
 import MerchandisePage from './routes/merchandise'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
@@ -6,7 +7,19 @@ import GlobalContext from './contexts/globalContext'
 // @ts-ignore
 import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
-const worker = workerize()
+const worker = (() => {
+  const fns: any = workerize()
+  // this way every caught exception will be displayed inside the toaster
+  return Object.keys(fns).reduce((total: any, cur: any) => {
+    total[cur] = (...args: any) =>
+      fns[cur](...args).catch((err: any) =>
+        toaster.danger('Error', {
+          description: err.message || `${err}`,
+        }),
+      )
+    return total
+  }, {})
+})()
 
 console.log(worker)
 
@@ -37,7 +50,9 @@ const App = () => {
 }
 
 function AppProvider() {
-  const globalContextValue = React.useRef({worker})
+  const globalContextValue = React.useRef({
+    worker,
+  })
 
   return (
     <GlobalContext.Provider value={globalContextValue.current}>
