@@ -4,12 +4,14 @@ import putRow from '../putRow'
 import saveEvent from './saveEvent'
 import {PUT_BUDGET} from '../../constants/events'
 
-export default async function putAcquisition({
+export default async function putBudget({
   store = null,
   type,
   payload,
   emitEvent = true,
 }: any) {
+  payload = {...payload, id: 1}
+
   const [, isBudgetUpdateError] = await handleAsync(
     putRow(SN.BUDGET, payload, store),
   )
