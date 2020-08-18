@@ -479,6 +479,8 @@ function ToBuy() {
     fetchComputedOfToBuyList()
   }
 
+  const hasBoughtItems = computedBuyList.spent > 0
+
   return (
     <Wrapper>
       <Control>
@@ -491,7 +493,7 @@ function ToBuy() {
           handleNewProductDrawer={handleNewProductDrawer}
         />
         <Filters value={filterBy} handleFilterChange={handleFilterChange} />
-        <Options refetchAll={refetchAll} />
+        <Options refetchAll={refetchAll} hasBoughtItems={hasBoughtItems} />
       </Control>
       <Table
         columns={columns}
