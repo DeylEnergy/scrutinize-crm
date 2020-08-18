@@ -10,12 +10,16 @@ export const STORE_NAME = {
   SUPPLIERS: 'suppliers',
   STATS: 'stats',
   LOGS: 'logs',
+  EVENTS: 'events',
+  ERRORS: 'errors',
 }
 
 export const INDEX_NAME = {
   NAME_MODEL: 'nameModel',
   DATETIME: 'datetime',
   NEEDED_SINCE_DATETIME: 'neededSinceDatetime',
+  EVENT_DATETIME: 'eventDatetime',
+  ERROR_DATETIME: 'errorDatetime',
 }
 
 export const TO_BUY_FILTER_OPTIONS = {
