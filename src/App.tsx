@@ -7,16 +7,23 @@ import GlobalContext from './contexts/globalContext'
 // @ts-ignore
 import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
+const fns: any = workerize()
+
+function displayDanger(err: any) {
+  toaster.danger('Error', {
+    description: err.message || `${err}`,
+  })
+}
+
+function handleError(err: any) {
+  displayDanger(err)
+  fns.sendEvent({type: 'saveError', payload: err}).catch(displayDanger)
+}
+
 const worker = (() => {
-  const fns: any = workerize()
   // this way every caught exception will be displayed inside the toaster
   return Object.keys(fns).reduce((total: any, cur: any) => {
-    total[cur] = (...args: any) =>
-      fns[cur](...args).catch((err: any) =>
-        toaster.danger('Error', {
-          description: err.message || `${err}`,
-        }),
-      )
+    total[cur] = (...args: any) => fns[cur](...args).catch(handleError)
     return total
   }, {})
 })()
