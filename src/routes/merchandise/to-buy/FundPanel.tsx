@@ -10,6 +10,7 @@ import {
 } from 'evergreen-ui'
 import EditablePopoverInput from '../../../components/EditablePopoverInput'
 import GlobalContext from '../../../contexts/globalContext'
+import {PUT_BUDGET} from '../../../constants/events'
 
 function FundPanelItemWrapper({className, children, innerRef, ...props}: any) {
   return (
@@ -33,7 +34,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       const numberValue = Number(newBudget)
       if (!isNaN(numberValue)) {
         return worker
-          .putRow('budget', {value: newBudget, id: 1})
+          .sendEvent({type: PUT_BUDGET, payload: {value: newBudget}})
           .then(fetchComputedOfToBuyList)
       }
     },
