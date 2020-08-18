@@ -1,10 +1,12 @@
-// @ts-nocheck
 import React from 'react'
 import {Popover, Menu, IconButton, Position} from 'evergreen-ui'
+import ModuleWrapper from '../../../components/ModuleWrapper'
+import ControlWrapper from '../../../components/ControlWrapper'
+import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
-import worker from './worker' // eslint-disable-line import/no-webpack-loader-syntax
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 interface Supplier {
   id: number
@@ -57,30 +59,6 @@ interface ProductsShape {
   acquisitions: [AcquisitionShape] | []
 }
 
-// const products: [ProductsShape] = [
-//   {
-//     id: 0,
-//     name: 'Name #0',
-//     model: 'Model #0',
-//     inStockCount: 1,
-//     soldCount: 1,
-//     lowestBoundCount: 3,
-//     isFrozen: false,
-//     image: null,
-//     sales: [],
-//     acquisitions: [],
-//   },
-// ]
-
-// for (let i = 1; i < 1000; i++) {
-//   products.push({
-//     ...products[0],
-//     id: i,
-//     name: `Name #${i}`,
-//     model: `Model #${i}`,
-//   })
-// }
-
 const columns = [
   {label: 'Name', width: 150},
   {label: 'Model', width: 150},
@@ -109,6 +87,7 @@ const SIDE_SHEET_DEFAULT = {
 
 export default function Products() {
   const {worker} = React.useContext(GlobalContext)
+
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => ({...s, ...v}),
@@ -139,7 +118,7 @@ export default function Products() {
         item.inStockCount,
         item.soldCount,
         item.datetime, // last sold
-        item.acquisitions?.[0]?.datetime, // last acquisition
+        new Date(item.lastAcquiredDatetime).toLocaleDateString(), // last acquisition
         item.lowestBoundCount,
       ],
       onDoubleClick: editSideSheet,
@@ -150,9 +129,6 @@ export default function Products() {
               <Menu.Group>
                 <Menu.Item onSelect={editSideSheet} icon="edit">
                   Edit
-                </Menu.Item>
-                <Menu.Item intent="danger" icon="trash">
-                  Delete
                 </Menu.Item>
               </Menu.Group>
             </Menu>
@@ -174,15 +150,14 @@ export default function Products() {
 
   const loadMoreItems = React.useCallback(() => {
     worker
-      .getAllFromIndexStore({
-        storeName: 'products',
-        indexName: 'nameModel',
+      .getRows({
+        storeName: SN.PRODUCTS,
+        indexName: IN.NAME_MODEL,
         limit: FETCH_ITEM_LIMIT,
-        lowerBoundKey: loadedItems.lastKey,
+        lastKey: loadedItems.lastKey,
       })
-      .then(newItems => {
+      .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
-
         setLoadedItems({
           ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
@@ -196,17 +171,43 @@ export default function Products() {
     setSideSheet(SIDE_SHEET_DEFAULT)
   }, [])
 
-  return (
-    <>
-      {
-        <Table
-          columns={columns}
-          rows={loadedItems.items}
-          hasNextPage={loadedItems.hasNextPage}
-          isItemLoaded={isItemLoaded}
-          loadMoreItems={loadMoreItems}
-        />
+  const handleSearchResult = React.useCallback(
+    (foundProducts: any[], isEmptyQuery: boolean) => {
+      let foundItems = foundProducts
+      if (isEmptyQuery) {
+        foundItems = foundProducts.slice(0, FETCH_ITEM_LIMIT)
       }
+
+      const foundItemsSerialized = foundItems.map((product: any) =>
+        serializeItem(product.value),
+      )
+      setLoadedItems({
+        hasNextPage: foundProducts.length > foundItems.length,
+        items: foundItemsSerialized,
+        lastKey:
+          foundProducts && foundProducts[foundProducts.length - 1].nameModel,
+      })
+    },
+    [setLoadedItems],
+  )
+
+  return (
+    <ModuleWrapper>
+      <ControlWrapper>
+        <SearchInput
+          width={210}
+          storeName={SN.PRODUCTS}
+          placeholder="Name or Model and tap Enter..."
+          onSearchResult={handleSearchResult}
+        />
+      </ControlWrapper>
+      <Table
+        columns={columns}
+        rows={loadedItems.items}
+        hasNextPage={loadedItems.hasNextPage}
+        isItemLoaded={isItemLoaded}
+        loadMoreItems={loadMoreItems}
+      />
       {sideSheet.value && (
         <UpdateProduct
           items={loadedItems.items}
@@ -217,6 +218,6 @@ export default function Products() {
           onCloseComplete={handleSlideSheetCloseComplete}
         />
       )}
-    </>
+    </ModuleWrapper>
   )
 }

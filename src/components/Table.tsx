@@ -5,6 +5,9 @@ import {VariableSizeGrid as Grid, GridChildComponentProps} from 'react-window'
 import {Divider, DIVIDER_VARIANT, Small, Subtitle} from '../elements'
 // @ts-ignore
 import InfiniteLoader from 'react-window-infinite-loader'
+import {Spinner} from 'evergreen-ui'
+import Tooltip from './Tooltip'
+import {useUpdate} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
@@ -40,9 +43,6 @@ const TableCellContent = styled.div`
   height: 100%;
   /* spacing is 8 * 1.5 */
   padding: 10px 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const Header = styled.div`
@@ -131,13 +131,23 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
   const cellData = rows[rowIndex]
   const cellContent = !isItemAvailable ? '...' : cellData.cells[columnIndex]
 
-  const cellOnDoubleClick = isItemAvailable ? cellData.onDoubleClick : null
+  const isCellContentObject =
+    cellContent !== null && typeof cellContent === 'object'
+
+  const cellOnDoubleClick = isItemAvailable
+    ? isCellContentObject
+      ? cellContent.onDoubleClick
+      : cellData.onDoubleClick
+    : null
   const columnLabel = columns[columnIndex].label
+
+  const customCellContentStyle =
+    (isCellContentObject && cellContent.style) || {}
 
   return (
     <TableCell
       // @ts-ignore
-      onClick={() => tableContext.setSelectedRow(style.top)}
+      // onClick={() => tableContext.setSelectedRow(style.top)}
       onDoubleClick={cellOnDoubleClick}
       // @ts-ignore
       selected={tableContext.selectedRow === style.top}
@@ -145,12 +155,18 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         ...style,
       }}
     >
-      <TableCellContent>
-        <Small variant="SECONDARY">
-          {isItemAvailable && columnLabel === 'OPTIONS' && cellData.optionsMenu
-            ? cellData.optionsMenu
-            : cellContent}
-        </Small>
+      <TableCellContent style={customCellContentStyle}>
+        <Tooltip content={isCellContentObject && cellContent.tooltipContent}>
+          <Small variant="SECONDARY">
+            {isItemAvailable &&
+            columnLabel === 'OPTIONS' &&
+            cellData.optionsMenu
+              ? cellData.optionsMenu
+              : isCellContentObject
+              ? cellContent.value
+              : cellContent}
+          </Small>
+        </Tooltip>
       </TableCellContent>
 
       <CellDividers />
@@ -224,7 +240,7 @@ function StickyColumn({
       {stickyColumnRows.map(({label, top}, i) => (
         <TableCell
           // @ts-ignore
-          onClick={() => tableContext.setSelectedRow(top)}
+          // onClick={() => tableContext.setSelectedRow(top)}
           onDoubleClick={() =>
             console.log('Hey dude i am gonna open modal for rowId', top)
           }
@@ -247,6 +263,13 @@ function StickyColumn({
     </StickyColumnContainer>
   )
 }
+
+const FlashBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`
 
 // @ts-ignore
 function getVisibleArea(children) {
@@ -391,6 +414,25 @@ function Table({
   loadMoreItems,
 }: TableProps) {
   const [selectedRow, setSelectedRow] = React.useState(null)
+  const [isFirstFetched, setIsFirstFetched] = React.useState(false)
+  const firstMountDatetime = React.useRef(Date.now())
+
+  useUpdate(() => {
+    let deferred: any
+    if (!isFirstFetched) {
+      const fetchedPassedMs = Date.now() - firstMountDatetime.current
+
+      const deferMs = fetchedPassedMs >= 700 ? 0 : 700 - fetchedPassedMs
+
+      deferred = setTimeout(() => {
+        setIsFirstFetched(true)
+      }, deferMs)
+    }
+
+    return () => {
+      clearTimeout(deferred)
+    }
+  }, [rows])
 
   const innerElementType = innerElementTypeRender(columns, rows)
 
@@ -399,47 +441,60 @@ function Table({
   return (
     // @ts-ignore
     <TableContext.Provider value={{selectedRow, setSelectedRow}}>
-      <AutoSizer>
-        {({height, width}) => (
-          <InfiniteLoader
-            isItemLoaded={isItemLoaded}
-            itemCount={itemCount}
-            loadMoreItems={loadMoreItems}
-            minimumBatchSize={20}
-          >
-            {({onItemsRendered, ref}: any) => (
-              <Grid
-                rowCount={itemCount}
-                columnCount={columns.length}
-                columnWidth={columnIndex => columns[columnIndex].width}
-                rowHeight={() => ROW_HEIGHT}
-                height={height}
-                width={width}
-                innerElementType={innerElementType}
-                style={GRID_PARENT_STYLE}
-                itemData={{rows, columns, isItemLoaded}}
-                // initialScrollTop={0}
-                onItemsRendered={({
-                  visibleRowStartIndex,
-                  visibleRowStopIndex,
-                  overscanRowStartIndex,
-                  overscanRowStopIndex,
-                }) => {
-                  onItemsRendered({
-                    overscanStartIndex: overscanRowStartIndex,
-                    overscanStopIndex: overscanRowStopIndex,
-                    visibleStartIndex: visibleRowStartIndex,
-                    visibleStopIndex: visibleRowStopIndex,
-                  })
-                }}
-                ref={ref}
-              >
-                {Cell}
-              </Grid>
-            )}
-          </InfiniteLoader>
+      <>
+        <AutoSizer>
+          {({height, width}) => (
+            <InfiniteLoader
+              isItemLoaded={isItemLoaded}
+              itemCount={itemCount}
+              loadMoreItems={loadMoreItems}
+              // minimumBatchSize={20}
+            >
+              {({onItemsRendered, ref}: any) => {
+                return (
+                  <Grid
+                    rowCount={itemCount}
+                    columnCount={columns.length}
+                    columnWidth={columnIndex => columns[columnIndex].width}
+                    rowHeight={() => ROW_HEIGHT}
+                    height={height}
+                    width={width}
+                    innerElementType={innerElementType}
+                    style={
+                      isFirstFetched && rows.length
+                        ? GRID_PARENT_STYLE
+                        : {display: 'none'}
+                    }
+                    itemData={{rows, columns, isItemLoaded}}
+                    onItemsRendered={({
+                      visibleRowStartIndex,
+                      visibleRowStopIndex,
+                      overscanRowStartIndex,
+                      overscanRowStopIndex,
+                    }) => {
+                      onItemsRendered({
+                        overscanStartIndex: overscanRowStartIndex,
+                        overscanStopIndex: overscanRowStopIndex,
+                        visibleStartIndex: visibleRowStartIndex,
+                        visibleStopIndex: visibleRowStopIndex,
+                      })
+                    }}
+                    ref={ref}
+                  >
+                    {Cell}
+                  </Grid>
+                )
+              }}
+            </InfiniteLoader>
+          )}
+        </AutoSizer>
+        {!isFirstFetched && (
+          <FlashBlock>
+            <Spinner size={32} />
+          </FlashBlock>
         )}
-      </AutoSizer>
+        {isFirstFetched && !rows.length && <FlashBlock>No data.</FlashBlock>}
+      </>
     </TableContext.Provider>
   )
 }

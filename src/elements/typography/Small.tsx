@@ -43,10 +43,10 @@ const STYLE = {
 const variant = css(({variant}) => STYLE[variant])
 
 export const Small = styled.span<Props>`
-  font-family: Montserrat;
+  font-family: Roboto;
   font-style: normal;
   /* Black / 100 */
 
-  color: #25282b;
+  color: ${({color}) => color || '#4c4c4c'};
   ${variant}
 `
