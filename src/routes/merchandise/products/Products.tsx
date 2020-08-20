@@ -7,6 +7,7 @@ import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
+import {withErrorBoundary} from '../../../utilities'
 
 interface Supplier {
   id: number
@@ -85,7 +86,7 @@ const SIDE_SHEET_DEFAULT = {
   isShown: false,
 }
 
-export default function Products() {
+function Products() {
   const {worker} = React.useContext(GlobalContext)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -221,3 +222,5 @@ export default function Products() {
     </ModuleWrapper>
   )
 }
+
+export default withErrorBoundary(Products)
