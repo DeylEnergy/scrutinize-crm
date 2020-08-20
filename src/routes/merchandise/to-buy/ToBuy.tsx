@@ -18,6 +18,7 @@ import Filters from './Filters'
 import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
+import {withErrorBoundary} from '../../../utilities'
 
 const Wrapper = styled.div`
   display: flex;
@@ -518,4 +519,4 @@ function ToBuy() {
   )
 }
 
-export default ToBuy
+export default withErrorBoundary(ToBuy)
