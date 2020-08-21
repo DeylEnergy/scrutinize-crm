@@ -2,6 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TextInputField from './TextInputField'
 
+const CELL_WRAPPER_STYLE = {
+  pointerEvents: 'all',
+  position: 'absolute',
+  zIndex: 21,
+  padding: '3px 4px 0 4px',
+}
+
 function CellInput({anchor}: any) {
   const [value, setValue] = React.useState(anchor.value)
 
@@ -13,10 +20,8 @@ function CellInput({anchor}: any) {
   return (
     <div
       style={{
-        pointerEvents: 'all',
-        position: 'absolute',
+        ...CELL_WRAPPER_STYLE,
         ...anchor.style,
-        padding: '3px 4px 0 4px',
       }}
     >
       <TextInputField
@@ -39,12 +44,12 @@ function EditableCellInput({anchor}: any) {
   const portalRef = React.useRef<HTMLDivElement | null | any>(null)
 
   React.useEffect(() => {
-    const root = document.querySelector('#root')
+    const body = document.querySelector('body')
 
-    if (root) {
+    if (body) {
       const portal = document.createElement('div')
       portal.id = 'input-portal'
-      root.insertAdjacentElement('afterend', portal)
+      body.appendChild(portal)
       portalRef.current = portal
     }
 
