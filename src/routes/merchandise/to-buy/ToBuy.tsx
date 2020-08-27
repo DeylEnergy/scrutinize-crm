@@ -64,7 +64,7 @@ const SIDE_SHEET_DEFAULT = {
 
 const SELECT_MENU_STYLE = {
   maxWidth: '100%',
-  whiteSpace: 'nowrap',
+  whiteSpace: 'nowrap' as 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: 'block',

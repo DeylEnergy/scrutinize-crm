@@ -15,7 +15,7 @@
     "electron-devtools-installer": "^2.2.4",
     "electron-is-dev": "^1.1.0",
     "electron-reload": "^1.5.0",
-    "evergreen-ui": "^4.28.1",
+    "evergreen-ui": "^5.0.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-error-boundary": "^2.3.1",

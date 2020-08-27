@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {Button, SelectField, Position} from 'evergreen-ui'
+import {Button, SelectField, Position, FilterListIcon} from 'evergreen-ui'
 import Popover from '../../../components/Popover'
 import {TO_BUY_FILTER_OPTIONS as FILTER_OPTIONS} from '../../../constants'
 
@@ -33,7 +33,7 @@ function Filters({value, handleFilterChange}: any) {
         marginRight={8}
         appearance="primary"
         intent="none"
-        iconBefore="filter-list"
+        iconBefore={FilterListIcon}
       >
         Filters
       </Button>

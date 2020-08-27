@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Pane} from 'evergreen-ui'
+import {Button, Pane, AddIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
 import GlobalContext from '../../../contexts/globalContext'
 
@@ -14,7 +14,7 @@ function EmptyView({onEmptyButtonClick, searchValue}: any) {
       <Button
         height={32}
         appearance="default"
-        iconBefore="add"
+        iconBefore={AddIcon}
         onClick={onEmptyButtonClick.bind(null, searchValue)}
       >
         Add new item
@@ -45,7 +45,7 @@ function AddProduct({handleSelectedProduct, handleNewProductDrawer}: any) {
         marginRight={8}
         appearance="primary"
         intent="success"
-        iconBefore="add"
+        iconBefore={AddIcon}
       >
         Add
       </Button>

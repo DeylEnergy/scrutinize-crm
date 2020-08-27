@@ -1,5 +1,5 @@
 import React from 'react'
-import {Popover, Menu, IconButton, Position} from 'evergreen-ui'
+import { Popover, Menu, IconButton, Position, MoreIcon, EditIcon } from 'evergreen-ui';
 import ModuleWrapper from '../../../components/ModuleWrapper'
 import ControlWrapper from '../../../components/ControlWrapper'
 import SearchInput from '../../../components/SearchInput'
@@ -128,7 +128,7 @@ function Products() {
           content={
             <Menu>
               <Menu.Group>
-                <Menu.Item onSelect={editSideSheet} icon="edit">
+                <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
                   Edit
                 </Menu.Item>
               </Menu.Group>
@@ -136,10 +136,10 @@ function Products() {
           }
           position={Position.BOTTOM_RIGHT}
         >
-          <IconButton icon="more" height={24} appearance="minimal" />
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
         </Popover>
       ),
-    }
+    };
   }, [])
 
   const isItemLoaded = React.useCallback(

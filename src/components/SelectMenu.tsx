@@ -9,6 +9,8 @@ import {
   TableHead,
   SearchTableHeaderCell,
   IconButton,
+  CrossIcon,
+  SearchIcon,
 } from 'evergreen-ui'
 import Popover from './Popover'
 import {debounce} from '../utilities'
@@ -42,10 +44,10 @@ function Header({
   const searchRef = React.useRef<any>()
 
   React.useEffect(() => {
-    let requestId: any
+    let requestId: number
     if (searchRef.current) {
       requestId = requestAnimationFrame(() => {
-        searchRef.current.querySelector('input').focus()
+        searchRef.current.focus()
       })
     }
 
@@ -81,7 +83,7 @@ function Header({
           <Heading size={400}>{title}</Heading>
         </Pane>
         <IconButton
-          icon="cross"
+          icon={CrossIcon}
           appearance="minimal"
           height={24}
           onClick={close}
@@ -89,10 +91,10 @@ function Header({
       </Pane>
       <TableHead>
         <SearchTableHeaderCell
-          innerRef={(ref: React.ReactNode) => (searchRef.current = ref)}
+          ref={searchRef}
           value={searchValue}
           onChange={handleChange}
-          borderRight={null}
+          borderRight={undefined}
           height={32}
           placeholder={filterPlaceholder}
           icon={filterIcon}
@@ -112,7 +114,7 @@ function SelectMenu({
   hasTitle,
   hasFilter = false,
   filterPlaceholder = 'Filter...',
-  filterIcon = 'search',
+  filterIcon = SearchIcon,
   detailView,
   emptyView,
   titleView,
