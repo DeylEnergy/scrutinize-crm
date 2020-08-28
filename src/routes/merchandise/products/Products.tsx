@@ -1,5 +1,12 @@
 import React from 'react'
-import { Popover, Menu, IconButton, Position, MoreIcon, EditIcon } from 'evergreen-ui';
+import {
+  Popover,
+  Menu,
+  IconButton,
+  Position,
+  MoreIcon,
+  EditIcon,
+} from 'evergreen-ui'
 import ModuleWrapper from '../../../components/ModuleWrapper'
 import ControlWrapper from '../../../components/ControlWrapper'
 import SearchInput from '../../../components/SearchInput'
@@ -139,7 +146,7 @@ function Products() {
           <IconButton icon={MoreIcon} height={24} appearance="minimal" />
         </Popover>
       ),
-    };
+    }
   }, [])
 
   const isItemLoaded = React.useCallback(
@@ -158,12 +165,15 @@ function Products() {
         lastKey: loadedItems.lastKey,
       })
       .then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
         const newItemsSerialized = newItems.map(serializeItem)
         setLoadedItems({
           ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
           items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems && newItems[newItems.length - 1].nameModel,
+          lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
         })
       })
   }, [loadedItems.items])
