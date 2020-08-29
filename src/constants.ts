@@ -18,6 +18,8 @@ export const INDEX_NAME = {
   NAME_MODEL: 'nameModel',
   DATETIME: 'datetime',
   NEEDED_SINCE_DATETIME: 'neededSinceDatetime',
+  __CART_ID__: '__cartId__',
+  CART_PARTICIPANTS: 'cartParticipants',
   EVENT_DATETIME: 'eventDatetime',
   ERROR_DATETIME: 'errorDatetime',
 }

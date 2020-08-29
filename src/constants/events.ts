@@ -9,3 +9,6 @@ export const PUT_ACQUISITION = 'putAcquisition'
 // budget
 export const RECOMPUTE_BUDGET = 'recomputeBudget'
 export const PUT_BUDGET = 'putBudget'
+
+// sale
+export const PUT_SALE = 'putSale'
