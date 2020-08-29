@@ -9,7 +9,8 @@ import {
   FaShoppingCart,
   FaChartBar,
 } from 'react-icons/fa'
-import {Tooltip} from 'evergreen-ui'
+import {Pane, Tooltip, IconButton} from 'evergreen-ui'
+import Carts from '../routes/carts'
 
 const Stripe = styled.div`
   color: #fff;
@@ -45,25 +46,27 @@ const ICON_COLOR = '#ffffff7d'
 
 const ICON_SIZE = 24
 
-const MenuIcon = ({
-  icon,
-  innerRef,
-  ...props
-}: {
-  icon: JSX.Element
-  innerRef?: any
-}) => {
+const MenuIcon = React.forwardRef(function MenuIcon(
+  {
+    icon,
+    ...props
+  }: {
+    icon: JSX.Element
+    innerRef?: any
+  },
+  ref: any,
+) {
   icon = React.cloneElement(icon, {
     size: ICON_SIZE,
     color: ICON_COLOR,
   })
 
   return (
-    <span ref={innerRef} {...props}>
+    <span ref={ref} {...props}>
       {icon}
     </span>
   )
-}
+})
 
 export default function Header() {
   return (
@@ -97,11 +100,7 @@ export default function Header() {
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
-        <Link to="/">
-          <Tooltip content="Cart">
-            <MenuIcon icon={<FaShoppingCart />} />
-          </Tooltip>
-        </Link>
+        <Carts />
         <Link to="/">
           <Tooltip content="Scanner">
             <MenuIcon icon={<FaQrcode />} />
