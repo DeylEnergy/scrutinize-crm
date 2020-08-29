@@ -13,8 +13,14 @@ export function getRows(params: any) {
   return fetcher(params)
 }
 
-export function getRow({storeName, key}: any) {
-  return queries.getRowFromStore(storeName, key)
+export function getRow(params: {
+  storeName: string
+  indexName?: string
+  key: string
+}) {
+  return params.indexName
+    ? queries.getRowFromIndexStore(params)
+    : queries.getRowFromStore(params.storeName, params.key)
 }
 
 export async function search({storeName, ...params}: any) {
@@ -31,7 +37,7 @@ export async function search({storeName, ...params}: any) {
   }
 }
 
-export async function perform({storeName, action}: any) {
+export async function perform({storeName, action, params = {}}: any) {
   const [actionFn, noActionFn] = await handleAsync(
     import(`./${storeName}/actions/${action}`),
   )
@@ -41,7 +47,7 @@ export async function perform({storeName, action}: any) {
   }
 
   if (actionFn.default) {
-    return actionFn.default()
+    return actionFn.default(params)
   }
 }
 

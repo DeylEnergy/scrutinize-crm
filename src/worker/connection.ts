@@ -1,6 +1,5 @@
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../constants'
-
-const currentVersion = 12
+const currentVersion = 17
 
 const db: {current: null | IDBDatabase} = {current: null}
 const dbReq: IDBOpenDBRequest = indexedDB.open('mydbx', currentVersion)
@@ -8,15 +7,18 @@ const dbReq: IDBOpenDBRequest = indexedDB.open('mydbx', currentVersion)
 dbReq.onupgradeneeded = () => {
   db.current = dbReq.result
 
+  const keyPath = {keyPath: 'id'}
   // @ts-ignore
   if (currentVersion === 1) {
-    const keyPath = {keyPath: 'id'}
     db.current
       .createObjectStore(SN.PRODUCTS, keyPath)
       .createIndex(IN.NAME_MODEL, IN.NAME_MODEL)
-    db.current
-      .createObjectStore(SN.SALES, keyPath)
-      .createIndex(IN.DATETIME, IN.DATETIME)
+
+    const sales = db.current.createObjectStore(SN.SALES, keyPath)
+    sales.createIndex(IN.DATETIME, IN.DATETIME)
+    sales.createIndex(IN.__CART_ID__, IN.__CART_ID__)
+    sales.createIndex(IN.CART_PARTICIPANTS, IN.CART_PARTICIPANTS)
+
     const acquisitionsStore = db.current.createObjectStore(
       SN.ACQUISITIONS,
       keyPath,
@@ -26,14 +28,18 @@ dbReq.onupgradeneeded = () => {
       IN.NEEDED_SINCE_DATETIME,
       IN.NEEDED_SINCE_DATETIME,
     )
+
     db.current.createObjectStore(SN.CUSTOMERS, keyPath)
     db.current.createObjectStore(SN.USERS, keyPath)
     db.current.createObjectStore(SN.SUPPLIERS, keyPath)
     db.current.createObjectStore(SN.STATS, keyPath)
     db.current.createObjectStore(SN.BUDGET, keyPath)
     db.current
-      .createObjectStore(SN.LOGS, keyPath)
-      .createIndex('eventDatetime', 'eventDatetime')
+      .createObjectStore(SN.EVENTS, keyPath)
+      .createIndex(IN.EVENT_DATETIME, IN.EVENT_DATETIME)
+    db.current
+      .createObjectStore(SN.ERRORS, keyPath)
+      .createIndex(IN.ERROR_DATETIME, IN.ERROR_DATETIME)
   }
 }
 

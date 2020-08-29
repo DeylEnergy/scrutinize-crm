@@ -16,7 +16,6 @@ function Input({value, inputType = 'string', onSave, togglePopover}: any) {
             inputType === 'number' ? Number(inputValue) : inputValue
 
           if (value === formattedValue) {
-            console.log('bump')
             return togglePopover()
           }
 

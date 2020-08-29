@@ -1,5 +1,12 @@
 import React from 'react'
-import {Menu, Button, Position} from 'evergreen-ui'
+import {
+  Menu,
+  Button,
+  Position,
+  CogIcon,
+  PrintIcon,
+  TickIcon,
+} from 'evergreen-ui'
 import Popover from '../../../components/Popover'
 import GlobalContext from '../../../contexts/globalContext'
 import ProcessAcquisitionsDialog from './ProcessAcquisitionsDialog'
@@ -22,7 +29,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
           <Menu>
             <Menu.Group>
               <Menu.Item
-                icon="print"
+                icon={PrintIcon}
                 onSelect={() => {
                   print(worker)
                   close()
@@ -32,7 +39,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
               </Menu.Item>
               {hasBoughtItems && (
                 <Menu.Item
-                  icon="tick"
+                  icon={TickIcon}
                   onSelect={() => {
                     close()
                     setIsShown(true)
@@ -45,7 +52,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
           </Menu>
         )}
       >
-        <Button height={20} iconBefore="cog">
+        <Button height={20} iconBefore={CogIcon}>
           Options
         </Button>
       </Popover>

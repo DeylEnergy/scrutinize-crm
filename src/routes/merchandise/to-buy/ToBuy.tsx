@@ -18,6 +18,7 @@ import Filters from './Filters'
 import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
+import {withErrorBoundary} from '../../../utilities'
 
 const Wrapper = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ const SIDE_SHEET_DEFAULT = {
 
 const SELECT_MENU_STYLE = {
   maxWidth: '100%',
-  whiteSpace: 'nowrap',
+  whiteSpace: 'nowrap' as 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: 'block',
@@ -155,13 +156,15 @@ function ToBuy() {
             }
 
             const updatedItems = {items: [...items]}
-            setLoadedItems(updatedItems)
+
             addTask(() => setEditCell(null))
 
             // schedule update for footer computed values
             if (key === 'price' || key === 'count' || key === 'isDone') {
               addTask(fetchComputedOfToBuyList)
             }
+
+            setLoadedItems(updatedItems)
           })
       }
 
@@ -518,4 +521,4 @@ function ToBuy() {
   )
 }
 
-export default ToBuy
+export default withErrorBoundary(ToBuy)

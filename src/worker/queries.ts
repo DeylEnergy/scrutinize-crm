@@ -34,12 +34,16 @@ export function getRowFromStore(
   })
 }
 
-export function getRowFromIndexStore(params: {
-  storeName: string
-  indexName: string
-  key: string
-}) {
-  const {storeName, indexName, key} = params
+export function getRowFromIndexStore(params: any) {
+  const {
+    storeName,
+    indexName,
+    key,
+  }: {
+    storeName: string
+    indexName: string
+    key: string
+  } = params
   return new Promise((resolve, reject) => {
     const {objectStore} = setupTransaction(storeName, 'readonly', true)
 
@@ -137,7 +141,13 @@ export function getAllFromIndexStore(params: any) {
 }
 
 export function getFullIndexStore(params: any) {
-  const {storeName, indexName, direction = 'next', filterBy} = params
+  const {
+    storeName,
+    indexName,
+    direction = 'next',
+    filterBy,
+    matchProperties = [],
+  } = params
   return new Promise(resolve => {
     const {objectStore} = setupTransaction(storeName, 'readonly', true)
 
@@ -155,6 +165,22 @@ export function getFullIndexStore(params: any) {
         if (filterFn) {
           rows = rows.filter(filterFn)
         }
+      }
+
+      const matchProps: any[] = Object.entries(matchProperties)
+
+      // match properties
+      if (matchProps.length) {
+        rows = rows.filter((x: any) => {
+          for (const [key, value] of matchProps) {
+            // const [key, value]: any = Object.entries(prop)
+            if (x[key] !== value) {
+              return false
+            }
+          }
+
+          return true
+        })
       }
 
       resolve({rows, params})

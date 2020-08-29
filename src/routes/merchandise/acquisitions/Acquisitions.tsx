@@ -1,6 +1,7 @@
 import React from 'react'
 import Table from '../../../components/Table'
 import GlobalContext from '../../../contexts/globalContext'
+import {withErrorBoundary} from '../../../utilities'
 
 const columns = [
   {label: 'Date', width: 150},
@@ -39,7 +40,7 @@ function serializeItem(item: any) {
   }
 }
 
-export default function Acquisitions() {
+function Acquisitions() {
   const {worker} = React.useContext(GlobalContext)
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -83,3 +84,5 @@ export default function Acquisitions() {
     />
   )
 }
+
+export default withErrorBoundary(Acquisitions)

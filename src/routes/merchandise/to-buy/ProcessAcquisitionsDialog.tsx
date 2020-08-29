@@ -18,7 +18,7 @@ const ProcessIndicatorWrapper = styled.span`
 
 const SPINNER_STYLE = {
   size: 16,
-  position: 'absolute',
+  position: 'absolute' as 'absolute',
   top: 1,
   left: '5px',
 }

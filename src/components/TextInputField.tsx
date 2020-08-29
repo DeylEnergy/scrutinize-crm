@@ -27,7 +27,7 @@ function TextInputFieldComponent({
   type = 'string',
   leadingZeros = false,
   ...props
-}: TextInputFieldProps) {
+}: any) {
   const [input, setInput] = React.useState<{
     updateCursor: boolean
     target: null | HTMLInputElement

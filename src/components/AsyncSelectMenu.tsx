@@ -6,8 +6,8 @@ import GlobalContext from '../contexts/globalContext'
 function AsyncSelectMenu({
   title,
   children,
+  selected,
   onSelect,
-  // searchFn,
   storeName,
   filterFor = null,
   emptyView = null,
@@ -37,7 +37,7 @@ function AsyncSelectMenu({
     <SelectMenu
       title={title}
       options={options}
-      selected={null}
+      selected={selected}
       onSelect={onSelect}
       asyncSearch={searchQuery}
       asyncSearchDebounceTimeMs={500}

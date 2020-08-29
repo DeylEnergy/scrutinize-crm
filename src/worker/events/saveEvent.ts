@@ -1,6 +1,7 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
 import putRow from '../putRow'
+import {STORE_NAME as SN} from '../../constants'
 
 export default async function saveEvent(eventData: any, emitEvent = true) {
   if (!emitEvent) {
@@ -8,7 +9,7 @@ export default async function saveEvent(eventData: any, emitEvent = true) {
   }
 
   const [result] = await handleAsync(
-    putRow('logs', {id: uuidv4(), ...eventData}),
+    putRow(SN.EVENTS, {id: uuidv4(), ...eventData}),
   )
 
   if (result) {

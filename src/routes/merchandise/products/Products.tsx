@@ -1,5 +1,12 @@
 import React from 'react'
-import {Popover, Menu, IconButton, Position} from 'evergreen-ui'
+import {
+  Popover,
+  Menu,
+  IconButton,
+  Position,
+  MoreIcon,
+  EditIcon,
+} from 'evergreen-ui'
 import ModuleWrapper from '../../../components/ModuleWrapper'
 import ControlWrapper from '../../../components/ControlWrapper'
 import SearchInput from '../../../components/SearchInput'
@@ -7,6 +14,7 @@ import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
+import {withErrorBoundary} from '../../../utilities'
 
 interface Supplier {
   id: number
@@ -85,7 +93,7 @@ const SIDE_SHEET_DEFAULT = {
   isShown: false,
 }
 
-export default function Products() {
+function Products() {
   const {worker} = React.useContext(GlobalContext)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -127,7 +135,7 @@ export default function Products() {
           content={
             <Menu>
               <Menu.Group>
-                <Menu.Item onSelect={editSideSheet} icon="edit">
+                <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
                   Edit
                 </Menu.Item>
               </Menu.Group>
@@ -135,7 +143,7 @@ export default function Products() {
           }
           position={Position.BOTTOM_RIGHT}
         >
-          <IconButton icon="more" height={24} appearance="minimal" />
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
         </Popover>
       ),
     }
@@ -157,12 +165,15 @@ export default function Products() {
         lastKey: loadedItems.lastKey,
       })
       .then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
         const newItemsSerialized = newItems.map(serializeItem)
         setLoadedItems({
           ...loadedItems,
           hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
           items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems && newItems[newItems.length - 1].nameModel,
+          lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
         })
       })
   }, [loadedItems.items])
@@ -221,3 +232,5 @@ export default function Products() {
     </ModuleWrapper>
   )
 }
+
+export default withErrorBoundary(Products)
