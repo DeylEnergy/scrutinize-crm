@@ -156,13 +156,15 @@ function ToBuy() {
             }
 
             const updatedItems = {items: [...items]}
-            setLoadedItems(updatedItems)
+
             addTask(() => setEditCell(null))
 
             // schedule update for footer computed values
             if (key === 'price' || key === 'count' || key === 'isDone') {
               addTask(fetchComputedOfToBuyList)
             }
+
+            setLoadedItems(updatedItems)
           })
       }
 
