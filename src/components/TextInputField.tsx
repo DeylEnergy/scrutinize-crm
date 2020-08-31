@@ -26,6 +26,7 @@ function TextInputFieldComponent({
   onBlur = noop,
   type = 'string',
   leadingZeros = false,
+  isInvalid = false,
   ...props
 }: any) {
   const [input, setInput] = React.useState<{
@@ -78,11 +79,11 @@ function TextInputFieldComponent({
   return (
     <TextComponent
       value={value}
-      isInvalid={required && !String(value).length}
+      isInvalid={(required && !String(value).length) || isInvalid}
       width="100%"
       marginBottom={12}
       onKeyDown={handleKeyDown}
-      onChange={handleChange}
+      onChange={onChange && handleChange}
       onBlur={handleBlur}
       {...props}
     />
