@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import {Menu, IconButton, Position, MoreIcon, EditIcon} from 'evergreen-ui'
 import {useTasksAfterUpdate} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
@@ -8,23 +7,10 @@ import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
+import {PageWrapper, ControlWrapper} from '../../layouts'
 import AddProduct from './AddProduct'
 import GlobalContext from '../../contexts/globalContext'
 import {withErrorBoundary} from '../../utilities'
-
-const Wrapper = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  position: relative;
-`
-
-const Control = styled.div`
-  position: absolute;
-  top: -30px;
-  right: 0;
-  display: flex;
-`
 
 const columns = [
   {label: 'Done', width: 50},
@@ -319,10 +305,10 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   )
 
   return (
-    <Wrapper>
-      <Control>
+    <PageWrapper>
+      <ControlWrapper>
         <AddProduct handleSelectedProduct={handleSelectedProduct} />
-      </Control>
+      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}
@@ -331,7 +317,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         loadMoreItems={fetchAcquisitions}
       />
       <EditableCellInput anchor={editCell} />
-    </Wrapper>
+    </PageWrapper>
   )
 }
 
