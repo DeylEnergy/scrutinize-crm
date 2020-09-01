@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import {Menu, IconButton, Position, MoreIcon, EditIcon} from 'evergreen-ui'
 import {useTasksAfterUpdate} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {PUT_SALE} from '../../constants/events'
+import {PUT_SALE, DELETE_SALE_ITEM} from '../../constants/events'
 import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
+import Popover from '../../components/Popover'
 import AddProduct from './AddProduct'
 import GlobalContext from '../../contexts/globalContext'
 import {withErrorBoundary} from '../../utilities'
@@ -33,6 +35,7 @@ const columns = [
   {label: 'Sum', width: 90},
   {label: 'Product Id', width: 270},
   {label: 'Note', width: 202},
+  {label: 'OPTIONS', width: 50},
 ]
 
 const LOADED_ITEMS_DEFAULT = {
@@ -69,8 +72,23 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
     fetchComputedCartSum()
   }, [worker])
 
+  const deleteSaleItem = React.useCallback(
+    (id: string, indexInTable: number) => {
+      worker
+        .sendEvent({
+          type: DELETE_SALE_ITEM,
+          payload: {id},
+        })
+        .then(() => {
+          itemsRef.current.splice(indexInTable, 1)
+          setLoadedItems({items: [...itemsRef.current]})
+        })
+    },
+    [worker, itemsRef],
+  )
+
   const serializeItem = React.useCallback(
-    (item: any) => {
+    (item: any, indexInTable: number) => {
       function updateItem(cellUpdate: any) {
         const updatedItem = {...item, ...cellUpdate}
 
@@ -95,10 +113,13 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
             const items = itemsRef.current
             const foundIndex = items.findIndex((x: any) => x.id === item.id)
 
-            items[foundIndex] = serializeItem({
-              ...result,
-              _product: updatedItem._product,
-            })
+            items[foundIndex] = serializeItem(
+              {
+                ...result,
+                _product: updatedItem._product,
+              },
+              indexInTable,
+            )
 
             const updatedItems = {items: [...items]}
             addTask(() => setEditCell(null))
@@ -200,6 +221,26 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         ),
       }
 
+      const optionsMenu = (
+        <Popover
+          content={
+            <Menu>
+              <Menu.Group>
+                <Menu.Item
+                  onSelect={() => deleteSaleItem(item.id, indexInTable)}
+                  icon={EditIcon}
+                >
+                  Remove
+                </Menu.Item>
+              </Menu.Group>
+            </Menu>
+          }
+          position={Position.BOTTOM_RIGHT}
+        >
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+        </Popover>
+      )
+
       return {
         id: item.id,
         cells: [
@@ -212,6 +253,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
           item._productId,
           '',
         ],
+        optionsMenu,
       }
     },
     [addTask],
