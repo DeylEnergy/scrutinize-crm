@@ -13,7 +13,7 @@ export default async function putSale({
   consumer = 'server',
 }: any) {
   // in case sale item is in the cart just increase its count
-  if (payload.__cartId__ && payload._productId) {
+  if (payload.__cartId__ && payload._productId && !payload.sum) {
     const [saleItems] = await handleAsync(
       getFullIndexStore({
         storeName: SN.SALES,
