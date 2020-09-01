@@ -58,18 +58,21 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   }, [worker])
 
   const deleteSaleItem = React.useCallback(
-    (id: string, indexInTable: number) => {
+    (id: string) => {
       worker
         .sendEvent({
           type: DELETE_SALE_ITEM,
           payload: {id},
         })
         .then(() => {
-          itemsRef.current.splice(indexInTable, 1)
-          setLoadedItems({items: [...itemsRef.current]})
+          const foundIndex = itemsRef.current.findIndex((x: any) => x.id === id)
+          if (foundIndex > -1) {
+            itemsRef.current.splice(foundIndex, 1)
+            setLoadedItems({items: [...itemsRef.current]})
+          }
         })
     },
-    [worker, itemsRef],
+    [worker, itemsRef.current],
   )
 
   const serializeItem = React.useCallback(
@@ -216,18 +219,21 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
 
       const optionsMenu = (
         <Popover
-          content={
+          content={({close}: any) => (
             <Menu>
               <Menu.Group>
                 <Menu.Item
-                  onSelect={() => deleteSaleItem(item.id, indexInTable)}
+                  onSelect={() => {
+                    close()
+                    deleteSaleItem(item.id)
+                  }}
                   icon={EditIcon}
                 >
                   Remove
                 </Menu.Item>
               </Menu.Group>
             </Menu>
-          }
+          )}
           position={Position.BOTTOM_RIGHT}
         >
           <IconButton icon={MoreIcon} height={24} appearance="minimal" />
