@@ -218,6 +218,16 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         ),
       }
 
+      const noteCell = {
+        value: item.note,
+        onDoubleClick: handleCellDblClick.bind(
+          null,
+          'note',
+          item.note,
+          'string',
+        ),
+      }
+
       const optionsMenu = (
         <Popover
           content={
@@ -248,7 +258,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
           countCell,
           sumCell,
           item._productId,
-          '',
+          noteCell,
         ],
         optionsMenu,
       }
