@@ -44,6 +44,8 @@ export default async function putSale({
       payload.realPrice = _product.realPrice
       payload.salePrice = _product.salePrice
 
+      payload.note = ''
+
       payload._product = _product
     }
   }
