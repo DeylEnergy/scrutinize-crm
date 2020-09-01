@@ -97,12 +97,10 @@ export default async function putSale({
     ...computed,
   }
 
-  const [, isAcquisitionUpdateError] = await handleAsync(
-    putRow(SN.SALES, server, store),
-  )
+  const [, isPutSaleError] = await handleAsync(putRow(SN.SALES, server, store))
 
-  if (isAcquisitionUpdateError) {
-    return Promise.reject(isAcquisitionUpdateError)
+  if (isPutSaleError) {
+    return Promise.reject(isPutSaleError)
   }
 
   const passedEvent = {

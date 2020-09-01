@@ -68,7 +68,6 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   React.useEffect(() => {
-    // fetch computation of buy list
     fetchComputedCartSum()
   }, [worker])
 
@@ -163,9 +162,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         value: (
           <CellCheckbox
             initState={item.isDone}
-            onUpdate={(e: React.ChangeEvent<HTMLInputElement>) => {
-              updateItem({isDone: e.target.checked})
-            }}
+            onUpdate={() => {}}
             disabled={item.isFrozen}
           />
         ),
