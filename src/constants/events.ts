@@ -12,6 +12,7 @@ export const PUT_BUDGET = 'putBudget'
 
 // sale
 export const PUT_SALE = 'putSale'
+export const DELETE_SALE_ITEM = 'deleteSaleItem'
 export const PROCESS_SALE = 'processSale'
 
 // stats
