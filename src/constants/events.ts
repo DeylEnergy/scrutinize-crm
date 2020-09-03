@@ -14,6 +14,7 @@ export const PUT_BUDGET = 'putBudget'
 export const PUT_SALE = 'putSale'
 export const DELETE_SALE_ITEM = 'deleteSaleItem'
 export const PROCESS_SALE = 'processSale'
+export const RETURN_SOLD_ITEM = 'returnSoldItem'
 
 // stats
 export const PUT_STAT = 'putStat'
