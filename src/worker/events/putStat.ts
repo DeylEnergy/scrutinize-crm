@@ -1,4 +1,4 @@
-import {handleAsync} from '../../utilities'
+import {handleAsync, getPeriodOfDate} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -26,16 +26,14 @@ export default async function putStat({
   if (parentEvent === PROCESS_SALE) {
     const {currentDate, sum, income} = payload
 
-    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0')
-    const currentYear = currentDate.getFullYear()
-    const currentMonthYear = `${currentMonth}/${currentYear}`
+    const currentPeriod = getPeriodOfDate(currentDate)
 
     let [foundPeriod] = await handleAsync(
-      getRowFromStore(SN.STATS, currentMonthYear, store),
+      getRowFromStore(SN.STATS, currentPeriod, store),
     )
 
     if (!foundPeriod) {
-      foundPeriod = getEmptyPeriod(currentMonthYear)
+      foundPeriod = getEmptyPeriod(currentPeriod)
     }
 
     foundPeriod.soldSum += sum
