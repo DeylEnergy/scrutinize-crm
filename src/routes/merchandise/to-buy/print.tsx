@@ -98,8 +98,11 @@ function makePage(items: any) {
   iframeBody?.appendChild(headlineEl)
   iframeBody?.appendChild(tableEl)
 
+  debugger
   iframeWindow.print()
-  iframeWrapper.remove()
+  iframeWindow.onafterprint = () => {
+    iframeWrapper.remove()
+  }
 }
 
 async function print(worker: any) {
@@ -108,7 +111,7 @@ async function print(worker: any) {
     indexName: IN.NEEDED_SINCE_DATETIME,
     direction: 'prev',
     filterBy: 'haveToBuy',
-    format: 'print',
+    format: 'printToBuyList',
   })
 
   makePage(items)
