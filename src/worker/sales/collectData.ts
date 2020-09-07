@@ -1,12 +1,8 @@
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
+import readCacheName from '../readCacheName'
+import handleIdbRequest from '../handleIdbRequest'
 
 export const storeNames = [SN.PRODUCTS, SN.USERS, SN.CUSTOMERS]
-
-function handleIdbRequest(req: IDBRequest) {
-  return new Promise(
-    resolve => (req.onsuccess = (res: any) => resolve(res.target.result)),
-  )
-}
 
 export default async function collectData(
   value: any,
@@ -18,11 +14,10 @@ export default async function collectData(
   const usersObjectStore = tx.objectStore(SN.USERS)
   const customersObjectStore = tx.objectStore(SN.CUSTOMERS)
 
-  const productsCache = cache[SN.PRODUCTS] ?? (cache[SN.PRODUCTS] = {})
-  const cartParticipantsCache =
-    cache[IN.CART_PARTICIPANTS] ?? (cache[IN.CART_PARTICIPANTS] = {})
-  const usersCache = cache[SN.USERS] ?? (cache[SN.USERS] = {})
-  const customersCache = cache[SN.CUSTOMERS] ?? (cache[SN.CUSTOMERS] = {})
+  const productsCache = readCacheName(cache, SN.PRODUCTS)
+  const cartParticipantsCache = readCacheName(cache, IN.CART_PARTICIPANTS)
+  const usersCache = readCacheName(cache, SN.USERS)
+  const customersCache = readCacheName(cache, SN.CUSTOMERS)
 
   let product = productsCache[value._productId]
   if (!product) {
@@ -30,6 +25,11 @@ export default async function collectData(
     productsCache[value._productId] = product
   }
   value._product = product
+
+  // we don't need additional data for unsold items; so let's return earlier
+  if (value.__cartId__) {
+    return value
+  }
 
   let participants = cartParticipantsCache[value.cartId]
   if (!participants) {
@@ -45,7 +45,7 @@ export default async function collectData(
   }
   user && (value._user = user)
 
-  let customer = usersCache[participants._customerId]
+  let customer = customersCache[participants._customerId]
   if (participants._customerId && !customer) {
     customer = await handleIdbRequest(
       customersObjectStore.get(participants._customerId),
