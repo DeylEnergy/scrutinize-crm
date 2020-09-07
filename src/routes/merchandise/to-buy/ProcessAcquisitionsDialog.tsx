@@ -81,7 +81,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
           indexName: IN.NEEDED_SINCE_DATETIME,
           direction: 'prev',
           filterBy: 'bought',
-          format: 'process',
+          format: 'processToBuyList',
         })
         .then((res: any) => setState({data: res}))
     }
