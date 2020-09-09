@@ -50,7 +50,7 @@ export default async function collectData(
     customer = await handleIdbRequest(
       customersObjectStore.get(participants._customerId),
     )
-    customersCache[participants._customerId] = cache
+    customersCache[participants._customerId] = customer
   }
   customer && (value._customer = customer)
 
