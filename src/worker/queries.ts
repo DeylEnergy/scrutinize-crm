@@ -1,18 +1,20 @@
 import setupTransaction from './setupTransaction'
 import {handleAsync} from '../utilities'
 
-async function getFilter(storeName: string, filterName: string) {
+async function getFilter(
+  storeName: string,
+  filterName: string,
+  filterParams: any,
+) {
   const [filters] = await handleAsync(import(`./${storeName}/filters`))
 
-  let applyFilter
-
-  if (filters && filters.default) {
-    applyFilter = filters.default[filterName]
-  } else if (filters && filters[filterName]) {
-    applyFilter = filters[filterName]
+  if (!filters) {
+    return
   }
 
-  return applyFilter
+  const filtersParent = filters.default(filterParams)
+
+  return filtersParent[filterName]
 }
 
 export function getRowFromStore(
@@ -129,7 +131,7 @@ async function getOutputFormatFn(storeName: string, formatFnName: string) {
 }
 
 async function setupQuery(params: any) {
-  const {storeName, filterBy, format} = params
+  const {storeName, filterBy, filterParams = {}, format} = params
 
   const [collectData, collectDataError] = await handleAsync(
     getCollectDataHandler(storeName),
@@ -149,7 +151,9 @@ async function setupQuery(params: any) {
 
   let filterFn = withoutFilter
   if (filterBy) {
-    const [exactFilter] = await handleAsync(getFilter(storeName, filterBy))
+    const [exactFilter] = await handleAsync(
+      getFilter(storeName, filterBy, filterParams),
+    )
 
     if (exactFilter) {
       filterFn = exactFilter
