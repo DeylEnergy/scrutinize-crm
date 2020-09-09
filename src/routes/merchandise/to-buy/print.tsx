@@ -98,7 +98,6 @@ function makePage(items: any) {
   iframeBody?.appendChild(headlineEl)
   iframeBody?.appendChild(tableEl)
 
-  debugger
   iframeWindow.print()
   iframeWindow.onafterprint = () => {
     iframeWrapper.remove()
