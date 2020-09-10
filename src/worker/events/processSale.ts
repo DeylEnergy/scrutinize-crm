@@ -22,11 +22,16 @@ function getProductShapeAfterSale(cartItem: any, saleDatetime: number) {
   return product
 }
 
-function getSaleShapeAfterSale(cartItem: any, saleDatetime: number) {
+function getSaleShapeAfterSale(
+  cartItem: any,
+  saleDatetime: number,
+  saleOrder: number,
+) {
   const {__cartId__, _product, ...soldItem} = cartItem
 
   soldItem.cartId = __cartId__
-  soldItem.datetime = saleDatetime
+  // saleOrder needed for ASC order within idb index store
+  soldItem.datetime = [saleDatetime, saleOrder]
 
   return soldItem
 }
@@ -61,7 +66,11 @@ export default async function processSale({payload}: any) {
         cb: ({store}: any) =>
           send({
             type: PUT_SALE,
-            payload: getSaleShapeAfterSale(cartItem, saleDatetime),
+            payload: getSaleShapeAfterSale(
+              cartItem,
+              saleDatetime,
+              successCount + 1,
+            ),
             store,
             emitEvent: false,
           }),

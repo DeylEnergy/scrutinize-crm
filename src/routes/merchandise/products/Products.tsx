@@ -7,8 +7,7 @@ import {
   MoreIcon,
   EditIcon,
 } from 'evergreen-ui'
-import ModuleWrapper from '../../../components/ModuleWrapper'
-import ControlWrapper from '../../../components/ControlWrapper'
+import {PageWrapper, ControlWrapper} from '../../../layouts'
 import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
@@ -203,7 +202,7 @@ function Products() {
   )
 
   return (
-    <ModuleWrapper>
+    <PageWrapper>
       <ControlWrapper>
         <SearchInput
           width={210}
@@ -229,7 +228,7 @@ function Products() {
           onCloseComplete={handleSlideSheetCloseComplete}
         />
       )}
-    </ModuleWrapper>
+    </PageWrapper>
   )
 }
 

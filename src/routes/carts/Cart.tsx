@@ -1,28 +1,16 @@
 import React from 'react'
-import styled from 'styled-components'
+import {Menu, IconButton, Position, MoreIcon, EditIcon} from 'evergreen-ui'
 import {useTasksAfterUpdate} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {PUT_SALE} from '../../constants/events'
+import {PUT_SALE, DELETE_SALE_ITEM} from '../../constants/events'
 import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
+import Popover from '../../components/Popover'
+import {PageWrapper, ControlWrapper} from '../../layouts'
 import AddProduct from './AddProduct'
 import GlobalContext from '../../contexts/globalContext'
 import {withErrorBoundary} from '../../utilities'
-
-const Wrapper = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  position: relative;
-`
-
-const Control = styled.div`
-  position: absolute;
-  top: -30px;
-  right: 0;
-  display: flex;
-`
 
 const columns = [
   {label: 'Done', width: 50},
@@ -33,6 +21,7 @@ const columns = [
   {label: 'Sum', width: 90},
   {label: 'Product Id', width: 270},
   {label: 'Note', width: 202},
+  {label: 'OPTIONS', width: 50},
 ]
 
 const LOADED_ITEMS_DEFAULT = {
@@ -65,12 +54,29 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   React.useEffect(() => {
-    // fetch computation of buy list
     fetchComputedCartSum()
   }, [worker])
 
+  const deleteSaleItem = React.useCallback(
+    (id: string) => {
+      worker
+        .sendEvent({
+          type: DELETE_SALE_ITEM,
+          payload: {id},
+        })
+        .then(() => {
+          const foundIndex = itemsRef.current.findIndex((x: any) => x.id === id)
+          if (foundIndex > -1) {
+            itemsRef.current.splice(foundIndex, 1)
+            setLoadedItems({items: [...itemsRef.current]})
+          }
+        })
+    },
+    [worker, itemsRef.current],
+  )
+
   const serializeItem = React.useCallback(
-    (item: any) => {
+    (item: any, indexInTable: number) => {
       function updateItem(cellUpdate: any) {
         const updatedItem = {...item, ...cellUpdate}
 
@@ -95,10 +101,13 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
             const items = itemsRef.current
             const foundIndex = items.findIndex((x: any) => x.id === item.id)
 
-            items[foundIndex] = serializeItem({
-              ...result,
-              _product: updatedItem._product,
-            })
+            items[foundIndex] = serializeItem(
+              {
+                ...result,
+                _product: updatedItem._product,
+              },
+              indexInTable,
+            )
 
             const updatedItems = {items: [...items]}
             addTask(() => setEditCell(null))
@@ -142,9 +151,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         value: (
           <CellCheckbox
             initState={item.isDone}
-            onUpdate={(e: React.ChangeEvent<HTMLInputElement>) => {
-              updateItem({isDone: e.target.checked})
-            }}
+            onUpdate={() => {}}
             disabled={item.isFrozen}
           />
         ),
@@ -200,6 +207,39 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         ),
       }
 
+      const noteCell = {
+        value: item.note,
+        onDoubleClick: handleCellDblClick.bind(
+          null,
+          'note',
+          item.note,
+          'string',
+        ),
+      }
+
+      const optionsMenu = (
+        <Popover
+          content={({close}: any) => (
+            <Menu>
+              <Menu.Group>
+                <Menu.Item
+                  onSelect={() => {
+                    close()
+                    deleteSaleItem(item.id)
+                  }}
+                  icon={EditIcon}
+                >
+                  Remove
+                </Menu.Item>
+              </Menu.Group>
+            </Menu>
+          )}
+          position={Position.BOTTOM_RIGHT}
+        >
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+        </Popover>
+      )
+
       return {
         id: item.id,
         cells: [
@@ -210,8 +250,9 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
           countCell,
           sumCell,
           item._productId,
-          '',
+          noteCell,
         ],
+        optionsMenu,
       }
     },
     [addTask],
@@ -270,10 +311,10 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   )
 
   return (
-    <Wrapper>
-      <Control>
+    <PageWrapper>
+      <ControlWrapper>
         <AddProduct handleSelectedProduct={handleSelectedProduct} />
-      </Control>
+      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}
@@ -282,7 +323,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         loadMoreItems={fetchAcquisitions}
       />
       <EditableCellInput anchor={editCell} />
-    </Wrapper>
+    </PageWrapper>
   )
 }
 

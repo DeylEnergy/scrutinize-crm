@@ -1,18 +1,20 @@
 import setupTransaction from './setupTransaction'
 import {handleAsync} from '../utilities'
 
-async function getFilter(storeName: string, filterName: string) {
+async function getFilter(
+  storeName: string,
+  filterName: string,
+  filterParams: any,
+) {
   const [filters] = await handleAsync(import(`./${storeName}/filters`))
 
-  let applyFilter
-
-  if (filters && filters.default) {
-    applyFilter = filters.default[filterName]
-  } else if (filters && filters[filterName]) {
-    applyFilter = filters[filterName]
+  if (!filters) {
+    return
   }
 
-  return applyFilter
+  const filtersParent = filters.default(filterParams)
+
+  return filtersParent[filterName]
 }
 
 export function getRowFromStore(
@@ -89,20 +91,102 @@ async function aggregate({rows, params}: any) {
   }
 }
 
-export function getAllFromIndexStore(params: any) {
-  const {
-    storeName,
-    indexName,
-    limit,
-    lastKey,
-    direction = 'next',
-    filterBy,
-  } = params
+function getCustomKeyRange(keyRange: any) {
+  if (!keyRange) {
+    return
+  }
 
-  return new Promise(resolve => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
+  // @ts-ignore
+  return IDBKeyRange[keyRange.method](...keyRange.args)
+}
 
-    const indexStore = objectStore.index(indexName)
+async function collectDataDefaultFn(value: any) {
+  return value
+}
+
+async function getCollectDataHandler(storeName: string) {
+  const [collectData, collectDataError] = await handleAsync(
+    import(`./${storeName}/collectData`),
+  )
+  if (collectDataError && collectDataError?.code !== 'MODULE_NOT_FOUND') {
+    return Promise.reject(collectDataError)
+  }
+
+  const collectDataFn: any = collectData?.default ?? collectDataDefaultFn
+
+  const collectDataStores = collectData?.storeNames ?? []
+
+  return {collectDataFn, collectDataStores}
+}
+
+async function getOutputFormatFn(storeName: string, formatFnName: string) {
+  const [outputFormatFn, outputFormatFnError] = await handleAsync(
+    import(`./${storeName}/outputFormats`),
+  )
+  if (outputFormatFnError && outputFormatFnError?.code !== 'MODULE_NOT_FOUND') {
+    return Promise.reject(outputFormatFnError)
+  }
+
+  return outputFormatFn?.[formatFnName]
+}
+
+async function setupQuery(params: any) {
+  const {storeName, filterBy, filterParams = {}, format} = params
+
+  const [collectData, collectDataError] = await handleAsync(
+    getCollectDataHandler(storeName),
+  )
+
+  if (collectDataError) {
+    return Promise.reject(collectDataError)
+  }
+
+  const {collectDataFn, collectDataStores} = collectData
+
+  const tx = setupTransaction([storeName, ...collectDataStores], 'readonly')
+
+  const cache: any = {cartParticipants: {}}
+
+  const primeObjectStore = tx.objectStore(storeName)
+
+  let filterFn = withoutFilter
+  if (filterBy) {
+    const [exactFilter] = await handleAsync(
+      getFilter(storeName, filterBy, filterParams),
+    )
+
+    if (exactFilter) {
+      filterFn = exactFilter
+    }
+  }
+
+  let outputFormatFn
+  if (format) {
+    const [_outputFormatFn, outputFormatFnError] = await handleAsync(
+      getOutputFormatFn(storeName, format),
+    )
+
+    if (outputFormatFnError) {
+      return Promise.reject(outputFormatFnError)
+    }
+
+    outputFormatFn = _outputFormatFn
+  }
+
+  return {tx, primeObjectStore, cache, collectDataFn, filterFn, outputFormatFn}
+}
+
+export function getAllFromIndexStore(params: any): any {
+  const {indexName, limit, lastKey, customKeyRange, direction = 'next'} = params
+
+  return new Promise(async (resolve, reject) => {
+    const [querySetup, querySetupError] = await handleAsync(setupQuery(params))
+
+    if (querySetupError) {
+      return reject(querySetupError)
+    }
+
+    const {tx, primeObjectStore, cache, collectDataFn, filterFn} = querySetup
 
     const keyBound =
       lastKey && (direction === 'next' ? 'lowerBound' : 'upperBound')
@@ -111,25 +195,28 @@ export function getAllFromIndexStore(params: any) {
     let count = 0
     const result: any[] = []
 
-    indexStore.openCursor(keyRange, direction).onsuccess = async (
-      event: any,
-    ) => {
+    const indexStore = primeObjectStore.index(indexName)
+    indexStore.openCursor(
+      getCustomKeyRange(customKeyRange) ?? keyRange,
+      direction,
+    ).onsuccess = async (event: any) => {
       const cursor = event.target.result
 
       if (!cursor || count === limit) {
-        return resolve({rows: result, params})
-      }
-
-      let filterFn = withoutFilter
-      if (filterBy) {
-        const [exactFilter] = await handleAsync(getFilter(storeName, filterBy))
-
-        if (exactFilter) {
-          filterFn = exactFilter
-        }
+        return resolve(result)
       }
 
       const {value} = cursor
+
+      const [, errorOnCollecting] = await handleAsync(
+        collectDataFn(value, tx, cache),
+      )
+
+      if (errorOnCollecting) {
+        tx.abort()
+        return reject(errorOnCollecting)
+      }
+
       if (filterFn(value)) {
         result.push(value)
         count += 1
@@ -137,34 +224,55 @@ export function getAllFromIndexStore(params: any) {
 
       cursor.continue()
     }
-  }).then(aggregate)
+  })
 }
 
 export function getFullIndexStore(params: any) {
   const {
-    storeName,
     indexName,
     direction = 'next',
     filterBy,
     matchProperties = [],
+    dataCollecting = true,
   } = params
-  return new Promise(resolve => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
+  return new Promise(async (resolve, reject) => {
+    const [querySetup, querySetupError] = await handleAsync(setupQuery(params))
 
-    const indexStore = objectStore.index(indexName)
+    if (querySetupError) {
+      return reject(querySetupError)
+    }
 
+    const {
+      tx,
+      primeObjectStore,
+      cache,
+      collectDataFn,
+      filterFn,
+      outputFormatFn,
+    } = querySetup
+
+    const indexStore = primeObjectStore.index(indexName)
     indexStore.getAll().onsuccess = async (event: any) => {
       let rows = event.target.result
       if (direction === 'prev') {
         rows.reverse()
       }
 
-      if (filterBy) {
-        const [filterFn] = await handleAsync(getFilter(storeName, filterBy))
+      if (dataCollecting && collectDataFn !== collectDataDefaultFn) {
+        for (const row of rows) {
+          const [, errorOnCollecting] = await handleAsync(
+            collectDataFn(row, tx, cache),
+          )
 
-        if (filterFn) {
-          rows = rows.filter(filterFn)
+          if (errorOnCollecting) {
+            tx.abort()
+            return reject(errorOnCollecting)
+          }
         }
+      }
+
+      if (filterBy) {
+        rows = rows.filter(filterFn)
       }
 
       const matchProps: any[] = Object.entries(matchProperties)
@@ -173,7 +281,6 @@ export function getFullIndexStore(params: any) {
       if (matchProps.length) {
         rows = rows.filter((x: any) => {
           for (const [key, value] of matchProps) {
-            // const [key, value]: any = Object.entries(prop)
             if (x[key] !== value) {
               return false
             }
@@ -183,7 +290,11 @@ export function getFullIndexStore(params: any) {
         })
       }
 
-      resolve({rows, params})
+      if (outputFormatFn) {
+        rows = outputFormatFn(rows)
+      }
+
+      resolve(rows)
     }
-  }).then(aggregate)
+  })
 }

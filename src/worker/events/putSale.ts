@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
-import {STORE_NAME as SN} from '../../constants'
+import {getRowFromStore, getFullIndexStore} from '../queries'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 
@@ -12,6 +12,27 @@ export default async function putSale({
   emitEvent = true,
   consumer = 'server',
 }: any) {
+  // in case sale item is in the cart just increase its count
+  if (payload.__cartId__ && payload._productId && !payload.sum) {
+    const [saleItems] = await handleAsync(
+      getFullIndexStore({
+        storeName: SN.SALES,
+        indexName: IN.__CART_ID__,
+        direction: 'prev',
+        matchProperties: {__cartId__: payload.__cartId__},
+      }),
+    )
+
+    const saleItem = saleItems.find(
+      (x: any) => x._productId === payload._productId,
+    )
+
+    if (saleItem) {
+      payload = saleItem
+      payload.count += 1
+    }
+  }
+
   if (!payload.id) {
     payload.id = uuidv4()
     if (payload._productId) {
@@ -22,6 +43,8 @@ export default async function putSale({
 
       payload.realPrice = _product.realPrice
       payload.salePrice = _product.salePrice
+
+      payload.note = ''
 
       payload._product = _product
     }
@@ -76,12 +99,10 @@ export default async function putSale({
     ...computed,
   }
 
-  const [, isAcquisitionUpdateError] = await handleAsync(
-    putRow(SN.SALES, server, store),
-  )
+  const [, isPutSaleError] = await handleAsync(putRow(SN.SALES, server, store))
 
-  if (isAcquisitionUpdateError) {
-    return Promise.reject(isAcquisitionUpdateError)
+  if (isPutSaleError) {
+    return Promise.reject(isPutSaleError)
   }
 
   const passedEvent = {

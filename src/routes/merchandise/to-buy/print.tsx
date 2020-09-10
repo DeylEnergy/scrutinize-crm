@@ -99,7 +99,9 @@ function makePage(items: any) {
   iframeBody?.appendChild(tableEl)
 
   iframeWindow.print()
-  iframeWrapper.remove()
+  iframeWindow.onafterprint = () => {
+    iframeWrapper.remove()
+  }
 }
 
 async function print(worker: any) {
@@ -108,7 +110,7 @@ async function print(worker: any) {
     indexName: IN.NEEDED_SINCE_DATETIME,
     direction: 'prev',
     filterBy: 'haveToBuy',
-    format: 'print',
+    format: 'printToBuyList',
   })
 
   makePage(items)

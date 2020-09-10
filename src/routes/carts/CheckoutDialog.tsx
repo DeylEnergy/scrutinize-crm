@@ -7,6 +7,7 @@ import TextInputField from '../../components/TextInputField'
 export default function CheckoutDialog({
   isShown,
   handleClose,
+  handleCheckoutSuccess,
   totalSum,
   cartId,
 }: any) {
@@ -31,7 +32,9 @@ export default function CheckoutDialog({
         isConfirmDisabled={changeSum < 0}
         confirmLabel="Finish"
         onConfirm={() => {
-          worker.sendEvent({type: PROCESS_SALE, payload: {cartId}})
+          worker
+            .sendEvent({type: PROCESS_SALE, payload: {cartId}})
+            .then(handleCheckoutSuccess)
         }}
         hasCancel={false}
       >

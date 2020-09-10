@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import {
   useTasksAfterUpdate,
   useLocalStorage,
@@ -12,6 +11,7 @@ import Table from '../../../components/Table'
 import CellCheckbox from '../../../components/CellCheckbox'
 import EditableCellInput from '../../../components/EditableCellInput'
 import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
+import {PageWrapper, ControlWrapper} from '../../../layouts'
 import FundPanel from './FundPanel'
 import AddProduct from './AddProduct'
 import Filters from './Filters'
@@ -19,20 +19,6 @@ import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 import {withErrorBoundary} from '../../../utilities'
-
-const Wrapper = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  position: relative;
-`
-
-const Control = styled.div`
-  position: absolute;
-  top: -30px;
-  right: 0;
-  display: flex;
-`
 
 const columns = [
   {label: 'Done', width: 50},
@@ -485,8 +471,8 @@ function ToBuy() {
   const hasBoughtItems = computedBuyList.spent > 0
 
   return (
-    <Wrapper>
-      <Control>
+    <PageWrapper>
+      <ControlWrapper>
         <FundPanel
           computedBuyList={computedBuyList}
           fetchComputedOfToBuyList={fetchComputedOfToBuyList}
@@ -497,7 +483,7 @@ function ToBuy() {
         />
         <Filters value={filterBy} handleFilterChange={handleFilterChange} />
         <Options refetchAll={refetchAll} hasBoughtItems={hasBoughtItems} />
-      </Control>
+      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}
@@ -517,7 +503,7 @@ function ToBuy() {
           onCloseComplete={handleSlideSheetCloseComplete}
         />
       )}
-    </Wrapper>
+    </PageWrapper>
   )
 }
 
