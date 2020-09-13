@@ -119,9 +119,13 @@ async function getCollectDataHandler(storeName: string) {
   return {collectDataFn, collectDataStores}
 }
 
-async function getOutputFormatFn(storeName: string, formatFnName: string) {
+async function getOutputFormatFn(
+  storeName: string,
+  fileName: string,
+  formatFnName: string,
+) {
   const [outputFormatFn, outputFormatFnError] = await handleAsync(
-    import(`./${storeName}/outputFormats`),
+    import(`./${storeName}/${fileName}`),
   )
   if (outputFormatFnError && outputFormatFnError?.code !== 'MODULE_NOT_FOUND') {
     return Promise.reject(outputFormatFnError)
@@ -131,7 +135,7 @@ async function getOutputFormatFn(storeName: string, formatFnName: string) {
 }
 
 async function setupQuery(params: any) {
-  const {storeName, filterBy, filterParams = {}, format} = params
+  const {storeName, filterBy, filterParams = {}, sort, format} = params
 
   const [collectData, collectDataError] = await handleAsync(
     getCollectDataHandler(storeName),
@@ -160,10 +164,23 @@ async function setupQuery(params: any) {
     }
   }
 
+  let sortFn
+  if (format) {
+    const [_sortFn, sortFnError] = await handleAsync(
+      getOutputFormatFn(storeName, 'sort', sort),
+    )
+
+    if (sortFnError) {
+      return Promise.reject(sortFnError)
+    }
+
+    sortFn = _sortFn
+  }
+
   let outputFormatFn
   if (format) {
     const [_outputFormatFn, outputFormatFnError] = await handleAsync(
-      getOutputFormatFn(storeName, format),
+      getOutputFormatFn(storeName, 'outputFormats', format),
     )
 
     if (outputFormatFnError) {
@@ -173,7 +190,15 @@ async function setupQuery(params: any) {
     outputFormatFn = _outputFormatFn
   }
 
-  return {tx, primeObjectStore, cache, collectDataFn, filterFn, outputFormatFn}
+  return {
+    tx,
+    primeObjectStore,
+    cache,
+    collectDataFn,
+    filterFn,
+    sortFn,
+    outputFormatFn,
+  }
 }
 
 export function getAllFromIndexStore(params: any): any {
@@ -227,7 +252,7 @@ export function getAllFromIndexStore(params: any): any {
   })
 }
 
-export function getFullIndexStore(params: any) {
+export function getFullIndexStore(params: any): any {
   const {
     indexName,
     direction = 'next',
@@ -248,6 +273,7 @@ export function getFullIndexStore(params: any) {
       cache,
       collectDataFn,
       filterFn,
+      sortFn,
       outputFormatFn,
     } = querySetup
 
@@ -273,6 +299,10 @@ export function getFullIndexStore(params: any) {
 
       if (filterBy) {
         rows = rows.filter(filterFn)
+      }
+
+      if (sortFn) {
+        rows = sortFn(rows)
       }
 
       const matchProps: any[] = Object.entries(matchProperties)
