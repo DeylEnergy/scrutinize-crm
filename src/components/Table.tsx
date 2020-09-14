@@ -155,7 +155,12 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         ...style,
       }}
     >
-      <TableCellContent style={customCellContentStyle}>
+      <TableCellContent
+        style={{
+          ...(cellData?.isDisabled ? {opacity: 0.5} : {}),
+          ...customCellContentStyle,
+        }}
+      >
         <Tooltip content={isCellContentObject && cellContent.tooltipContent}>
           <Small variant="SECONDARY">
             {isItemAvailable &&
@@ -397,6 +402,7 @@ interface TableProps {
     cells: any[]
     onDoubleClick: () => void
     optionsMenu?: React.ReactNode
+    isDisabled?: boolean
   }[]
 
   hasNextPage: any
