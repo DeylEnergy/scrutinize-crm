@@ -135,7 +135,14 @@ async function getOutputFormatFn(
 }
 
 async function setupQuery(params: any) {
-  const {storeName, filterBy, filterParams = {}, sort, format} = params
+  const {
+    storeName,
+    indexName,
+    filterBy,
+    filterParams = {},
+    sort,
+    format,
+  } = params
 
   const [collectData, collectDataError] = await handleAsync(
     getCollectDataHandler(storeName),
@@ -152,6 +159,8 @@ async function setupQuery(params: any) {
   const cache: any = {cartParticipants: {}}
 
   const primeObjectStore = tx.objectStore(storeName)
+  const targetStore =
+    (indexName && primeObjectStore.index(indexName)) || primeObjectStore
 
   let filterFn = withoutFilter
   if (filterBy) {
@@ -193,6 +202,7 @@ async function setupQuery(params: any) {
   return {
     tx,
     primeObjectStore,
+    targetStore,
     cache,
     collectDataFn,
     filterFn,
@@ -200,7 +210,7 @@ async function setupQuery(params: any) {
     outputFormatFn,
   }
 }
-
+// TODO: Rename with more generic name
 export function getAllFromIndexStore(params: any): any {
   const {indexName, limit, lastKey, customKeyRange, direction = 'next'} = params
 
@@ -211,7 +221,7 @@ export function getAllFromIndexStore(params: any): any {
       return reject(querySetupError)
     }
 
-    const {tx, primeObjectStore, cache, collectDataFn, filterFn} = querySetup
+    const {tx, targetStore, cache, collectDataFn, filterFn} = querySetup
 
     const keyBound =
       lastKey && (direction === 'next' ? 'lowerBound' : 'upperBound')
@@ -220,8 +230,7 @@ export function getAllFromIndexStore(params: any): any {
     let count = 0
     const result: any[] = []
 
-    const indexStore = primeObjectStore.index(indexName)
-    indexStore.openCursor(
+    targetStore.openCursor(
       getCustomKeyRange(customKeyRange) ?? keyRange,
       direction,
     ).onsuccess = async (event: any) => {
@@ -251,10 +260,9 @@ export function getAllFromIndexStore(params: any): any {
     }
   })
 }
-
+// TODO: Rename with more generic name
 export function getFullIndexStore(params: any): any {
   const {
-    indexName,
     direction = 'next',
     filterBy,
     matchProperties = [],
@@ -269,7 +277,7 @@ export function getFullIndexStore(params: any): any {
 
     const {
       tx,
-      primeObjectStore,
+      targetStore,
       cache,
       collectDataFn,
       filterFn,
@@ -277,8 +285,7 @@ export function getFullIndexStore(params: any): any {
       outputFormatFn,
     } = querySetup
 
-    const indexStore = primeObjectStore.index(indexName)
-    indexStore.getAll().onsuccess = async (event: any) => {
+    targetStore.getAll().onsuccess = async (event: any) => {
       let rows = event.target.result
       if (direction === 'prev') {
         rows.reverse()
