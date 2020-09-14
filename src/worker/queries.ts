@@ -165,7 +165,7 @@ async function setupQuery(params: any) {
   }
 
   let sortFn
-  if (format) {
+  if (sort) {
     const [_sortFn, sortFnError] = await handleAsync(
       getOutputFormatFn(storeName, 'sort', sort),
     )
