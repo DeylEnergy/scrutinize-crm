@@ -77,13 +77,8 @@ export default function Header() {
             <MenuIcon icon={<FaDatabase />} />
           </Tooltip>
         </Link>
-        <Link to="/">
-          <Tooltip content="Transactions">
-            <MenuIcon icon={<FaExchangeAlt />} />
-          </Tooltip>
-        </Link>
-        <Link to="/">
-          <Tooltip content="Logs">
+        <Link to="/sales">
+          <Tooltip content="Sales">
             <MenuIcon icon={<FaList />} />
           </Tooltip>
         </Link>
