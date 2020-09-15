@@ -18,7 +18,7 @@ export default async function collectData(
   const suppliersCache = readCacheName(cache, SN.SUPPLIERS)
 
   let product = productsCache[value._productId]
-  if (!product) {
+  if (value._productId && !product) {
     product = await handleIdbRequest(productsObjectStore.get(value._productId))
     productsCache[value._productId] = product
   }
