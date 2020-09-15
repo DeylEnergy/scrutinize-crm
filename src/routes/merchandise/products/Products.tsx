@@ -13,7 +13,7 @@ import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
-import {withErrorBoundary} from '../../../utilities'
+import {withErrorBoundary, useUpdate} from '../../../utilities'
 
 interface Supplier {
   id: number
@@ -95,11 +95,19 @@ const SIDE_SHEET_DEFAULT = {
 function Products() {
   const {worker} = React.useContext(GlobalContext)
 
+  const itemsRef = React.useRef<any>(null)
+
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
-    (s, v) => ({...s, ...v}),
+    (s, v) => {
+      const updated = {...s, ...v}
+      itemsRef.current = updated.items
+      return updated
+    },
     LOADED_ITEMS_DEFAULT,
   )
+
+  const [searchQuery, setSearchQuery] = React.useState('')
 
   const [sideSheet, setSideSheet] = React.useReducer(
     // @ts-ignore
@@ -155,50 +163,55 @@ function Products() {
     [loadedItems.hasNextPage, loadedItems.items],
   )
 
-  const loadMoreItems = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: SN.PRODUCTS,
-        indexName: IN.NAME_MODEL,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey: loadedItems.lastKey,
-      })
-      .then((newItems: any) => {
-        if (!newItems) {
-          return
-        }
-        const newItemsSerialized = newItems.map(serializeItem)
-        setLoadedItems({
-          ...loadedItems,
-          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-          items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
+  const fetchItems = React.useCallback(
+    ({lastKey, searchQuery = ''}: any) => {
+      worker
+        .getRows({
+          storeName: SN.PRODUCTS,
+          indexName: IN.NAME_MODEL,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy: 'consist',
+          filterParams: {searchQuery},
         })
-      })
-  }, [loadedItems.items])
+        .then((newItems: any) => {
+          if (!newItems) {
+            return
+          }
+          const newItemsSerialized = newItems.map(serializeItem)
+          setLoadedItems({
+            ...loadedItems,
+            hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+            items: [
+              ...(lastKey ? itemsRef.current : []),
+              ...newItemsSerialized,
+            ],
+            lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
+          })
+        })
+    },
+    [setLoadedItems],
+  )
+
+  const {lastKey} = loadedItems
+
+  const loadMoreItems = React.useCallback(() => {
+    fetchItems({lastKey, searchQuery})
+  }, [lastKey, searchQuery])
+
+  useUpdate(() => {
+    fetchItems({searchQuery})
+  }, [searchQuery])
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
     setSideSheet(SIDE_SHEET_DEFAULT)
   }, [])
 
-  const handleSearchResult = React.useCallback(
-    (foundProducts: any[], isEmptyQuery: boolean) => {
-      let foundItems = foundProducts
-      if (isEmptyQuery) {
-        foundItems = foundProducts.slice(0, FETCH_ITEM_LIMIT)
-      }
-
-      const foundItemsSerialized = foundItems.map((product: any) =>
-        serializeItem(product.value),
-      )
-      setLoadedItems({
-        hasNextPage: foundProducts.length > foundItems.length,
-        items: foundItemsSerialized,
-        lastKey:
-          foundProducts && foundProducts[foundProducts.length - 1].nameModel,
-      })
+  const handleSearchQuery = React.useCallback(
+    (value: string) => {
+      setSearchQuery(value)
     },
-    [setLoadedItems],
+    [setSearchQuery],
   )
 
   return (
@@ -206,9 +219,9 @@ function Products() {
       <ControlWrapper>
         <SearchInput
           width={210}
-          storeName={SN.PRODUCTS}
           placeholder="Name or Model and tap Enter..."
-          onSearchResult={handleSearchResult}
+          value={searchQuery}
+          handleSearchQuery={handleSearchQuery}
         />
       </ControlWrapper>
       <Table
