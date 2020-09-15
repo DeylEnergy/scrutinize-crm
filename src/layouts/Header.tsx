@@ -82,7 +82,7 @@ export default function Header() {
             <MenuIcon icon={<FaList />} />
           </Tooltip>
         </Link>
-        <Link to="/">
+        <Link to="/stats">
           <Tooltip content="Statistics">
             <MenuIcon icon={<FaChartBar />} />
           </Tooltip>

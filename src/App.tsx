@@ -3,6 +3,7 @@ import {toaster} from 'evergreen-ui'
 import Header from './layouts/Header'
 import MerchandisePage from './routes/merchandise'
 import SalesPage from './routes/sales'
+import StatsPage from './routes/stats'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import GlobalContext from './contexts/globalContext'
 // @ts-ignore
@@ -50,6 +51,9 @@ const App = () => {
           </Route>
           <Route path="/sales">
             <SalesPage />
+          </Route>
+          <Route path="/stats">
+            <StatsPage />
           </Route>
           <Route path="/">
             <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
