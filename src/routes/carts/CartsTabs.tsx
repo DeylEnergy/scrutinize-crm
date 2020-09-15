@@ -39,6 +39,7 @@ export default function CartsTabs({
         indexName: IN.__CART_ID__,
         direction: 'prev',
         format: 'cartIds',
+        dataCollecting: false,
       })
       .then((rows: any) => {
         if (!rows.length) {
