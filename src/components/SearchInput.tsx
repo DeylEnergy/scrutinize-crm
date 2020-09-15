@@ -4,37 +4,26 @@ import GlobalContext from '../contexts/globalContext'
 
 interface Props {
   width?: number
-  storeName: string
   placeholder?: string
-  onSearchResult: (result: any[], isEmptyQuery: boolean) => any
+  value: string
+  handleSearchQuery: (value: string) => any
 }
 
 function CustomSearchInput({
   width = 170,
-  storeName,
   placeholder,
-  onSearchResult,
+  value,
+  handleSearchQuery,
 }: Props) {
-  const {worker} = React.useContext<any>(GlobalContext)
-  const [value, setValue] = React.useState('')
-
-  const searchFn = worker.search
+  const [searchQuery, setSearchQuery] = React.useState(value)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
+    setSearchQuery(e.target.value)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      searchFn({
-        storeName,
-        type: 'search',
-        query: value,
-        fullResult: true,
-      }).then((result: any) => {
-        const isEmptyQuery = !value
-        onSearchResult(result, isEmptyQuery)
-      })
+      handleSearchQuery(searchQuery)
     }
   }
 
@@ -43,9 +32,7 @@ function CustomSearchInput({
       height={24}
       width={width}
       placeholder={placeholder}
-      value={value}
-      onFocus={() => searchFn({storeName, type: 'init'})}
-      onBlur={() => searchFn({storeName, type: 'discard'})}
+      value={searchQuery}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
     />
