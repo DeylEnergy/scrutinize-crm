@@ -2,7 +2,11 @@ import {handleAsync, getPeriodOfDate} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
-import {PUT_STAT, PROCESS_SALE} from '../../constants/events'
+import {
+  PUT_STAT,
+  PROCESS_SALE,
+  PROCESS_ACQUISITIONS,
+} from '../../constants/events'
 import {getRowFromStore} from '../queries'
 
 function getEmptyPeriod(currentMonthYear: string) {
@@ -23,8 +27,8 @@ export default async function putStat({
   parentEvent = null,
 }: any) {
   let updatedPeriod = payload
-  if (parentEvent === PROCESS_SALE) {
-    const {currentDate, sum, income} = payload
+  if (parentEvent === PROCESS_SALE || parentEvent === PROCESS_ACQUISITIONS) {
+    const {currentDate, sum} = payload
 
     const currentPeriod = getPeriodOfDate(currentDate)
 
@@ -36,8 +40,12 @@ export default async function putStat({
       foundPeriod = getEmptyPeriod(currentPeriod)
     }
 
-    foundPeriod.soldSum += sum
-    foundPeriod.incomeSum += income
+    if (parentEvent === PROCESS_SALE) {
+      foundPeriod.soldSum += sum
+      foundPeriod.incomeSum += payload.income
+    } else if (parentEvent === PROCESS_ACQUISITIONS) {
+      foundPeriod.spentSum += sum
+    }
 
     updatedPeriod = foundPeriod
   }

@@ -5,6 +5,8 @@ import {
   PUT_PRODUCT,
   COMPLETE_ACQUISITION,
   RECOMPUTE_BUDGET,
+  PUT_STAT,
+  PROCESS_ACQUISITIONS,
 } from '../../constants/events'
 import send from './index'
 
@@ -18,6 +20,8 @@ export default async function process() {
   })
 
   let successCount = 0
+
+  const currentDate = new Date()
 
   for (const bought of boughtProducts.reverse()) {
     const events = [
@@ -43,6 +47,17 @@ export default async function process() {
           send({
             type: RECOMPUTE_BUDGET,
             payload: bought,
+            store,
+            emitEvent: false,
+          }),
+      },
+      {
+        storeName: 'stats',
+        cb: ({store}: any) =>
+          send({
+            type: PUT_STAT,
+            payload: {...bought, currentDate},
+            parentEvent: PROCESS_ACQUISITIONS,
             store,
             emitEvent: false,
           }),
