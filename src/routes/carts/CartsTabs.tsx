@@ -61,7 +61,7 @@ export default function CartsTabs({
       <Pane height="100%" display="flex" flexDirection="column">
         <Tablist marginBottom={8}>
           <>
-            {tabs.map(({label, cartId}: any, index: number) => (
+            {tabs.map(({label, cartId}: any) => (
               <Tab
                 key={label}
                 id={label}
