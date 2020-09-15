@@ -272,6 +272,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         indexName: IN.__CART_ID__,
         direction: 'prev',
         matchProperties: {__cartId__: cartId},
+        sort: 'asc',
       })
       .then((newItems: any) => {
         const newItemsSerialized = newItems.map(serializeItem)
