@@ -1,6 +1,4 @@
-function isSearchValueIncluded(searchValue: string, searchQuery: string) {
-  return searchValue.toLowerCase().includes(searchQuery)
-}
+import {isSearchValueIncluded} from '../../utilities'
 
 export default function filters({searchQuery}: any) {
   if (searchQuery) {
