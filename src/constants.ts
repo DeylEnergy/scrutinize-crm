@@ -7,6 +7,7 @@ export const STORE_NAME = {
   BUDGET: 'budget',
   CUSTOMERS: 'customers',
   USERS: 'users',
+  GROUPS: 'groups',
   SUPPLIERS: 'suppliers',
   STATS: 'stats',
   LOGS: 'logs',
