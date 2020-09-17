@@ -19,5 +19,8 @@ export const RETURN_SOLD_ITEM = 'returnSoldItem'
 // stats
 export const PUT_STAT = 'putStat'
 
+// users
+export const PUT_USER = 'putUser'
+
 // groups
 export const PUT_GROUP = 'putGroup'
