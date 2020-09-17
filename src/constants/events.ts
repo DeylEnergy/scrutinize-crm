@@ -18,3 +18,6 @@ export const RETURN_SOLD_ITEM = 'returnSoldItem'
 
 // stats
 export const PUT_STAT = 'putStat'
+
+// groups
+export const PUT_GROUP = 'putGroup'
