@@ -23,6 +23,7 @@ export const INDEX_NAME = {
   CART_PARTICIPANTS: 'cartParticipants',
   EVENT_DATETIME: 'eventDatetime',
   ERROR_DATETIME: 'errorDatetime',
+  NAME: 'name',
 }
 
 export const TO_BUY_FILTER_OPTIONS = {

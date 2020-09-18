@@ -1,5 +1,5 @@
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../constants'
-const currentVersion = 19
+const currentVersion = 21
 
 const db: {current: null | IDBDatabase} = {current: null}
 const dbReq: IDBOpenDBRequest = indexedDB.open('mydbx', currentVersion)
@@ -30,7 +30,9 @@ dbReq.onupgradeneeded = () => {
     )
 
     db.current.createObjectStore(SN.CUSTOMERS, keyPath)
-    db.current.createObjectStore(SN.USERS, keyPath)
+    db.current
+      .createObjectStore(SN.USERS, keyPath)
+      .createIndex(IN.NAME, IN.NAME)
     db.current.createObjectStore(SN.GROUPS, keyPath)
     db.current.createObjectStore(SN.SUPPLIERS, keyPath)
     db.current.createObjectStore(SN.STATS, {keyPath: 'period'})
