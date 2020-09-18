@@ -159,7 +159,10 @@ function Sales() {
   const fetchItems = React.useCallback(
     ({from, to, lastKey, searchQuery = ''}: any) => {
       const startDate = (to && [to]) ?? PERIOD_START_DEFAULT
-      const stopDate = lastKey ?? (from && [from]) ?? PERIOD_STOP_DEFAULT
+      const stopDate =
+        lastKey ?? (from && [from, Infinity]) ?? PERIOD_STOP_DEFAULT
+      const includeFirstItem = Boolean(lastKey)
+      const excludeLastItem = false
       worker
         .getRows({
           storeName: SN.SALES,
@@ -168,7 +171,7 @@ function Sales() {
           limit: FETCH_ITEM_LIMIT,
           customKeyRange: {
             method: 'bound',
-            args: [startDate, stopDate],
+            args: [startDate, stopDate, excludeLastItem, includeFirstItem],
           },
           filterBy: 'consist',
           filterParams: {searchQuery},
@@ -185,7 +188,9 @@ function Sales() {
               ...(lastKey ? itemsRef.current : []),
               ...newItemsSerialized,
             ],
-            lastKey: newItems.length && newItems[newItems.length - 1].datetime,
+            lastKey:
+              (newItems.length && newItems[newItems.length - 1].datetime) ||
+              null,
           })
         })
     },
@@ -196,8 +201,8 @@ function Sales() {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    fetchItems({from, to, lastKey})
-  }, [from, to, lastKey])
+    fetchItems({from, to, searchQuery, lastKey})
+  }, [from, to, searchQuery, lastKey])
 
   React.useEffect(() => {
     fetchItems({from, to, searchQuery})
