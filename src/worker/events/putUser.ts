@@ -2,6 +2,7 @@ import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
+import {getRowFromStore} from '../queries'
 import saveEvent from './saveEvent'
 import {PUT_USER} from '../../constants/events'
 
@@ -29,7 +30,7 @@ export default async function putGroup({
   const passedEvent = {
     type: PUT_USER,
     eventDatetime: Date.now(),
-    payload: payload,
+    payload: updatedUser,
   }
 
   const [savedEvent] = await handleAsync(saveEvent(passedEvent, emitEvent))
@@ -39,7 +40,15 @@ export default async function putGroup({
   }
 
   if (consumer === 'client') {
-    return updatedUser
+    const [group, groupError] = await handleAsync(
+      getRowFromStore(SN.GROUPS, updatedUser._groupId, store),
+    )
+
+    if (groupError) {
+      return Promise.reject(groupError)
+    }
+
+    return {...updatedUser, _group: group}
   }
 
   return savedEvent
