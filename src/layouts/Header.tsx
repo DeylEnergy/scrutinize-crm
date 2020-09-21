@@ -7,6 +7,7 @@ import {
   FaList,
   FaQrcode,
   FaShoppingCart,
+  FaUser,
   FaChartBar,
 } from 'react-icons/fa'
 import {Pane, Tooltip, IconButton} from 'evergreen-ui'
@@ -85,6 +86,11 @@ export default function Header() {
         <Link to="/stats">
           <Tooltip content="Statistics">
             <MenuIcon icon={<FaChartBar />} />
+          </Tooltip>
+        </Link>
+        <Link to="/users-control">
+          <Tooltip content="Users Control">
+            <MenuIcon icon={<FaUser />} />
           </Tooltip>
         </Link>
         <Link to="/">
