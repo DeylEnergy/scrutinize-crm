@@ -3,32 +3,33 @@ import {Pane, Heading, Checkbox} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {SPACING} from '../../../constants'
+import RIGHTS from '../../../constants/rights'
 
 const PRODUCT_PERMISSIONS = [
-  ['canSeeProducts', 'Can see products'],
-  ['canEditProducts', 'Can edit products'],
+  [RIGHTS.CAN_SEE_PRODUCTS, 'Can see products'],
+  [RIGHTS.CAN_EDIT_PRODUCTS, 'Can edit products'],
 ]
 
 const TO_BUY_LIST_PERMISSIONS = [
-  ['canSeeToBuyList', 'Can see to buy list'],
-  ['canEditItemsInToBuyItems', 'Can edit items in to buy list'],
-  ['canAddItemToBuyList', 'Can add items to buy list'],
-  ['canPrintToBuyList', 'Can print to buy list'],
-  ['canCompleteToBuyList', 'Can process to buy list'],
+  [RIGHTS.CAN_SEE_TO_BUY_LIST, 'Can see to buy list'],
+  [RIGHTS.CAN_EDIT_ITEMS_IN_TO_BUY_LIST, 'Can edit items in to buy list'],
+  [RIGHTS.CAN_ADD_ITEM_TO_BUY_LIST, 'Can add items to buy list'],
+  [RIGHTS.CAN_PRINT_TO_BUY_LIST, 'Can print to buy list'],
+  [RIGHTS.CAN_COMPLETE_TO_BUY_LIST, 'Can process to buy list'],
 ]
 
 const ACQUISITIONS_PERMISSIONS = [
-  ['canSeeAcquisitions', 'Can see acquisitions'],
+  [RIGHTS.CAN_SEE_ACQUISITIONS, 'Can see acquisitions'],
 ]
 
 const SALES_PERMISSIONS = [
-  ['canSeeSales', 'Can see sales'],
-  ['canReturnSalesItems', 'Can return sales items'],
+  [RIGHTS.CAN_SEE_SALES, 'Can see sales'],
+  [RIGHTS.CAN_RETURN_SALES_ITEMS, 'Can return sales items'],
 ]
 
-const USERS_PERMISSIONS = [['canSeeUsers', 'Can see users']]
+const USERS_PERMISSIONS = [[RIGHTS.CAN_SEE_USERS, 'Can see users']]
 
-const USERS_GROUP = [['canSeeUsersGroup', 'Can see users group']]
+const USERS_GROUP = [[RIGHTS.CAN_SEE_USERS_GROUP, 'Can see users group']]
 
 const PERMISSIONS = [
   ...PRODUCT_PERMISSIONS,
