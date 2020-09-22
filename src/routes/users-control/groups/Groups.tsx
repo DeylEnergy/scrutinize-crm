@@ -13,7 +13,7 @@ import {
 import Table from '../../../components/Table'
 import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN} from '../../../constants'
-import {withErrorBoundary} from '../../../utilities'
+import {useAccount, withErrorBoundary} from '../../../utilities'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import UpdateGroup from './UpdateGroup'
 import {PUT_GROUP} from '../../../constants/events'
@@ -43,6 +43,7 @@ const NEW_GROUP_VALUE = {
 }
 
 function Groups() {
+  const [account, setAccount] = useAccount()
   const {worker} = React.useContext(GlobalContext)
   const itemsRef = React.useRef<any>(null)
 
@@ -140,6 +141,13 @@ function Groups() {
         .then((result: any) => {
           if (!result) {
             return
+          }
+
+          if (updatedGroup.id === account.groupId) {
+            setAccount({
+              groupName: updatedGroup.name,
+              permissions: updatedGroup.permissions,
+            })
           }
 
           const items = itemsRef.current
