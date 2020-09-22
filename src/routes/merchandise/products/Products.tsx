@@ -13,7 +13,8 @@ import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
-import {withErrorBoundary, useUpdate} from '../../../utilities'
+import RIGHTS from '../../../constants/rights'
+import {withErrorBoundary, useAccount, useUpdate} from '../../../utilities'
 
 interface Supplier {
   id: number
@@ -93,6 +94,7 @@ const SIDE_SHEET_DEFAULT = {
 }
 
 function Products() {
+  const [{permissions}] = useAccount()
   const {worker} = React.useContext(GlobalContext)
 
   const itemsRef = React.useRef<any>(null)
@@ -123,6 +125,8 @@ function Products() {
       })
     }
 
+    const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
+
     return {
       id: item.id,
       cells: [
@@ -136,8 +140,8 @@ function Products() {
         new Date(item.lastAcquiredDatetime).toLocaleDateString(), // last acquisition
         item.lowestBoundCount,
       ],
-      onDoubleClick: editSideSheet,
-      optionsMenu: (
+      onDoubleClick: (canEditProducts && editSideSheet) || null,
+      optionsMenu: canEditProducts && (
         <Popover
           content={
             <Menu>

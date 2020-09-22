@@ -12,6 +12,8 @@ import {
 } from 'react-icons/fa'
 import {Pane, Tooltip, IconButton} from 'evergreen-ui'
 import Carts from '../routes/carts'
+import {useAccount} from '../utilities'
+import RIGHTS from '../constants/rights'
 
 const Stripe = styled.div`
   color: #fff;
@@ -70,29 +72,46 @@ const MenuIcon = React.forwardRef(function MenuIcon(
 })
 
 export default function Header() {
+  const [{permissions}] = useAccount()
+
+  const canSeeMerchandise =
+    permissions?.includes(RIGHTS.CAN_SEE_PRODUCTS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_TO_BUY_LIST) ||
+    permissions?.includes(RIGHTS.CAN_SEE_ACQUISITIONS)
+
+  const canSeeUsersControl =
+    permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_USERS_GROUP)
+
   return (
     <Stripe>
       <ActionsContainer>
-        <Link to="/merchandise">
-          <Tooltip content="Merchandise">
-            <MenuIcon icon={<FaDatabase />} />
-          </Tooltip>
-        </Link>
-        <Link to="/sales">
-          <Tooltip content="Sales">
-            <MenuIcon icon={<FaList />} />
-          </Tooltip>
-        </Link>
+        {canSeeMerchandise && (
+          <Link to="/merchandise">
+            <Tooltip content="Merchandise">
+              <MenuIcon icon={<FaDatabase />} />
+            </Tooltip>
+          </Link>
+        )}
+        {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
+          <Link to="/sales">
+            <Tooltip content="Sales">
+              <MenuIcon icon={<FaList />} />
+            </Tooltip>
+          </Link>
+        )}
         <Link to="/stats">
           <Tooltip content="Statistics">
             <MenuIcon icon={<FaChartBar />} />
           </Tooltip>
         </Link>
-        <Link to="/users-control">
-          <Tooltip content="Users Control">
-            <MenuIcon icon={<FaUser />} />
-          </Tooltip>
-        </Link>
+        {canSeeUsersControl && (
+          <Link to="/users-control">
+            <Tooltip content="Users Control">
+              <MenuIcon icon={<FaUser />} />
+            </Tooltip>
+          </Link>
+        )}
         <Link to="/">
           <Tooltip content="Stickers manager">
             <MenuIcon icon={<FaQrcode />} />

@@ -1,51 +1,62 @@
-// @ts-nocheck
 import React from 'react'
 import {Pane, Tablist, Tab} from 'evergreen-ui'
 import Block from '../../../components/Block'
 import Products from '../products/Products'
 import ToBuy from '../to-buy/ToBuy'
 import Acquisitions from '../acquisitions/Acquisitions'
-
-const TABS = {
-  selectedIndex: 0,
-  tabs: [
-    {
-      label: 'Products',
-      component: <Products />,
-    },
-    {label: 'To Buy List', component: <ToBuy />},
-    {label: 'Acquisitions', component: <Acquisitions />},
-  ],
-}
+import {useAccount} from '../../../utilities'
+import RIGHTS from '../../../constants/rights'
 
 export default function MainDatabase() {
-  const [state, setState] = React.useReducer((s, v) => ({...s, ...v}), TABS)
+  const [{permissions}] = useAccount()
+
+  const tabs = React.useMemo(() => {
+    const allowedTabs = []
+    if (permissions.includes(RIGHTS.CAN_SEE_PRODUCTS)) {
+      allowedTabs.push({
+        label: 'Products',
+        component: <Products />,
+      })
+    }
+
+    if (permissions.includes(RIGHTS.CAN_SEE_TO_BUY_LIST)) {
+      allowedTabs.push({label: 'To Buy List', component: <ToBuy />})
+    }
+
+    if (permissions.includes(RIGHTS.CAN_SEE_ACQUISITIONS)) {
+      allowedTabs.push({label: 'Acquisitions', component: <Acquisitions />})
+    }
+
+    return allowedTabs
+  }, [permissions])
+
+  const [selectedTab, setSelectedTab] = React.useState(tabs?.[0].label)
 
   return (
     <Block ratio={1}>
       <Pane height="100%" display="flex" flexDirection="column">
         <Tablist marginBottom={8}>
-          {state.tabs.map(({label}, index) => (
+          {tabs.map(({label}: any) => (
             <Tab
               key={label}
               id={label}
-              onSelect={() => setState({selectedIndex: index})}
-              isSelected={index === state.selectedIndex}
+              onSelect={() => setSelectedTab(label)}
+              isSelected={label === selectedTab}
               aria-controls={`panel-${label}`}
             >
               {label}
             </Tab>
           ))}
         </Tablist>
-        {state.tabs.map(
-          ({label, component}, index) =>
-            index === state.selectedIndex && (
+        {tabs.map(
+          ({label, component}: any) =>
+            label === selectedTab && (
               <Pane
                 key={label}
                 id={`panel-${label}`}
                 role="tabpanel"
                 aria-labelledby={label}
-                aria-hidden={index !== state.selectedIndex}
+                aria-hidden={label === selectedTab}
                 height="100%"
               >
                 {component}

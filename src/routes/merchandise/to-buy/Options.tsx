@@ -11,6 +11,8 @@ import Popover from '../../../components/Popover'
 import GlobalContext from '../../../contexts/globalContext'
 import ProcessAcquisitionsDialog from './ProcessAcquisitionsDialog'
 import print from './print'
+import RIGHTS from '../../../constants/rights'
+import {useAccount} from '../../../utilities'
 
 interface OptionsProps {
   refetchAll: () => void
@@ -18,6 +20,7 @@ interface OptionsProps {
 }
 
 function Options({refetchAll, hasBoughtItems}: OptionsProps) {
+  const [{permissions}] = useAccount()
   const {worker} = React.useContext(GlobalContext)
   const [isShown, setIsShown] = React.useState(false)
 
@@ -28,26 +31,29 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
         content={({close}: any) => (
           <Menu>
             <Menu.Group>
-              <Menu.Item
-                icon={PrintIcon}
-                onSelect={() => {
-                  print(worker)
-                  close()
-                }}
-              >
-                Print document
-              </Menu.Item>
-              {hasBoughtItems && (
+              {permissions.includes(RIGHTS.CAN_PRINT_TO_BUY_LIST) && (
                 <Menu.Item
-                  icon={TickIcon}
+                  icon={PrintIcon}
                   onSelect={() => {
+                    print(worker)
                     close()
-                    setIsShown(true)
                   }}
                 >
-                  Process bought items
+                  Print document
                 </Menu.Item>
               )}
+              {hasBoughtItems &&
+                permissions.includes(RIGHTS.CAN_COMPLETE_TO_BUY_LIST) && (
+                  <Menu.Item
+                    icon={TickIcon}
+                    onSelect={() => {
+                      close()
+                      setIsShown(true)
+                    }}
+                  >
+                    Process bought items
+                  </Menu.Item>
+                )}
             </Menu.Group>
           </Menu>
         )}

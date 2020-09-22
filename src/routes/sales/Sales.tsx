@@ -14,7 +14,8 @@ import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
 import GlobalContext from '../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {withErrorBoundary} from '../../utilities'
+import RIGHTS from '../../constants/rights'
+import {useAccount, withErrorBoundary} from '../../utilities'
 import {RETURN_SOLD_ITEM} from '../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
@@ -60,6 +61,7 @@ function ReturnSoldItemDialog({isShown, onClose, onConfirm}: any) {
 }
 
 function Sales() {
+  const [{permissions}] = useAccount()
   const {worker} = React.useContext(GlobalContext)
   const itemsRef = React.useRef<any>(null)
 
@@ -130,7 +132,7 @@ function Sales() {
         item?._customer?.name,
         item.note,
       ],
-      optionsMenu: (
+      optionsMenu: permissions.includes(RIGHTS.CAN_RETURN_SALES_ITEMS) && (
         <Popover
           content={
             <Menu>

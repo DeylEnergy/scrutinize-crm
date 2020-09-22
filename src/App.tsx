@@ -7,8 +7,11 @@ import StatsPage from './routes/stats'
 import UsersControlPage from './routes/users-control'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import GlobalContext from './contexts/globalContext'
+import AccountContext from './contexts/accountContext'
 // @ts-ignore
 import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
+import RIGHTS from './constants/rights'
+import {useAccount} from './utilities'
 
 const fns: any = workerize()
 
@@ -34,6 +37,17 @@ const worker = (() => {
 console.log(worker)
 
 const App = () => {
+  const [{permissions}] = useAccount()
+
+  const canSeeMerchandise =
+    permissions?.includes(RIGHTS.CAN_SEE_PRODUCTS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_TO_BUY_LIST) ||
+    permissions?.includes(RIGHTS.CAN_SEE_ACQUISITIONS)
+
+  const canSeeUsersControl =
+    permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_USERS_GROUP)
+
   return (
     <div
       style={{
@@ -47,18 +61,24 @@ const App = () => {
       <Router>
         <Header />
         <Switch>
-          <Route path="/merchandise">
-            <MerchandisePage />
-          </Route>
-          <Route path="/sales">
-            <SalesPage />
-          </Route>
+          {canSeeMerchandise && (
+            <Route path="/merchandise">
+              <MerchandisePage />
+            </Route>
+          )}
+          {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
+            <Route path="/sales">
+              <SalesPage />
+            </Route>
+          )}
           <Route path="/stats">
             <StatsPage />
           </Route>
-          <Route path="/users-control">
-            <UsersControlPage />
-          </Route>
+          {canSeeUsersControl && (
+            <Route path="/users-control">
+              <UsersControlPage />
+            </Route>
+          )}
           <Route path="/">
             <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
           </Route>
@@ -68,14 +88,34 @@ const App = () => {
   )
 }
 
+const PERMISSIONS_MOCK = [
+  'canSeeUsers',
+  'canSeeUsersGroup',
+  'canSeeSales',
+  'canSeeProducts',
+  'canEditProducts',
+  'canSeeToBuyList',
+  'canSeeAcquisitions',
+  'canEditItemsInToBuyItems',
+  'canAddItemToBuyList',
+  'canPrintToBuyList',
+  'canCompleteToBuyList',
+]
+
 function AppProvider() {
   const globalContextValue = React.useRef({
     worker,
   })
+  // TODO: implement auth logic
+  const [groupPermissions, setGroupPermissions] = React.useState({
+    permissions: PERMISSIONS_MOCK,
+  })
 
   return (
     <GlobalContext.Provider value={globalContextValue.current}>
-      <App />
+      <AccountContext.Provider value={[groupPermissions, setGroupPermissions]}>
+        <App />
+      </AccountContext.Provider>
     </GlobalContext.Provider>
   )
 }

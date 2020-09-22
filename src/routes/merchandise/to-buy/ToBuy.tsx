@@ -6,6 +6,7 @@ import {
 } from '../../../utilities'
 import {Button} from 'evergreen-ui'
 import {TO_BUY_FILTER_OPTIONS as FILTER_OPTIONS} from '../../../constants'
+import RIGHTS from '../../../constants/rights'
 import {PUT_ACQUISITION} from '../../../constants/events'
 import Table from '../../../components/Table'
 import CellCheckbox from '../../../components/CellCheckbox'
@@ -18,7 +19,7 @@ import Filters from './Filters'
 import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
 import GlobalContext from '../../../contexts/globalContext'
-import {withErrorBoundary} from '../../../utilities'
+import {useAccount, withErrorBoundary} from '../../../utilities'
 
 const columns = [
   {label: 'Done', width: 50},
@@ -57,6 +58,7 @@ const SELECT_MENU_STYLE = {
 }
 
 function ToBuy() {
+  const [{permissions}] = useAccount()
   const {worker} = React.useContext(GlobalContext)
   const itemsRef = React.useRef<any>(null)
 
@@ -154,12 +156,19 @@ function ToBuy() {
           })
       }
 
+      const canEditCells =
+        permissions.includes(RIGHTS.CAN_EDIT_ITEMS_IN_TO_BUY_LIST) || null
+
       const handleCellDblClick = (
         cellName: string,
         value: string,
         valueType: string,
         e: React.MouseEvent,
       ) => {
+        if (!canEditCells) {
+          return
+        }
+
         const {
           top,
           left,
@@ -202,7 +211,7 @@ function ToBuy() {
             onUpdate={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateItem({isDone: e.target.checked})
             }}
-            disabled={item.isFrozen}
+            disabled={item.isFrozen || !canEditCells}
           />
         ),
       }
@@ -299,7 +308,7 @@ function ToBuy() {
             onSelect={handleSupplierPick}
             storeName="suppliers"
           >
-            <Button style={SELECT_MENU_STYLE}>
+            <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
               {item._supplier ? item._supplier.name : 'Select supplier..'}
             </Button>
           </AsyncSelectMenu>
@@ -320,7 +329,7 @@ function ToBuy() {
             onSelect={handleExecutorPick}
             storeName="users"
           >
-            <Button style={SELECT_MENU_STYLE}>
+            <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
               {item._user ? item._user.name : 'Select executor...'}
             </Button>
           </AsyncSelectMenu>
@@ -331,6 +340,7 @@ function ToBuy() {
       const frozenCell = {
         value: (
           <CellCheckbox
+            disabled={!canEditCells}
             initState={item.isFrozen}
             onUpdate={(e: React.ChangeEvent<HTMLInputElement>) =>
               updateItem({isFrozen: e.target.checked})
@@ -477,12 +487,17 @@ function ToBuy() {
           computedBuyList={computedBuyList}
           fetchComputedOfToBuyList={fetchComputedOfToBuyList}
         />
-        <AddProduct
-          handleSelectedProduct={handleSelectedProduct}
-          handleNewProductDrawer={handleNewProductDrawer}
-        />
+        {permissions.includes(RIGHTS.CAN_ADD_ITEM_TO_BUY_LIST) && (
+          <AddProduct
+            handleSelectedProduct={handleSelectedProduct}
+            handleNewProductDrawer={handleNewProductDrawer}
+          />
+        )}
         <Filters value={filterBy} handleFilterChange={handleFilterChange} />
-        <Options refetchAll={refetchAll} hasBoughtItems={hasBoughtItems} />
+        {(permissions.includes(RIGHTS.CAN_PRINT_TO_BUY_LIST) ||
+          permissions.includes(RIGHTS.CAN_COMPLETE_TO_BUY_LIST)) && (
+          <Options refetchAll={refetchAll} hasBoughtItems={hasBoughtItems} />
+        )}
       </ControlWrapper>
       <Table
         columns={columns}
