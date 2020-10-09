@@ -1,8 +1,21 @@
 import React from 'react'
-import {Menu, IconButton, Position, MoreIcon, EditIcon} from 'evergreen-ui'
-import {useTasksAfterUpdate} from '../../utilities'
+import {
+  Menu,
+  IconButton,
+  Position,
+  MoreIcon,
+  EditIcon,
+  toaster,
+} from 'evergreen-ui'
+import {
+  useTasksAfterUpdate,
+  useScannerListener,
+  withErrorBoundary,
+  recognizeQRCode,
+} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {PUT_SALE, DELETE_SALE_ITEM} from '../../constants/events'
+import codePrefixes from '../../constants/codePrefixes'
 import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
@@ -10,7 +23,6 @@ import Popover from '../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 import AddProduct from './AddProduct'
 import GlobalContext from '../../contexts/globalContext'
-import {withErrorBoundary} from '../../utilities'
 
 const columns = [
   {label: 'Done', width: 50},
@@ -285,12 +297,12 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
 
         setLoadedItems(updatedLoadedItems)
       })
-  }, [loadedItems.items])
+  }, [])
 
-  const refetchAll = () => {
+  const refetchAll = React.useCallback(() => {
     fetchAcquisitions()
     fetchComputedCartSum()
-  }
+  }, [fetchAcquisitions, fetchComputedCartSum])
 
   const handleSelectedProduct = React.useCallback(
     (item: any) => {
@@ -308,8 +320,28 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         })
         .then(refetchAll)
     },
-    [itemsRef],
+    [refetchAll],
   )
+
+  const handleNewScannedProduct = React.useCallback(
+    (scanResult: any) => {
+      const [prefix, data] = recognizeQRCode(scanResult?.value)
+      if (prefix === codePrefixes.acquisitions) {
+        worker
+          .getRow({storeName: SN.ACQUISITIONS, key: data})
+          .then((aq: any) => {
+            handleSelectedProduct({value: aq._productId})
+          })
+      } else {
+        toaster.warning('Unknown type of QR code.')
+      }
+    },
+    [worker, handleSelectedProduct],
+  )
+
+  useScannerListener({
+    onChange: handleNewScannedProduct,
+  })
 
   return (
     <PageWrapper>

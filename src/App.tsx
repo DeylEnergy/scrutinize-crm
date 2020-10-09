@@ -8,10 +8,13 @@ import UsersControlPage from './routes/users-control'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import GlobalContext from './contexts/globalContext'
 import AccountContext from './contexts/accountContext'
+import GlobalScannerContext from './contexts/globalScannerContext'
+import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
 import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
 import {useAccount} from './utilities'
+import GlobalQRScanner from './routes/global-qr-scanner'
 
 const fns: any = workerize()
 
@@ -84,6 +87,7 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
+      <GlobalQRScanner />
     </div>
   )
 }
@@ -110,11 +114,25 @@ function AppProvider() {
   const [groupPermissions, setGroupPermissions] = React.useState({
     permissions: PERMISSIONS_MOCK,
   })
+  const [globalScanner, setGlobalScanner] = React.useState({
+    isShown: false,
+    isGlobal: true,
+  })
+
+  const [scannerListener, setScannerListener] = React.useState<any>(null)
 
   return (
     <GlobalContext.Provider value={globalContextValue.current}>
       <AccountContext.Provider value={[groupPermissions, setGroupPermissions]}>
-        <App />
+        <GlobalScannerContext.Provider
+          value={[globalScanner, setGlobalScanner]}
+        >
+          <ScannerListenerContext.Provider
+            value={[scannerListener, setScannerListener]}
+          >
+            <App />
+          </ScannerListenerContext.Provider>
+        </GlobalScannerContext.Provider>
       </AccountContext.Provider>
     </GlobalContext.Provider>
   )
