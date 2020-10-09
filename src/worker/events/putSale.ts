@@ -12,6 +12,26 @@ export default async function putSale({
   emitEvent = true,
   consumer = 'server',
 }: any) {
+  // in case sale item was scanned outside from particular cart give it the latest one
+  if (!payload.__cartId__ && !payload.cartId) {
+    const [saleItem] = await handleAsync(
+      getFullIndexStore({
+        storeName: SN.SALES,
+        indexName: IN.__CART_ID__,
+        direction: 'prev',
+        limit: 1,
+      }),
+    )
+
+    if (saleItem.length) {
+      payload.__cartId__ = saleItem[0].__cartId__
+    } else {
+      const datetime = Date.now()
+      const uId = uuidv4()
+      payload.__cartId__ = `${datetime}_${uId}`
+    }
+  }
+
   // in case sale item is in the cart just increase its count
   if (payload.__cartId__ && payload._productId && !payload.sum) {
     const [saleItems] = await handleAsync(
