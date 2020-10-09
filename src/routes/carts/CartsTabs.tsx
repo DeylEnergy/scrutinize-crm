@@ -18,7 +18,9 @@ export default function CartsTabs({
   const handleNewCart = () => {
     const lastTabId = tabs.length
 
-    const cartId = uuidv4()
+    const datetime = Date.now()
+    const uId = uuidv4()
+    const cartId = `${datetime}_${uId}`
 
     return setState({
       selectedCartId: cartId,
@@ -37,7 +39,6 @@ export default function CartsTabs({
       .getRows({
         storeName: SN.SALES,
         indexName: IN.__CART_ID__,
-        direction: 'prev',
         format: 'cartIds',
         dataCollecting: false,
       })
