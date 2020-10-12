@@ -2,15 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import {
-  FaExchangeAlt,
   FaDatabase,
   FaList,
   FaQrcode,
-  FaShoppingCart,
   FaUser,
   FaChartBar,
+  FaUserCog,
 } from 'react-icons/fa'
-import {Pane, Tooltip, IconButton} from 'evergreen-ui'
+import {Tooltip} from 'evergreen-ui'
 import Carts from '../routes/carts'
 import {useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
@@ -108,7 +107,7 @@ export default function Header() {
         {canSeeUsersControl && (
           <Link to="/users-control">
             <Tooltip content="Users Control">
-              <MenuIcon icon={<FaUser />} />
+              <MenuIcon icon={<FaUserCog />} />
             </Tooltip>
           </Link>
         )}
@@ -121,11 +120,7 @@ export default function Header() {
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
         <Carts />
-        <Link to="/">
-          <Tooltip content="Scanner">
-            <MenuIcon icon={<FaQrcode />} />
-          </Tooltip>
-        </Link>
+        <MenuIcon icon={<FaUser />} />
       </ActionsContainer>
     </Stripe>
   )
