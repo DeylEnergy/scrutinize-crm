@@ -14,4 +14,5 @@ export default {
   CAN_SEE_USER_PROFILE: 'canSeeUserProfile',
   CAN_SEE_CARTS: 'canSeeCarts',
   CAN_SEE_STICKERS_MANAGER: 'canSeeStickersManager',
+  CAN_SEE_STATS: 'canSeeStats',
 }
