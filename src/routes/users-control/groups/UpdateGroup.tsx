@@ -27,9 +27,20 @@ const SALES_PERMISSIONS = [
   [RIGHTS.CAN_RETURN_SALES_ITEMS, 'Can return sales items'],
 ]
 
-const USERS_PERMISSIONS = [[RIGHTS.CAN_SEE_USERS, 'Can see users']]
+const USERS_PERMISSIONS = [
+  [RIGHTS.CAN_SEE_USERS, 'Can see users'],
+  [RIGHTS.CAN_SEE_USER_PROFILE, 'Can see user profile'],
+]
 
 const USERS_GROUP = [[RIGHTS.CAN_SEE_USERS_GROUP, 'Can see users group']]
+
+const STATS_PERMISSIONS = [[RIGHTS.CAN_SEE_STATS, 'Can see statistics']]
+
+const CARTS_PERMISSIONS = [[RIGHTS.CAN_SEE_CARTS, 'Can see carts']]
+
+const STICKERS_MANAGER_PERMISSIONS = [
+  [RIGHTS.CAN_SEE_STICKERS_MANAGER, 'Can see stickers manager'],
+]
 
 const PERMISSIONS = [
   ...PRODUCT_PERMISSIONS,
@@ -38,6 +49,9 @@ const PERMISSIONS = [
   ...SALES_PERMISSIONS,
   ...USERS_PERMISSIONS,
   ...USERS_GROUP,
+  ...STATS_PERMISSIONS,
+  ...CARTS_PERMISSIONS,
+  ...STICKERS_MANAGER_PERMISSIONS,
 ]
 
 function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
