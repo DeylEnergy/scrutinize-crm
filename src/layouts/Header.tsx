@@ -99,11 +99,13 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
-        <Link to="/stats">
-          <Tooltip content="Statistics">
-            <MenuIcon icon={<FaChartBar />} />
-          </Tooltip>
-        </Link>
+        {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
+          <Link to="/stats">
+            <Tooltip content="Statistics">
+              <MenuIcon icon={<FaChartBar />} />
+            </Tooltip>
+          </Link>
+        )}
         {canSeeUsersControl && (
           <Link to="/users-control">
             <Tooltip content="Users Control">
@@ -111,16 +113,20 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
-        <Link to="/">
-          <Tooltip content="Stickers manager">
-            <MenuIcon icon={<FaQrcode />} />
-          </Tooltip>
-        </Link>
+        {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
+          <Link to="/">
+            <Tooltip content="Stickers manager">
+              <MenuIcon icon={<FaQrcode />} />
+            </Tooltip>
+          </Link>
+        )}
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
-        <Carts />
-        <MenuIcon icon={<FaUser />} />
+        {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
+        {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && (
+          <MenuIcon icon={<FaUser />} />
+        )}
       </ActionsContainer>
     </Stripe>
   )
