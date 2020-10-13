@@ -5,6 +5,7 @@ import MerchandisePage from './routes/merchandise'
 import SalesPage from './routes/sales'
 import StatsPage from './routes/stats'
 import UsersControlPage from './routes/users-control'
+import SignInPage from './routes/sign-in'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import GlobalContext from './contexts/globalContext'
 import AccountContext from './contexts/accountContext'
@@ -82,6 +83,9 @@ const App = () => {
               <UsersControlPage />
             </Route>
           )}
+          <Route path="/sign-in">
+            <SignInPage />
+          </Route>
           <Route path="/">
             <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
           </Route>
@@ -92,28 +96,36 @@ const App = () => {
   )
 }
 
-const PERMISSIONS_MOCK = [
-  'canSeeUsers',
-  'canSeeUsersGroup',
-  'canSeeSales',
-  'canSeeProducts',
-  'canEditProducts',
-  'canSeeToBuyList',
-  'canSeeAcquisitions',
-  'canEditItemsInToBuyItems',
-  'canAddItemToBuyList',
-  'canPrintToBuyList',
-  'canCompleteToBuyList',
-]
+const ACCOUNT_MOCK = {
+  user: {
+    name: 'Joe Doe',
+  },
+  permissions: [
+    'canSeeUsers',
+    'canSeeUsersGroup',
+    'canSeeSales',
+    'canSeeProducts',
+    'canEditProducts',
+    'canSeeToBuyList',
+    'canSeeAcquisitions',
+    'canEditItemsInToBuyItems',
+    'canAddItemToBuyList',
+    'canPrintToBuyList',
+    'canCompleteToBuyList',
+    'canSeeUserProfile',
+    'canSeeCarts',
+    'canSeeStickersManager',
+    'canSeeStats',
+  ],
+  groupName: 'Administrator',
+}
 
 function AppProvider() {
   const globalContextValue = React.useRef({
     worker,
   })
   // TODO: implement auth logic
-  const [groupPermissions, setGroupPermissions] = React.useState({
-    permissions: PERMISSIONS_MOCK,
-  })
+  const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
     isShown: false,
     isGlobal: true,
@@ -123,7 +135,7 @@ function AppProvider() {
 
   return (
     <GlobalContext.Provider value={globalContextValue.current}>
-      <AccountContext.Provider value={[groupPermissions, setGroupPermissions]}>
+      <AccountContext.Provider value={[account, setAccount]}>
         <GlobalScannerContext.Provider
           value={[globalScanner, setGlobalScanner]}
         >
