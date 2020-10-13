@@ -1,9 +1,20 @@
 import React from 'react'
-import {SelectField, TextareaField, Pane, Avatar} from 'evergreen-ui'
+import {v4 as uuidv4} from 'uuid'
+import {
+  SelectField,
+  TextareaField,
+  Pane,
+  Avatar,
+  Heading,
+  Button,
+  RefreshIcon,
+  toaster,
+} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
 import GlobalContext from '../../../contexts/globalContext'
+import SeeSecretKeyPopover from './SeeSecretKeyPopover'
 
 const NOTE_INPUT_STYLE = {
   resize: 'vertical' as 'vertical',
@@ -30,6 +41,10 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   const [groups, setGroups] = React.useState([])
 
   const [groupId, setGroupId] = React.useState(doc._groupId)
+
+  const [secretKey, setSecretKey] = React.useState(
+    () => doc.secretKey || uuidv4(),
+  )
 
   React.useEffect(() => {
     worker.getRows({storeName: SN.GROUPS}).then(setGroups)
@@ -64,9 +79,22 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     setInput({note: e.target.value})
   }, [])
 
+  const handleGenerateSecretKey = React.useCallback(() => {
+    setSecretKey(uuidv4())
+    toaster.success(
+      `New secret key was created. Don't forget to click "Save" button`,
+    )
+  }, [setSecretKey])
+
   const saveChanges = React.useCallback(() => {
-    handleUpdateUser({id: doc.id, ...input, avatar, _groupId: groupId})
-  }, [handleUpdateUser, doc.id, input, avatar, groupId])
+    handleUpdateUser({
+      id: doc.id,
+      ...input,
+      avatar,
+      secretKey,
+      _groupId: groupId,
+    })
+  }, [handleUpdateUser, doc.id, input, avatar, secretKey, groupId])
 
   const canSave = () => {
     if (input.name.length <= 1) {
@@ -76,6 +104,8 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     return true
   }
 
+  const canBeSaved = canSave()
+
   const userExists = Boolean(doc.id)
 
   return (
@@ -84,7 +114,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onCloseComplete={onCloseComplete}
-      canSave={canSave()}
+      canSave={canBeSaved}
     >
       <input
         ref={avatarUploadRef}
@@ -102,6 +132,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         />
       </Pane>
       <TextInputField
+        tabIndex={0}
         name="name"
         value={input.name}
         // @ts-ignore
@@ -136,7 +167,34 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         value={input.note ?? ''}
         onChange={handleNoteInput}
         style={NOTE_INPUT_STYLE}
+        marginBottom={8}
       />
+      <Heading
+        size={400}
+        fontWeight={500}
+        color="#425A70"
+        marginTop={SPACING / 2}
+        marginBottom={SPACING / 2}
+      >
+        Credentials
+      </Heading>
+      <Pane display="flex" justifyContent="space-between">
+        <SeeSecretKeyPopover
+          userName={input.name}
+          secretKey={secretKey}
+          disabled={!canBeSaved}
+        />
+        <Button
+          intent="warning"
+          iconBefore={RefreshIcon}
+          justifyContent="center"
+          width="49%"
+          onClick={handleGenerateSecretKey}
+          disabled={!canBeSaved}
+        >
+          Generate new key
+        </Button>
+      </Pane>
     </SideSheet>
   )
 }
