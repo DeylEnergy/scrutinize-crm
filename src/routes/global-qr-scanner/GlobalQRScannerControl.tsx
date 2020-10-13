@@ -49,7 +49,12 @@ function GlobalQRScannerControl(props: any) {
             action: 'authorization',
             params: {userName, secretKey},
           })
-          .then(({user, group}: any) => {
+          .then((result: any) => {
+            if (!result) {
+              return
+            }
+
+            const {user, group} = result
             setAccount({
               user,
               permissions: group.permissions,
