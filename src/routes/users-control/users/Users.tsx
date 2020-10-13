@@ -78,7 +78,7 @@ function Users() {
       })
     }
     const avatarCell = {
-      value: <Avatar name={item.name} size={32} />,
+      value: <Avatar src={item.avatar} name={item.name} size={32} />,
       style: {
         padding: '4px 0px',
         textAlign: 'center',
@@ -169,7 +169,6 @@ function Users() {
 
   const handleUpdateUser = React.useCallback(
     updateUser => {
-      console.log(updateUser)
       worker
         .sendEvent({
           type: PUT_USER,

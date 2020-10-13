@@ -1,5 +1,5 @@
 import React from 'react'
-import {SelectField, TextareaField} from 'evergreen-ui'
+import {SelectField, TextareaField, Pane, Avatar} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
@@ -12,6 +12,10 @@ const NOTE_INPUT_STYLE = {
 function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   const {worker} = React.useContext(GlobalContext)
   const doc = sideSheet.value
+
+  const avatarUploadRef = React.useRef<any>()
+
+  const [avatar, setAvatar] = React.useState(doc.avatar ?? '')
 
   const [input, setInput] = React.useReducer(
     // @ts-ignore
@@ -31,6 +35,27 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     worker.getRows({storeName: SN.GROUPS}).then(setGroups)
   }, [])
 
+  const handleAvatarUpload = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const {files} = e.target
+      if (files && files[0].type.includes('image')) {
+        const reader = new FileReader()
+        reader.readAsDataURL(files[0])
+        reader.onload = () => {
+          setAvatar(reader.result)
+        }
+      }
+    },
+    [setAvatar],
+  )
+
+  const handleAvatarClick = React.useCallback(() => {
+    if (avatarUploadRef.current) {
+      const clickEvent = new MouseEvent('click')
+      avatarUploadRef.current.dispatchEvent(clickEvent)
+    }
+  }, [])
+
   const handleInput = React.useCallback((value, e) => {
     setInput({[e.target.name]: value})
   }, [])
@@ -40,8 +65,8 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   }, [])
 
   const saveChanges = React.useCallback(() => {
-    handleUpdateUser({id: doc.id, ...input, _groupId: groupId})
-  }, [handleUpdateUser, doc.id, input, groupId])
+    handleUpdateUser({id: doc.id, ...input, avatar, _groupId: groupId})
+  }, [handleUpdateUser, doc.id, input, avatar, groupId])
 
   const canSave = () => {
     if (input.name.length <= 1) {
@@ -61,6 +86,21 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
       onCloseComplete={onCloseComplete}
       canSave={canSave()}
     >
+      <input
+        ref={avatarUploadRef}
+        type="file"
+        onChange={handleAvatarUpload}
+        hidden
+      />
+      <Pane display="flex" justifyContent="center" marginBottom={SPACING}>
+        <Avatar
+          src={avatar}
+          onClick={handleAvatarClick}
+          name={input.name || 'U'}
+          size={100}
+          cursor="pointer"
+        />
+      </Pane>
       <TextInputField
         name="name"
         value={input.name}
