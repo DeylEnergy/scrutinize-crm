@@ -5,14 +5,15 @@ import {
   FaDatabase,
   FaList,
   FaQrcode,
-  FaUser,
   FaChartBar,
   FaUserCog,
 } from 'react-icons/fa'
 import {Tooltip} from 'evergreen-ui'
+import IconButton from '../components/IconButton'
 import Carts from '../routes/carts'
 import {useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
+import UserProfilePopover from './UserProfilePopover'
 
 const Stripe = styled.div`
   color: #fff;
@@ -44,32 +45,6 @@ const Logo = styled.div`
   width: 5%;
 `
 
-const ICON_COLOR = '#ffffff7d'
-
-const ICON_SIZE = 24
-
-const MenuIcon = React.forwardRef(function MenuIcon(
-  {
-    icon,
-    ...props
-  }: {
-    icon: JSX.Element
-    innerRef?: any
-  },
-  ref: any,
-) {
-  icon = React.cloneElement(icon, {
-    size: ICON_SIZE,
-    color: ICON_COLOR,
-  })
-
-  return (
-    <span ref={ref} {...props}>
-      {icon}
-    </span>
-  )
-})
-
 export default function Header() {
   const [{permissions}] = useAccount()
 
@@ -88,35 +63,35 @@ export default function Header() {
         {canSeeMerchandise && (
           <Link to="/merchandise">
             <Tooltip content="Merchandise">
-              <MenuIcon icon={<FaDatabase />} />
+              <IconButton icon={<FaDatabase />} />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
           <Link to="/sales">
             <Tooltip content="Sales">
-              <MenuIcon icon={<FaList />} />
+              <IconButton icon={<FaList />} />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
           <Link to="/stats">
             <Tooltip content="Statistics">
-              <MenuIcon icon={<FaChartBar />} />
+              <IconButton icon={<FaChartBar />} />
             </Tooltip>
           </Link>
         )}
         {canSeeUsersControl && (
           <Link to="/users-control">
             <Tooltip content="Users Control">
-              <MenuIcon icon={<FaUserCog />} />
+              <IconButton icon={<FaUserCog />} />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
           <Link to="/">
             <Tooltip content="Stickers manager">
-              <MenuIcon icon={<FaQrcode />} />
+              <IconButton icon={<FaQrcode />} />
             </Tooltip>
           </Link>
         )}
@@ -125,7 +100,7 @@ export default function Header() {
       <ActionsContainer last>
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
         {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && (
-          <MenuIcon icon={<FaUser />} />
+          <UserProfilePopover />
         )}
       </ActionsContainer>
     </Stripe>
