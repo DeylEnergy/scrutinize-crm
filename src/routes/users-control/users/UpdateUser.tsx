@@ -15,6 +15,8 @@ import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
 import GlobalContext from '../../../contexts/globalContext'
 import SeeSecretKeyPopover from './SeeSecretKeyPopover'
+import {useAccount} from '../../../utilities'
+import RIGHTS from '../../../constants/rights'
 
 const NOTE_INPUT_STYLE = {
   resize: 'vertical' as 'vertical',
@@ -22,6 +24,9 @@ const NOTE_INPUT_STYLE = {
 
 function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   const {worker} = React.useContext(GlobalContext)
+
+  const [{permissions, user}] = useAccount()
+
   const doc = sideSheet.value
 
   const avatarUploadRef = React.useRef<any>()
@@ -108,6 +113,11 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
 
   const userExists = Boolean(doc.id)
 
+  const canSeeCredentials =
+    !userExists ||
+    user?.id === doc.id ||
+    permissions.includes(RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS)
+
   return (
     <SideSheet
       title={userExists ? 'Edit user' : 'Add user'}
@@ -169,32 +179,36 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         style={NOTE_INPUT_STYLE}
         marginBottom={8}
       />
-      <Heading
-        size={400}
-        fontWeight={500}
-        color="#425A70"
-        marginTop={SPACING / 2}
-        marginBottom={SPACING / 2}
-      >
-        Credentials
-      </Heading>
-      <Pane display="flex" justifyContent="space-between">
-        <SeeSecretKeyPopover
-          userName={input.name}
-          secretKey={secretKey}
-          disabled={!canBeSaved}
-        />
-        <Button
-          intent="warning"
-          iconBefore={RefreshIcon}
-          justifyContent="center"
-          width="49%"
-          onClick={handleGenerateSecretKey}
-          disabled={!canBeSaved}
-        >
-          Generate new key
-        </Button>
-      </Pane>
+      {canSeeCredentials && (
+        <>
+          <Heading
+            size={400}
+            fontWeight={500}
+            color="#425A70"
+            marginTop={SPACING / 2}
+            marginBottom={SPACING / 2}
+          >
+            Credentials
+          </Heading>
+          <Pane display="flex" justifyContent="space-between">
+            <SeeSecretKeyPopover
+              userName={input.name}
+              secretKey={secretKey}
+              disabled={!canBeSaved}
+            />
+            <Button
+              intent="warning"
+              iconBefore={RefreshIcon}
+              justifyContent="center"
+              width="49%"
+              onClick={handleGenerateSecretKey}
+              disabled={!canBeSaved}
+            >
+              Generate new key
+            </Button>
+          </Pane>
+        </>
+      )}
     </SideSheet>
   )
 }

@@ -30,6 +30,7 @@ const SALES_PERMISSIONS = [
 const USERS_PERMISSIONS = [
   [RIGHTS.CAN_SEE_USERS, 'Can see users'],
   [RIGHTS.CAN_SEE_USER_PROFILE, 'Can see user profile'],
+  [RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS, 'Can see other users secret keys'],
 ]
 
 const USERS_GROUP = [[RIGHTS.CAN_SEE_USERS_GROUP, 'Can see users group']]
