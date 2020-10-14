@@ -31,7 +31,7 @@ export default function pushEvents(requests: any) {
       const {cb, storeName} = request
       const store = tx.objectStore(storeName)
       const [data, requestFailed]: any = await handleAsync(
-        wrapReq(cb, {store, eventsResults}),
+        wrapReq(cb, {store, tx, eventsResults}),
       )
 
       if (requestFailed) {
