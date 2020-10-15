@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRowFromStore, getFullIndexStore} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -9,6 +9,7 @@ const PROFIT_PERCENTAGE = 20
 
 export default async function putAcquisition({
   store = null,
+  tx = null,
   type,
   payload,
   emitEvent = true,
@@ -20,6 +21,8 @@ export default async function putAcquisition({
       const _product: any = await getRowFromStore(
         SN.PRODUCTS,
         payload._productId,
+        null,
+        tx,
       )
 
       payload.price = _product.realPrice
