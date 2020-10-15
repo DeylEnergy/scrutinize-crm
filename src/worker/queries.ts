@@ -20,11 +20,15 @@ async function getFilter(
 export function getRowFromStore(
   storeName: string,
   id: string | number,
-  store?: IDBObjectStore,
+  store?: IDBObjectStore | null,
+  tx?: IDBTransaction,
 ) {
   return new Promise(resolve => {
+    if (!tx) {
+      tx = setupTransaction(storeName, 'readonly')
+    }
+
     if (!store) {
-      const tx = setupTransaction(storeName, 'readonly')
       // @ts-ignore
       store = tx?.objectStore(storeName)
     }
@@ -135,6 +139,7 @@ async function getOutputFormatFn(
 }
 
 async function setupQuery(params: any) {
+  let {tx} = params
   const {
     storeName,
     indexName,
@@ -154,7 +159,9 @@ async function setupQuery(params: any) {
 
   const {collectDataFn, collectDataStores} = collectData
 
-  const tx = setupTransaction([storeName, ...collectDataStores], 'readonly')
+  if (!tx) {
+    tx = setupTransaction([storeName, ...collectDataStores], 'readonly')
+  }
 
   const cache: any = {cartParticipants: {}}
 
