@@ -6,6 +6,7 @@ import {
   PUT_SALE,
   PUT_STAT,
   PROCESS_SALE,
+  PUT_ACQUISITION,
 } from '../../constants/events'
 import send from './index'
 
@@ -50,13 +51,18 @@ export default async function processSale({payload}: any) {
   const saleDatetime = currentDate.getTime()
 
   for (const cartItem of cartProducts.reverse()) {
+    const productShapeAfterSale = getProductShapeAfterSale(
+      cartItem,
+      saleDatetime,
+    )
+
     const events = [
       {
         storeName: SN.PRODUCTS,
         cb: ({store}: any) =>
           send({
             type: PUT_PRODUCT,
-            payload: getProductShapeAfterSale(cartItem, saleDatetime),
+            payload: productShapeAfterSale,
             store,
             emitEvent: false,
           }),
@@ -86,8 +92,39 @@ export default async function processSale({payload}: any) {
             emitEvent: false,
           }),
       },
-      // TODO: if product inStockCount <= lowestBoundCount add in toBuyList
     ]
+
+    if (
+      productShapeAfterSale.inStockCount <=
+      productShapeAfterSale.lowestBoundCount
+    ) {
+      const [theProductInBuyList] = await handleAsync(
+        getFullIndexStore({
+          storeName: SN.ACQUISITIONS,
+          indexName: IN.NEEDED_SINCE_DATETIME,
+          dataCollecting: false,
+          matchProperties: {_productId: productShapeAfterSale.id},
+        }),
+      )
+
+      // product already in the buy list, no need to schedule the event
+      if (!theProductInBuyList.length) {
+        events.push({
+          storeName: SN.ACQUISITIONS,
+          cb: ({store, tx}: any) =>
+            send({
+              type: PUT_ACQUISITION,
+              payload: {
+                neededSinceDatetime: saleDatetime,
+                _productId: productShapeAfterSale.id,
+              },
+              store,
+              tx,
+              emitEvent: false,
+            }),
+        })
+      }
+    }
 
     const [wasProcessed] = await handleAsync(pushEvents(events))
 
