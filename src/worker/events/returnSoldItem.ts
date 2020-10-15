@@ -1,7 +1,12 @@
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRowFromStore, getFullIndexStore} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {PUT_PRODUCT, PUT_SALE, PUT_STAT} from '../../constants/events'
+import {
+  PUT_PRODUCT,
+  PUT_SALE,
+  PUT_STAT,
+  DELETE_TO_BUY_ITEM,
+} from '../../constants/events'
 import {getPeriodOfDate} from '../../utilities'
 import send from './index'
 import pushEvents from '../pushEvents'
@@ -114,8 +119,38 @@ export default async function returnSoldItem({payload, emitEvent = true}: any) {
           emitEvent: false,
         }),
     },
-    // TODO: remove product inStockCount > lowestBoundCount from toBuyList
   ]
+
+  if (
+    productShapeAfterReturn.inStockCount >
+    productShapeAfterReturn.lowestBoundCount
+  ) {
+    const [theProductInBuyList] = await handleAsync(
+      getFullIndexStore({
+        storeName: SN.ACQUISITIONS,
+        indexName: IN.NEEDED_SINCE_DATETIME,
+        dataCollecting: false,
+        matchProperties: {_productId: productShapeAfterReturn.id},
+      }),
+    )
+
+    // schedule remove product from the buy list in case it's found
+    if (theProductInBuyList.length) {
+      events.push({
+        storeName: SN.ACQUISITIONS,
+        cb: ({store, tx}: any) =>
+          send({
+            type: DELETE_TO_BUY_ITEM,
+            payload: {
+              id: theProductInBuyList[0].id,
+            },
+            store,
+            tx,
+            emitEvent: false,
+          }),
+      })
+    }
+  }
 
   const [success] = await handleAsync(pushEvents(events))
 
