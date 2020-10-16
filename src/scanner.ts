@@ -1,3 +1,4 @@
+// @ts-nocheck
 import jsQR from 'jsqr'
 
 let canvas: any
@@ -14,7 +15,7 @@ function drawLine(begin: any, end: any, color: any) {
   context.strokeStyle = color
   context.stroke()
 }
-
+// eslint-disable-next-line
 self.onmessage = async function(evt: MessageEvent) {
   const data = evt.data
 
@@ -54,7 +55,7 @@ self.onmessage = async function(evt: MessageEvent) {
     )
 
     if (code) {
-      // @ts-ignore
+      // eslint-disable-next-line
       self.postMessage(code)
       drawLine(
         code.location.topLeftCorner,
@@ -79,3 +80,6 @@ self.onmessage = async function(evt: MessageEvent) {
     }
   }
 }
+
+// Temporary HACK to fix problem with hanging message of TypeScript's "checking results"...
+export default function none() {}
