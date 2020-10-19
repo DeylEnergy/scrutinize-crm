@@ -1,11 +1,11 @@
 import React from 'react'
 import {toaster} from 'evergreen-ui'
 import Header from './layouts/Header'
-import MerchandisePage from './routes/merchandise'
-import SalesPage from './routes/sales'
-import StatsPage from './routes/stats'
-import UsersControlPage from './routes/users-control'
-import SignInPage from './routes/sign-in'
+import MerchandisePage from './pages/merchandise'
+import SalesPage from './pages/sales'
+import StatsPage from './pages/stats'
+import UsersControlPage from './pages/users-control'
+import SignInPage from './pages/sign-in'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
@@ -15,7 +15,7 @@ import ScannerListenerContext from './contexts/scannerListenerContext'
 import createDbWorker from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
 import {useAccount} from './utilities'
-import GlobalQRScanner from './routes/global-qr-scanner'
+import GlobalQRScanner from './pages/global-qr-scanner'
 
 const fns: any = createDbWorker()
 

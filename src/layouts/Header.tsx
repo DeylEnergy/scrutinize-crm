@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa'
 import {Tooltip} from 'evergreen-ui'
 import IconButton from '../components/IconButton'
-import Carts from '../routes/carts'
+import Carts from '../pages/carts'
 import {useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
 import UserProfilePopover from './UserProfilePopover'
