@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Pane, AddIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase} from '../../utilities'
 
 function EmptyView({}: any) {
   return (
@@ -17,13 +17,13 @@ function EmptyView({}: any) {
 }
 
 function AddProduct({handleSelectedProduct}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   return (
     <AsyncSelectMenu
       title="Add product"
       onSelect={handleSelectedProduct}
-      searchFn={worker.search}
+      searchFn={db.search}
       storeName={'products'}
       emptyView={(searchValue: any) => <EmptyView />}
     >

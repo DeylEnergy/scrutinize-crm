@@ -8,11 +8,10 @@ import {
   TickIcon,
 } from 'evergreen-ui'
 import Popover from '../../../components/Popover'
-import GlobalContext from '../../../contexts/globalContext'
 import ProcessAcquisitionsDialog from './ProcessAcquisitionsDialog'
 import print from './print'
 import RIGHTS from '../../../constants/rights'
-import {useAccount} from '../../../utilities'
+import {useAccount, useDatabase} from '../../../utilities'
 
 interface OptionsProps {
   refetchAll: () => void
@@ -21,7 +20,7 @@ interface OptionsProps {
 
 function Options({refetchAll, hasBoughtItems}: OptionsProps) {
   const [{permissions}] = useAccount()
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const [isShown, setIsShown] = React.useState(false)
 
   return (
@@ -35,7 +34,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
                 <Menu.Item
                   icon={PrintIcon}
                   onSelect={() => {
-                    print(worker)
+                    print(db)
                     close()
                   }}
                 >

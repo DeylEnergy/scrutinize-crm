@@ -8,7 +8,7 @@ import {
   BanCircleIcon,
 } from 'evergreen-ui'
 import styled from 'styled-components'
-import GlobalContext from '../../../contexts/globalContext'
+import {useDatabase} from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
 
@@ -57,7 +57,7 @@ const ProcessIndicator = ({isProcessing, success}: ProcessIndicatorProps) => {
 }
 
 export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const [state, setState] = React.useReducer(
     // @ts-ignore
     (s, v) => {
@@ -75,15 +75,13 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
 
   React.useEffect(() => {
     if (isShown) {
-      worker
-        .getRows({
-          storeName: SN.ACQUISITIONS,
-          indexName: IN.NEEDED_SINCE_DATETIME,
-          direction: 'prev',
-          filterBy: 'bought',
-          format: 'processToBuyList',
-        })
-        .then((res: any) => setState({data: res}))
+      db.getRows({
+        storeName: SN.ACQUISITIONS,
+        indexName: IN.NEEDED_SINCE_DATETIME,
+        direction: 'prev',
+        filterBy: 'bought',
+        format: 'processToBuyList',
+      }).then((res: any) => setState({data: res}))
     }
 
     return () => setState({data: null})
@@ -124,7 +122,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
                   isLoading={isProcessing}
                   onClick={() => {
                     setState({acquisitionsProcessing: true})
-                    worker.sendEvent({type: PROCESS_ACQUISITIONS}).then(() => {
+                    db.sendEvent({type: PROCESS_ACQUISITIONS}).then(() => {
                       setState({
                         acquisitionsProcessing: false,
                         acquisitionsSuccess: true,

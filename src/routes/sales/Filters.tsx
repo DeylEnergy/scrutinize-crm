@@ -1,7 +1,7 @@
 import React from 'react'
 import {SelectField} from 'evergreen-ui'
 import FiltersPopoverButton from '../../components/FiltersPopoverButton'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase} from '../../utilities'
 import {STORE_NAME as SN, SPACING} from '../../constants'
 
 export const FILTER_PARAMS_DEFAULT = {
@@ -11,17 +11,15 @@ export const FILTER_PARAMS_DEFAULT = {
 }
 
 function Options({period, handleFilterChange}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const [periodOptions, setPeriodOptions] = React.useState([])
 
   React.useEffect(() => {
-    worker
-      .getRows({
-        storeName: SN.STATS,
-        direction: 'prev',
-        format: 'periods',
-      })
-      .then(setPeriodOptions)
+    db.getRows({
+      storeName: SN.STATS,
+      direction: 'prev',
+      format: 'periods',
+    }).then(setPeriodOptions)
   }, [])
 
   return (

@@ -11,9 +11,8 @@ import {
   EditIcon,
 } from 'evergreen-ui'
 import Table from '../../../components/Table'
-import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN} from '../../../constants'
-import {useAccount, withErrorBoundary} from '../../../utilities'
+import {useAccount, useDatabase, withErrorBoundary} from '../../../utilities'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import UpdateGroup from './UpdateGroup'
 import {PUT_GROUP} from '../../../constants/events'
@@ -44,7 +43,7 @@ const NEW_GROUP_VALUE = {
 
 function Groups() {
   const [account, setAccount] = useAccount()
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -102,24 +101,22 @@ function Groups() {
   )
 
   const loadMoreItems = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: SN.GROUPS,
-        limit: FETCH_ITEM_LIMIT,
-      })
-      .then((newItems: any) => {
-        if (!newItems) {
-          return
-        }
+    db.getRows({
+      storeName: SN.GROUPS,
+      limit: FETCH_ITEM_LIMIT,
+    }).then((newItems: any) => {
+      if (!newItems) {
+        return
+      }
 
-        const newItemsSerialized = newItems.map(serializeItem)
-        setLoadedItems({
-          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-          items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems.length && newItems[newItems.length - 1].id,
-        })
+      const newItemsSerialized = newItems.map(serializeItem)
+      setLoadedItems({
+        hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+        items: [...loadedItems.items, ...newItemsSerialized],
+        lastKey: newItems.length && newItems[newItems.length - 1].id,
       })
-  }, [loadedItems.items, worker, serializeItem])
+    })
+  }, [loadedItems.items, db, serializeItem])
 
   const handleNewGroupClick = React.useCallback(
     () => setSideSheet({isShown: true, value: NEW_GROUP_VALUE}),
@@ -132,38 +129,36 @@ function Groups() {
 
   const handleUpdateGroup = React.useCallback(
     updatedGroup => {
-      worker
-        .sendEvent({
-          type: PUT_GROUP,
-          payload: updatedGroup,
-          consumer: 'client',
-        })
-        .then((result: any) => {
-          if (!result) {
-            return
-          }
+      db.sendEvent({
+        type: PUT_GROUP,
+        payload: updatedGroup,
+        consumer: 'client',
+      }).then((result: any) => {
+        if (!result) {
+          return
+        }
 
-          if (updatedGroup.id === account.groupId) {
-            setAccount({
-              groupName: updatedGroup.name,
-              permissions: updatedGroup.permissions,
-            })
-          }
+        if (updatedGroup.id === account.groupId) {
+          setAccount({
+            groupName: updatedGroup.name,
+            permissions: updatedGroup.permissions,
+          })
+        }
 
-          const items = itemsRef.current
+        const items = itemsRef.current
 
-          if (!updatedGroup.id) {
-            items.push(serializeItem(result))
-          } else {
-            const foundIndex = items.findIndex((x: any) => x.id === result.id)
-            items[foundIndex] = serializeItem(result)
-          }
+        if (!updatedGroup.id) {
+          items.push(serializeItem(result))
+        } else {
+          const foundIndex = items.findIndex((x: any) => x.id === result.id)
+          items[foundIndex] = serializeItem(result)
+        }
 
-          setLoadedItems({items: [...items]})
-          setTimeout(() => setSideSheet({isShown: false}))
-        })
+        setLoadedItems({items: [...items]})
+        setTimeout(() => setSideSheet({isShown: false}))
+      })
     },
-    [worker, serializeItem],
+    [db, serializeItem],
   )
 
   return (

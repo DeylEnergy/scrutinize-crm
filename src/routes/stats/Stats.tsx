@@ -1,9 +1,8 @@
 import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../components/Table'
-import GlobalContext from '../../contexts/globalContext'
 import {STORE_NAME as SN} from '../../constants'
-import {withErrorBoundary} from '../../utilities'
+import {useDatabase, withErrorBoundary} from '../../utilities'
 import {PageWrapper} from '../../layouts'
 
 const columns = [
@@ -22,7 +21,7 @@ const LOADED_ITEMS_DEFAULT = {
 }
 
 function Stats() {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>([])
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -52,25 +51,23 @@ function Stats() {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: SN.STATS,
-        direction: 'prev',
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-      })
-      .then((newItems: any) => {
-        if (!newItems) {
-          return
-        }
+    db.getRows({
+      storeName: SN.STATS,
+      direction: 'prev',
+      limit: FETCH_ITEM_LIMIT,
+      lastKey,
+    }).then((newItems: any) => {
+      if (!newItems) {
+        return
+      }
 
-        const newItemsSerialized = newItems.map(serializeItem)
-        setLoadedItems({
-          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-          items: [...itemsRef.current, ...newItemsSerialized],
-          lastKey: newItems.length && newItems[newItems.length - 1].period,
-        })
+      const newItemsSerialized = newItems.map(serializeItem)
+      setLoadedItems({
+        hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+        items: [...itemsRef.current, ...newItemsSerialized],
+        lastKey: newItems.length && newItems[newItems.length - 1].period,
       })
+    })
   }, [lastKey])
 
   return (

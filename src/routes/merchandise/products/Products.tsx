@@ -11,10 +11,14 @@ import {PageWrapper, ControlWrapper} from '../../../layouts'
 import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
-import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import RIGHTS from '../../../constants/rights'
-import {withErrorBoundary, useAccount, useUpdate} from '../../../utilities'
+import {
+  withErrorBoundary,
+  useAccount,
+  useDatabase,
+  useUpdate,
+} from '../../../utilities'
 
 interface Supplier {
   id: number
@@ -95,7 +99,7 @@ const SIDE_SHEET_DEFAULT = {
 
 function Products() {
   const [{permissions}] = useAccount()
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   const itemsRef = React.useRef<any>(null)
 
@@ -169,30 +173,25 @@ function Products() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      worker
-        .getRows({
-          storeName: SN.PRODUCTS,
-          indexName: IN.NAME_MODEL,
-          limit: FETCH_ITEM_LIMIT,
-          lastKey,
-          filterBy: 'consist',
-          filterParams: {searchQuery},
+      db.getRows({
+        storeName: SN.PRODUCTS,
+        indexName: IN.NAME_MODEL,
+        limit: FETCH_ITEM_LIMIT,
+        lastKey,
+        filterBy: 'consist',
+        filterParams: {searchQuery},
+      }).then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
+        const newItemsSerialized = newItems.map(serializeItem)
+        setLoadedItems({
+          ...loadedItems,
+          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+          items: [...(lastKey ? itemsRef.current : []), ...newItemsSerialized],
+          lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
         })
-        .then((newItems: any) => {
-          if (!newItems) {
-            return
-          }
-          const newItemsSerialized = newItems.map(serializeItem)
-          setLoadedItems({
-            ...loadedItems,
-            hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-            items: [
-              ...(lastKey ? itemsRef.current : []),
-              ...newItemsSerialized,
-            ],
-            lastKey: newItems.length && newItems[newItems.length - 1].nameModel,
-          })
-        })
+      })
     },
     [setLoadedItems],
   )

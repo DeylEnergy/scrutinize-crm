@@ -1,6 +1,6 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase} from '../../utilities'
 import {PROCESS_SALE} from '../../constants/events'
 import TextInputField from '../../components/TextInputField'
 
@@ -11,7 +11,7 @@ export default function CheckoutDialog({
   totalSum,
   cartId,
 }: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   const [paidSum, setPaidSum] = React.useState<any>('')
 
@@ -32,9 +32,9 @@ export default function CheckoutDialog({
         isConfirmDisabled={changeSum < 0}
         confirmLabel="Finish"
         onConfirm={() => {
-          worker
-            .sendEvent({type: PROCESS_SALE, payload: {cartId}})
-            .then(handleCheckoutSuccess)
+          db.sendEvent({type: PROCESS_SALE, payload: {cartId}}).then(
+            handleCheckoutSuccess,
+          )
         }}
         hasCancel={false}
       >

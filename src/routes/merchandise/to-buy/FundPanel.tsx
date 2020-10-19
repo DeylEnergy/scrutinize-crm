@@ -9,7 +9,7 @@ import {
   TintIcon,
 } from 'evergreen-ui'
 import EditablePopoverInput from '../../../components/EditablePopoverInput'
-import GlobalContext from '../../../contexts/globalContext'
+import {useDatabase} from '../../../utilities'
 import {PUT_BUDGET} from '../../../constants/events'
 
 function FundPanelItemWrapper({className, children, innerRef, ...props}: any) {
@@ -27,18 +27,18 @@ const StyledFundPanelItemWrapper = styled(FundPanelItemWrapper)`
 `
 
 function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   const onSaveBudget = React.useCallback(
     (newBudget: any) => {
       const numberValue = Number(newBudget)
       if (!isNaN(numberValue)) {
-        return worker
+        return db
           .sendEvent({type: PUT_BUDGET, payload: {value: newBudget}})
           .then(fetchComputedOfToBuyList)
       }
     },
-    [worker],
+    [db],
   )
 
   const {budget, needed, spent, remains} = computedBuyList

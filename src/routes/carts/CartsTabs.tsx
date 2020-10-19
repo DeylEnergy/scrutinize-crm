@@ -3,7 +3,7 @@ import {Pane, Tablist, Tab, AddIcon} from 'evergreen-ui'
 import {v4 as uuidv4} from 'uuid'
 import Block from '../../components/Block'
 import Cart from './Cart'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 
 export default function CartsTabs({
@@ -11,7 +11,7 @@ export default function CartsTabs({
   setState,
   fetchComputedCartSum,
 }: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   const {tabs} = state
 
@@ -35,26 +35,24 @@ export default function CartsTabs({
   }
 
   React.useEffect(() => {
-    worker
-      .getRows({
-        storeName: SN.SALES,
-        indexName: IN.__CART_ID__,
-        format: 'cartIds',
-        dataCollecting: false,
-      })
-      .then((rows: any) => {
-        if (!rows.length) {
-          return handleNewCart()
-        }
+    db.getRows({
+      storeName: SN.SALES,
+      indexName: IN.__CART_ID__,
+      format: 'cartIds',
+      dataCollecting: false,
+    }).then((rows: any) => {
+      if (!rows.length) {
+        return handleNewCart()
+      }
 
-        setState({
-          selectedCartId: rows[0],
-          tabs: rows.map((cartId: string, index: number) => ({
-            label: `Cart #${index + 1}`,
-            cartId,
-          })),
-        })
+      setState({
+        selectedCartId: rows[0],
+        tabs: rows.map((cartId: string, index: number) => ({
+          label: `Cart #${index + 1}`,
+          cartId,
+        })),
       })
+    })
   }, [])
 
   return (

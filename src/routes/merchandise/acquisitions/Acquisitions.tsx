@@ -1,7 +1,6 @@
 import React from 'react'
 import Table from '../../../components/Table'
-import GlobalContext from '../../../contexts/globalContext'
-import {withErrorBoundary} from '../../../utilities'
+import {useDatabase, withErrorBoundary} from '../../../utilities'
 
 const columns = [
   {label: 'Date', width: 150},
@@ -41,7 +40,7 @@ function serializeItem(item: any) {
 }
 
 function Acquisitions() {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => ({...s, ...v}),
@@ -56,22 +55,20 @@ function Acquisitions() {
   )
 
   const loadMoreItems = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: 'acquisitions',
-        indexName: 'datetime',
-        direction: 'prev',
-        limit: FETCH_ITEM_LIMIT,
-        lastKey: loadedItems.lastKey,
+    db.getRows({
+      storeName: 'acquisitions',
+      indexName: 'datetime',
+      direction: 'prev',
+      limit: FETCH_ITEM_LIMIT,
+      lastKey: loadedItems.lastKey,
+    }).then((newItems: any) => {
+      const newItemsSerialized = newItems.map(serializeItem)
+      setLoadedItems({
+        hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+        items: [...loadedItems.items, ...newItemsSerialized],
+        lastKey: newItems.length && newItems[newItems.length - 1].datetime,
       })
-      .then((newItems: any) => {
-        const newItemsSerialized = newItems.map(serializeItem)
-        setLoadedItems({
-          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-          items: [...loadedItems.items, ...newItemsSerialized],
-          lastKey: newItems.length && newItems[newItems.length - 1].datetime,
-        })
-      })
+    })
   }, [loadedItems.items])
 
   return (

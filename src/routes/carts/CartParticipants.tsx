@@ -1,12 +1,11 @@
 import React from 'react'
 import {Button, Pane, FollowerIcon, FollowingIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
-import {handleAsync} from '../../utilities'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase, handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 
 function CartParticipants({selectedCartId}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const [hasLoaded, setHasLoaded] = React.useState(false)
   const [cartParticipants, setCartParticipants] = React.useReducer(
     // @ts-ignore
@@ -18,26 +17,24 @@ function CartParticipants({selectedCartId}: any) {
   )
 
   React.useEffect(() => {
-    worker
-      .perform({
-        storeName: SN.SALES,
-        action: 'getCartParticipants',
-        params: {cartId: selectedCartId},
+    db.perform({
+      storeName: SN.SALES,
+      action: 'getCartParticipants',
+      params: {cartId: selectedCartId},
+    }).then(({_user, _userId, _customer, _customerId}: any) => {
+      setHasLoaded(true)
+      setCartParticipants({
+        _userName: _user?.name,
+        _userId,
+        _customerName: _customer?.name,
+        _customerId,
       })
-      .then(({_user, _userId, _customer, _customerId}: any) => {
-        setHasLoaded(true)
-        setCartParticipants({
-          _userName: _user?.name,
-          _userId,
-          _customerName: _customer?.name,
-          _customerId,
-        })
-      })
+    })
   }, [])
 
   const updateCartParticipants = React.useCallback(
     (updatedParticipant: any) => {
-      return worker.sendEvent({
+      return db.sendEvent({
         type: 'putCartParticipants',
         payload: {
           __cartId__: selectedCartId,

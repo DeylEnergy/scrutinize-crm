@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
-import GlobalContext from '../../contexts/globalContext'
+import {useDatabase} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
@@ -12,7 +12,7 @@ const TABS = {
 }
 
 export default function CartsDialog({isShown, setIsShown}: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   // @ts-ignore
   const [state, setState] = React.useReducer((s, v) => ({...s, ...v}), TABS)
 
@@ -45,14 +45,12 @@ export default function CartsDialog({isShown, setIsShown}: any) {
   }, [selectedCartId, tabs])
 
   const fetchComputedCartSum = React.useCallback(() => {
-    worker
-      .perform({
-        storeName: SN.SALES,
-        action: 'computeCartSum',
-        params: {__cartId__: selectedCartId},
-      })
-      .then((cartSum: number) => setState({currentCartSum: cartSum}))
-  }, [worker, selectedCartId])
+    db.perform({
+      storeName: SN.SALES,
+      action: 'computeCartSum',
+      params: {__cartId__: selectedCartId},
+    }).then((cartSum: number) => setState({currentCartSum: cartSum}))
+  }, [db, selectedCartId])
 
   return (
     <>

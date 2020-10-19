@@ -18,8 +18,7 @@ import AddProduct from './AddProduct'
 import Filters from './Filters'
 import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
-import GlobalContext from '../../../contexts/globalContext'
-import {useAccount, withErrorBoundary} from '../../../utilities'
+import {useAccount, useDatabase, withErrorBoundary} from '../../../utilities'
 
 const columns = [
   {label: 'Done', width: 50},
@@ -59,7 +58,7 @@ const SELECT_MENU_STYLE = {
 
 function ToBuy() {
   const [{permissions}] = useAccount()
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -90,15 +89,15 @@ function ToBuy() {
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   const fetchComputedOfToBuyList = React.useCallback(() => {
-    worker
-      .perform({storeName: 'acquisitions', action: 'computeBuyList'})
-      .then(setComputedBuyList)
-  }, [worker])
+    db.perform({storeName: 'acquisitions', action: 'computeBuyList'}).then(
+      setComputedBuyList,
+    )
+  }, [db])
 
   React.useEffect(() => {
     // fetch computation of buy list
     fetchComputedOfToBuyList()
-  }, [worker])
+  }, [db])
 
   const serializeItem = React.useCallback(
     (item: any) => {
@@ -116,44 +115,39 @@ function ToBuy() {
           return setEditCell(null)
         }
 
-        worker
-          .sendEvent({
-            type: PUT_ACQUISITION,
-            payload: updatedItem,
-            consumer: 'client',
-          })
-          .then((result: any) => {
-            const items = itemsRef.current
-            const foundIndex = items.findIndex((x: any) => x.id === item.id)
-            if (result.isFrozen && filterBy !== FILTER_OPTIONS.FROZEN) {
-              items.splice(foundIndex, 1)
-            } else if (!result.isFrozen && filterBy === FILTER_OPTIONS.FROZEN) {
-              items.splice(foundIndex, 1)
-            } else if (
-              result.isDone &&
-              filterBy === FILTER_OPTIONS.HAVE_TO_BUY
-            ) {
-              items.splice(foundIndex, 1)
-            } else if (!result.isDone && filterBy === FILTER_OPTIONS.BOUGHT) {
-              items.splice(foundIndex, 1)
-            } else {
-              items[foundIndex] = serializeItem({
-                ...result,
-                _product: updatedItem._product,
-              })
-            }
+        db.sendEvent({
+          type: PUT_ACQUISITION,
+          payload: updatedItem,
+          consumer: 'client',
+        }).then((result: any) => {
+          const items = itemsRef.current
+          const foundIndex = items.findIndex((x: any) => x.id === item.id)
+          if (result.isFrozen && filterBy !== FILTER_OPTIONS.FROZEN) {
+            items.splice(foundIndex, 1)
+          } else if (!result.isFrozen && filterBy === FILTER_OPTIONS.FROZEN) {
+            items.splice(foundIndex, 1)
+          } else if (result.isDone && filterBy === FILTER_OPTIONS.HAVE_TO_BUY) {
+            items.splice(foundIndex, 1)
+          } else if (!result.isDone && filterBy === FILTER_OPTIONS.BOUGHT) {
+            items.splice(foundIndex, 1)
+          } else {
+            items[foundIndex] = serializeItem({
+              ...result,
+              _product: updatedItem._product,
+            })
+          }
 
-            const updatedItems = {items: [...items]}
+          const updatedItems = {items: [...items]}
 
-            addTask(() => setEditCell(null))
+          addTask(() => setEditCell(null))
 
-            // schedule update for footer computed values
-            if (key === 'price' || key === 'count' || key === 'isDone') {
-              addTask(fetchComputedOfToBuyList)
-            }
+          // schedule update for footer computed values
+          if (key === 'price' || key === 'count' || key === 'isDone') {
+            addTask(fetchComputedOfToBuyList)
+          }
 
-            setLoadedItems(updatedItems)
-          })
+          setLoadedItems(updatedItems)
+        })
       }
 
       const canEditCells =
@@ -381,24 +375,22 @@ function ToBuy() {
   )
 
   const fetchAcquisitions = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: 'acquisitions',
-        indexName: 'neededSinceDatetime',
-        direction: 'prev',
-        filterBy,
-      })
-      .then((newItems: any) => {
-        const newItemsSerialized = newItems.map(serializeItem)
+    db.getRows({
+      storeName: 'acquisitions',
+      indexName: 'neededSinceDatetime',
+      direction: 'prev',
+      filterBy,
+    }).then((newItems: any) => {
+      const newItemsSerialized = newItems.map(serializeItem)
 
-        const updatedLoadedItems = {
-          ...loadedItems,
-          hasNextPage: false,
-          items: newItemsSerialized,
-        }
+      const updatedLoadedItems = {
+        ...loadedItems,
+        hasNextPage: false,
+        items: newItemsSerialized,
+      }
 
-        setLoadedItems(updatedLoadedItems)
-      })
+      setLoadedItems(updatedLoadedItems)
+    })
   }, [loadedItems.items, filterBy])
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
@@ -418,18 +410,16 @@ function ToBuy() {
         neededSinceDatetime: Date.now(),
         _productId: item.value,
       }
-      worker
-        .sendEvent({
-          type: PUT_ACQUISITION,
-          payload: productToAdd,
-          consumer: 'client',
-        })
-        .then((product: any) => {
-          const items = itemsRef.current
-          const serializedProduct = serializeItem(product)
-          setLoadedItems({items: [serializedProduct, ...items]})
-          fetchComputedOfToBuyList()
-        })
+      db.sendEvent({
+        type: PUT_ACQUISITION,
+        payload: productToAdd,
+        consumer: 'client',
+      }).then((product: any) => {
+        const items = itemsRef.current
+        const serializedProduct = serializeItem(product)
+        setLoadedItems({items: [serializedProduct, ...items]})
+        fetchComputedOfToBuyList()
+      })
     },
     [itemsRef],
   )
@@ -443,23 +433,21 @@ function ToBuy() {
         ...input,
       }
 
-      worker
-        .sendEvent({
-          type: PUT_ACQUISITION,
-          payload: updatedRow,
-          consumer: 'client',
+      db.sendEvent({
+        type: PUT_ACQUISITION,
+        payload: updatedRow,
+        consumer: 'client',
+      }).then((result: any) => {
+        const items = itemsRef.current
+        const newProduct = serializeItem(result)
+        setLoadedItems({items: [newProduct, ...items]})
+        fetchComputedOfToBuyList()
+        requestAnimationFrame(() => {
+          setSideSheet({isShown: false})
         })
-        .then((result: any) => {
-          const items = itemsRef.current
-          const newProduct = serializeItem(result)
-          setLoadedItems({items: [newProduct, ...items]})
-          fetchComputedOfToBuyList()
-          requestAnimationFrame(() => {
-            setSideSheet({isShown: false})
-          })
-        })
+      })
     },
-    [worker],
+    [db],
   )
 
   const handleFilterChange = React.useCallback(

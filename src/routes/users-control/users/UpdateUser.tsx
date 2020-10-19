@@ -13,9 +13,8 @@ import {
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
-import GlobalContext from '../../../contexts/globalContext'
 import SeeSecretKeyPopover from './SeeSecretKeyPopover'
-import {useAccount} from '../../../utilities'
+import {useAccount, useDatabase} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
 
 const NOTE_INPUT_STYLE = {
@@ -23,9 +22,9 @@ const NOTE_INPUT_STYLE = {
 }
 
 function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
-  const {worker} = React.useContext(GlobalContext)
-
   const [{permissions, user}] = useAccount()
+
+  const db = useDatabase()
 
   const doc = sideSheet.value
 
@@ -52,7 +51,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   )
 
   React.useEffect(() => {
-    worker.getRows({storeName: SN.GROUPS}).then(setGroups)
+    db.getRows({storeName: SN.GROUPS}).then(setGroups)
   }, [])
 
   const handleAvatarUpload = React.useCallback(

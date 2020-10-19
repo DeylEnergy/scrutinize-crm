@@ -12,10 +12,9 @@ import {
 import SearchInput from '../../components/SearchInput'
 import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
-import GlobalContext from '../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import RIGHTS from '../../constants/rights'
-import {useAccount, withErrorBoundary} from '../../utilities'
+import {useAccount, useDatabase, withErrorBoundary} from '../../utilities'
 import {RETURN_SOLD_ITEM} from '../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
@@ -62,7 +61,7 @@ function ReturnSoldItemDialog({isShown, onClose, onConfirm}: any) {
 
 function Sales() {
   const [{permissions}] = useAccount()
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -91,19 +90,17 @@ function Sales() {
 
   const serializeItem = React.useCallback(item => {
     const confirmReturnSoldItem = (close: any) => {
-      worker
-        .sendEvent({
-          type: RETURN_SOLD_ITEM,
-          payload: {id: item.id},
-        })
-        .then(() => {
-          const items = itemsRef.current
-          const foundIndex = items.findIndex((x: any) => x.id === item.id)
-          const updatedRow = {...item, returned: true}
-          items[foundIndex] = serializeItem(updatedRow)
-          setLoadedItems({items: [...items]})
-          setTimeout(close)
-        })
+      db.sendEvent({
+        type: RETURN_SOLD_ITEM,
+        payload: {id: item.id},
+      }).then(() => {
+        const items = itemsRef.current
+        const foundIndex = items.findIndex((x: any) => x.id === item.id)
+        const updatedRow = {...item, returned: true}
+        items[foundIndex] = serializeItem(updatedRow)
+        setLoadedItems({items: [...items]})
+        setTimeout(close)
+      })
     }
 
     const returnSoldItem = () => {
@@ -165,36 +162,30 @@ function Sales() {
         lastKey ?? (from && [from, Infinity]) ?? PERIOD_STOP_DEFAULT
       const includeFirstItem = Boolean(lastKey)
       const excludeLastItem = false
-      worker
-        .getRows({
-          storeName: SN.SALES,
-          indexName: IN.DATETIME,
-          direction: 'prev',
-          limit: FETCH_ITEM_LIMIT,
-          customKeyRange: {
-            method: 'bound',
-            args: [startDate, stopDate, excludeLastItem, includeFirstItem],
-          },
-          filterBy: 'consist',
-          filterParams: {searchQuery},
-        })
-        .then((newItems: any) => {
-          if (!newItems) {
-            return
-          }
+      db.getRows({
+        storeName: SN.SALES,
+        indexName: IN.DATETIME,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        customKeyRange: {
+          method: 'bound',
+          args: [startDate, stopDate, excludeLastItem, includeFirstItem],
+        },
+        filterBy: 'consist',
+        filterParams: {searchQuery},
+      }).then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
 
-          const newItemsSerialized = newItems.map(serializeItem)
-          setLoadedItems({
-            hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-            items: [
-              ...(lastKey ? itemsRef.current : []),
-              ...newItemsSerialized,
-            ],
-            lastKey:
-              (newItems.length && newItems[newItems.length - 1].datetime) ||
-              null,
-          })
+        const newItemsSerialized = newItems.map(serializeItem)
+        setLoadedItems({
+          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+          items: [...(lastKey ? itemsRef.current : []), ...newItemsSerialized],
+          lastKey:
+            (newItems.length && newItems[newItems.length - 1].datetime) || null,
         })
+      })
     },
     [setLoadedItems],
   )

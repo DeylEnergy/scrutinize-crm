@@ -7,17 +7,17 @@ import StatsPage from './routes/stats'
 import UsersControlPage from './routes/users-control'
 import SignInPage from './routes/sign-in'
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
-import GlobalContext from './contexts/globalContext'
+import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
 import GlobalScannerContext from './contexts/globalScannerContext'
 import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
-import workerize from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
+import createDbWorker from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
 import {useAccount} from './utilities'
 import GlobalQRScanner from './routes/global-qr-scanner'
 
-const fns: any = workerize()
+const fns: any = createDbWorker()
 
 function displayDanger(err: any) {
   toaster.danger('Error', {
@@ -30,7 +30,7 @@ function handleError(err: any) {
   fns.sendEvent({type: 'saveError', payload: err}).catch(displayDanger)
 }
 
-const worker = (() => {
+const dbWorker = (() => {
   // this way every caught exception will be displayed inside the toaster
   return Object.keys(fns).reduce((total: any, cur: any) => {
     total[cur] = (...args: any) => fns[cur](...args).catch(handleError)
@@ -38,7 +38,7 @@ const worker = (() => {
   }, {})
 })()
 
-console.log(worker)
+console.log(dbWorker)
 
 const App = () => {
   const [{permissions}] = useAccount()
@@ -121,9 +121,6 @@ const ACCOUNT_MOCK = {
 }
 
 function AppProvider() {
-  const globalContextValue = React.useRef({
-    worker,
-  })
   // TODO: implement auth logic
   const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
@@ -134,8 +131,8 @@ function AppProvider() {
   const [scannerListener, setScannerListener] = React.useState<any>(null)
 
   return (
-    <GlobalContext.Provider value={globalContextValue.current}>
-      <AccountContext.Provider value={[account, setAccount]}>
+    <AccountContext.Provider value={[account, setAccount]}>
+      <DatabaseContext.Provider value={dbWorker}>
         <GlobalScannerContext.Provider
           value={[globalScanner, setGlobalScanner]}
         >
@@ -145,8 +142,8 @@ function AppProvider() {
             <App />
           </ScannerListenerContext.Provider>
         </GlobalScannerContext.Provider>
-      </AccountContext.Provider>
-    </GlobalContext.Provider>
+      </DatabaseContext.Provider>
+    </AccountContext.Provider>
   )
 }
 

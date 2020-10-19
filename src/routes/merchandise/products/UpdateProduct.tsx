@@ -1,7 +1,7 @@
 import React from 'react'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
-import GlobalContext from '../../../contexts/globalContext'
+import {useDatabase} from '../../../utilities'
 import {PUT_PRODUCT} from '../../../constants/events'
 
 type SideSheetType = {
@@ -83,7 +83,7 @@ function UpdateProduct({
 }: any) {
   // console.log('<UpdateProduct />')
 
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   const doc = sideSheet.value
 
@@ -179,17 +179,15 @@ function UpdateProduct({
     const {name, model, ...rest} = input
     const nameModel = [name, model]
     const updatedRow = {...sideSheet.value, ...rest, nameModel}
-    worker
-      .sendEvent({
-        type: PUT_PRODUCT,
-        payload: updatedRow,
-      })
-      .then(() => {
-        const foundIndex = items.findIndex((x: any) => x.id === updatedRow.id)
-        items[foundIndex] = serializeItem(updatedRow)
-        setLoadedItems({items: [...items]})
-        setTimeout(() => setSideSheet({isShown: false}))
-      })
+    db.sendEvent({
+      type: PUT_PRODUCT,
+      payload: updatedRow,
+    }).then(() => {
+      const foundIndex = items.findIndex((x: any) => x.id === updatedRow.id)
+      items[foundIndex] = serializeItem(updatedRow)
+      setLoadedItems({items: [...items]})
+      setTimeout(() => setSideSheet({isShown: false}))
+    })
   }
 
   const productExists = Boolean(doc.id)

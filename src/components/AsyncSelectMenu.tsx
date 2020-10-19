@@ -1,7 +1,7 @@
 import React from 'react'
 import {Position} from 'evergreen-ui'
 import SelectMenu from './SelectMenu'
-import GlobalContext from '../contexts/globalContext'
+import {useDatabase} from '../utilities'
 
 function AsyncSelectMenu({
   title,
@@ -13,10 +13,10 @@ function AsyncSelectMenu({
   emptyView = null,
   position = Position.BOTTOM_RIGHT,
 }: any) {
-  const {worker} = React.useContext<any>(GlobalContext)
+  const db = useDatabase()
   const [options, setOptions] = React.useState([])
   const searchValue = React.useRef<any>('')
-  const searchFn = worker.search
+  const searchFn = db.search
 
   const searchQuery = React.useCallback((value: any) => {
     searchFn({storeName, type: 'search', query: value}).then((res: any) => {

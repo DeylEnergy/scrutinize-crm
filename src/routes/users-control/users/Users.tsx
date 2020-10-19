@@ -14,9 +14,8 @@ import {
 import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateUser from './UpdateUser'
-import GlobalContext from '../../../contexts/globalContext'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../../constants'
-import {withErrorBoundary} from '../../../utilities'
+import {useDatabase, withErrorBoundary} from '../../../utilities'
 import {PUT_USER} from '../../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 
@@ -49,7 +48,7 @@ const NEW_USER_VALUE = {
 }
 
 function Users() {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -118,30 +117,25 @@ function Users() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      worker
-        .getRows({
-          storeName: SN.USERS,
-          indexName: IN.NAME,
-          limit: FETCH_ITEM_LIMIT,
-          lastKey,
-          filterBy: 'consist',
-          filterParams: {searchQuery},
-        })
-        .then((newItems: any) => {
-          if (!newItems) {
-            return
-          }
+      db.getRows({
+        storeName: SN.USERS,
+        indexName: IN.NAME,
+        limit: FETCH_ITEM_LIMIT,
+        lastKey,
+        filterBy: 'consist',
+        filterParams: {searchQuery},
+      }).then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
 
-          const newItemsSerialized = newItems.map(serializeItem)
-          setLoadedItems({
-            hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-            items: [
-              ...(lastKey ? itemsRef.current : []),
-              ...newItemsSerialized,
-            ],
-            lastKey: newItems.length && newItems[newItems.length - 1].name,
-          })
+        const newItemsSerialized = newItems.map(serializeItem)
+        setLoadedItems({
+          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+          items: [...(lastKey ? itemsRef.current : []), ...newItemsSerialized],
+          lastKey: newItems.length && newItems[newItems.length - 1].name,
         })
+      })
     },
     [setLoadedItems],
   )
@@ -169,31 +163,29 @@ function Users() {
 
   const handleUpdateUser = React.useCallback(
     updateUser => {
-      worker
-        .sendEvent({
-          type: PUT_USER,
-          payload: updateUser,
-          consumer: 'client',
-        })
-        .then((result: any) => {
-          if (!result) {
-            return
-          }
+      db.sendEvent({
+        type: PUT_USER,
+        payload: updateUser,
+        consumer: 'client',
+      }).then((result: any) => {
+        if (!result) {
+          return
+        }
 
-          const items = itemsRef.current
+        const items = itemsRef.current
 
-          if (!updateUser.id) {
-            items.push(serializeItem(result))
-          } else {
-            const foundIndex = items.findIndex((x: any) => x.id === result.id)
-            items[foundIndex] = serializeItem(result)
-          }
+        if (!updateUser.id) {
+          items.push(serializeItem(result))
+        } else {
+          const foundIndex = items.findIndex((x: any) => x.id === result.id)
+          items[foundIndex] = serializeItem(result)
+        }
 
-          setLoadedItems({items: [...items]})
-          setTimeout(() => setSideSheet({isShown: false}))
-        })
+        setLoadedItems({items: [...items]})
+        setTimeout(() => setSideSheet({isShown: false}))
+      })
     },
-    [worker, serializeItem],
+    [db, serializeItem],
   )
 
   const handleNewGroupClick = React.useCallback(

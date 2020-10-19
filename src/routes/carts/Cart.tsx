@@ -8,6 +8,7 @@ import {
   toaster,
 } from 'evergreen-ui'
 import {
+  useDatabase,
   useTasksAfterUpdate,
   useScannerListener,
   withErrorBoundary,
@@ -22,7 +23,6 @@ import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 import AddProduct from './AddProduct'
-import GlobalContext from '../../contexts/globalContext'
 
 const columns = [
   {label: 'Done', width: 50},
@@ -48,7 +48,7 @@ interface CartProps {
 }
 
 function Cart({cartId, fetchComputedCartSum}: CartProps) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -67,24 +67,22 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
 
   React.useEffect(() => {
     fetchComputedCartSum()
-  }, [worker])
+  }, [db])
 
   const deleteSaleItem = React.useCallback(
     (id: string) => {
-      worker
-        .sendEvent({
-          type: DELETE_SALE_ITEM,
-          payload: {id},
-        })
-        .then(() => {
-          const foundIndex = itemsRef.current.findIndex((x: any) => x.id === id)
-          if (foundIndex > -1) {
-            itemsRef.current.splice(foundIndex, 1)
-            setLoadedItems({items: [...itemsRef.current]})
-          }
-        })
+      db.sendEvent({
+        type: DELETE_SALE_ITEM,
+        payload: {id},
+      }).then(() => {
+        const foundIndex = itemsRef.current.findIndex((x: any) => x.id === id)
+        if (foundIndex > -1) {
+          itemsRef.current.splice(foundIndex, 1)
+          setLoadedItems({items: [...itemsRef.current]})
+        }
+      })
     },
-    [worker, itemsRef.current],
+    [db, itemsRef.current],
   )
 
   const serializeItem = React.useCallback(
@@ -103,33 +101,31 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
           return setEditCell(null)
         }
 
-        worker
-          .sendEvent({
-            type: PUT_SALE,
-            payload: updatedItem,
-            consumer: 'client',
-          })
-          .then((result: any) => {
-            const items = itemsRef.current
-            const foundIndex = items.findIndex((x: any) => x.id === item.id)
+        db.sendEvent({
+          type: PUT_SALE,
+          payload: updatedItem,
+          consumer: 'client',
+        }).then((result: any) => {
+          const items = itemsRef.current
+          const foundIndex = items.findIndex((x: any) => x.id === item.id)
 
-            items[foundIndex] = serializeItem(
-              {
-                ...result,
-                _product: updatedItem._product,
-              },
-              indexInTable,
-            )
+          items[foundIndex] = serializeItem(
+            {
+              ...result,
+              _product: updatedItem._product,
+            },
+            indexInTable,
+          )
 
-            const updatedItems = {items: [...items]}
-            addTask(() => setEditCell(null))
-            // schedule update for footer computed values
-            if (key === 'salePrice' || key === 'count') {
-              addTask(fetchComputedCartSum)
-            }
+          const updatedItems = {items: [...items]}
+          addTask(() => setEditCell(null))
+          // schedule update for footer computed values
+          if (key === 'salePrice' || key === 'count') {
+            addTask(fetchComputedCartSum)
+          }
 
-            setLoadedItems(updatedItems)
-          })
+          setLoadedItems(updatedItems)
+        })
       }
 
       const handleCellDblClick = (
@@ -278,25 +274,23 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   )
 
   const fetchAcquisitions = React.useCallback(() => {
-    worker
-      .getRows({
-        storeName: SN.SALES,
-        indexName: IN.__CART_ID__,
-        direction: 'prev',
-        matchProperties: {__cartId__: cartId},
-        sort: 'asc',
-      })
-      .then((newItems: any) => {
-        const newItemsSerialized = newItems.map(serializeItem)
+    db.getRows({
+      storeName: SN.SALES,
+      indexName: IN.__CART_ID__,
+      direction: 'prev',
+      matchProperties: {__cartId__: cartId},
+      sort: 'asc',
+    }).then((newItems: any) => {
+      const newItemsSerialized = newItems.map(serializeItem)
 
-        const updatedLoadedItems = {
-          ...loadedItems,
-          hasNextPage: false,
-          items: newItemsSerialized,
-        }
+      const updatedLoadedItems = {
+        ...loadedItems,
+        hasNextPage: false,
+        items: newItemsSerialized,
+      }
 
-        setLoadedItems(updatedLoadedItems)
-      })
+      setLoadedItems(updatedLoadedItems)
+    })
   }, [])
 
   const refetchAll = React.useCallback(() => {
@@ -312,13 +306,11 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         _productId: item.value,
       }
 
-      worker
-        .sendEvent({
-          type: PUT_SALE,
-          payload: productToAdd,
-          consumer: 'client',
-        })
-        .then(refetchAll)
+      db.sendEvent({
+        type: PUT_SALE,
+        payload: productToAdd,
+        consumer: 'client',
+      }).then(refetchAll)
     },
     [refetchAll],
   )
@@ -327,16 +319,14 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
     (scanResult: any) => {
       const [prefix, data] = recognizeQRCode(scanResult?.value)
       if (prefix === codePrefixes.acquisitions) {
-        worker
-          .getRow({storeName: SN.ACQUISITIONS, key: data})
-          .then((aq: any) => {
-            handleSelectedProduct({value: aq._productId})
-          })
+        db.getRow({storeName: SN.ACQUISITIONS, key: data}).then((aq: any) => {
+          handleSelectedProduct({value: aq._productId})
+        })
       } else {
         toaster.warning('Unknown type of QR code.')
       }
     },
-    [worker, handleSelectedProduct],
+    [db, handleSelectedProduct],
   )
 
   useScannerListener({
