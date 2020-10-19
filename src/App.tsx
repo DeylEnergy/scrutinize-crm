@@ -12,7 +12,7 @@ import AccountContext from './contexts/accountContext'
 import GlobalScannerContext from './contexts/globalScannerContext'
 import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
-import createDbWorker from 'workerize-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
+import createDbWorker from 'workerize-loader!./database' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
 import {useAccount} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
