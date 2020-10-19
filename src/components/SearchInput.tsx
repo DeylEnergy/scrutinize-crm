@@ -1,6 +1,5 @@
 import React from 'react'
 import {SearchInput} from 'evergreen-ui'
-import GlobalContext from '../contexts/globalContext'
 
 interface Props {
   width?: number
