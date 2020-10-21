@@ -72,17 +72,19 @@ const StyledHeaderCell = styled.div<{sticky?: boolean}>`
 `
 const HeaderCell = ({
   children,
+  isLastColumn,
   ...props
 }: {
   style?: React.CSSProperties
   sticky?: boolean
   children: React.ReactNode
+  isLastColumn?: boolean
 }) => (
   <StyledHeaderCell {...props}>
     <Subtitle variant="SECONDARY" padding={HEADER_SUBTITLE_PADDING}>
       {children}
     </Subtitle>
-    <CellDividers />
+    <CellDividers isLastColumn={isLastColumn} />
   </StyledHeaderCell>
 )
 
@@ -112,10 +114,10 @@ const GridData = styled.div`
   top: 50px;
 `
 
-function CellDividers() {
+function CellDividers({isLastColumn = false}: any) {
   return (
     <>
-      <Divider absolute variant={DIVIDER_VARIANT.VERTICAL} />
+      {!isLastColumn && <Divider absolute variant={DIVIDER_VARIANT.VERTICAL} />}
       <Divider absolute variant={DIVIDER_VARIANT.HORIZONTAL} />
     </>
   )
@@ -174,7 +176,7 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         </Tooltip>
       </TableCellContent>
 
-      <CellDividers />
+      <CellDividers isLastColumn={columnIndex === columns.length - 1} />
     </TableCell>
   )
 }
@@ -216,6 +218,7 @@ function StickyHeader({
               width,
             }}
             key={i}
+            isLastColumn={i === columns.length - 1}
           >
             {label === 'OPTIONS' ? '' : label}
           </HeaderCell>
