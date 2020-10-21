@@ -388,14 +388,14 @@ const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
 }
 
 const GRID_PARENT_STYLE = {
-  // Black / 20
-  border: '1px solid #dbdde0',
+  outline: '1px solid #dbdde0',
 }
 
 interface TableProps {
   columns: {
     label: string
     width: number
+    canGrow?: boolean
   }[]
 
   rows: {
@@ -419,9 +419,66 @@ function Table({
   isItemLoaded,
   loadMoreItems,
 }: TableProps) {
-  const [selectedRow, setSelectedRow] = React.useState(null)
+  const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
+  const [selectedRow, setSelectedRow] = React.useState<any>({
+    rows,
+    columns: adjustedColumns,
+    isItemLoaded,
+  })
   const [isFirstFetched, setIsFirstFetched] = React.useState(false)
   const firstMountDatetime = React.useRef(Date.now())
+
+  const gridComponentRef = React.useRef<any>()
+
+  const outerRef = React.useRef<any>()
+
+  const stretchColumns = React.useCallback(() => {
+    if (isFirstFetched) {
+      return
+    }
+
+    const gridEl = outerRef.current
+    if (gridEl) {
+      const gridDimensions = gridEl.getBoundingClientRect()
+      const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
+      const gridWidth = gridDimensions.width - gridScrollWidth
+
+      const columnsTotalWidth = columns.reduce(
+        (a, b) => a + b.width,
+        STICKY_COLUMN_WIDTH,
+      )
+
+      if (gridWidth > columnsTotalWidth) {
+        let totalExtraWidth = gridWidth - columnsTotalWidth
+
+        const growableColumnsCount = columns.reduce(
+          (a, b) => (b.canGrow ? a + 1 : a),
+          0,
+        )
+
+        const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+
+        const columnsUpdate = JSON.parse(JSON.stringify(columns))
+        for (const column of columnsUpdate) {
+          if (column.canGrow) {
+            let extraWidthForThisColumn = extraWidthForEachColumn
+            if (totalExtraWidth < extraWidthForEachColumn) {
+              extraWidthForThisColumn = totalExtraWidth
+            }
+            column.width += extraWidthForThisColumn
+            totalExtraWidth -= extraWidthForThisColumn
+          }
+        }
+
+        setAdjustedColumns(columnsUpdate)
+        setTimeout(() => {
+          if (gridComponentRef.current) {
+            gridComponentRef.current.resetAfterColumnIndex(0)
+          }
+        })
+      }
+    }
+  }, [isFirstFetched, columns, setAdjustedColumns, outerRef, gridComponentRef])
 
   useUpdate(() => {
     let deferred: any
@@ -440,7 +497,7 @@ function Table({
     }
   }, [rows])
 
-  const innerElementType = innerElementTypeRender(columns, rows)
+  const innerElementType = innerElementTypeRender(adjustedColumns, rows)
 
   const itemCount = hasNextPage ? rows.length + 1 : rows.length
 
@@ -459,9 +516,12 @@ function Table({
               {({onItemsRendered, ref}: any) => {
                 return (
                   <Grid
+                    // @ts-ignore
                     rowCount={itemCount}
-                    columnCount={columns.length}
-                    columnWidth={columnIndex => columns[columnIndex].width}
+                    columnCount={adjustedColumns.length}
+                    columnWidth={columnIndex =>
+                      adjustedColumns[columnIndex].width
+                    }
                     rowHeight={() => ROW_HEIGHT}
                     height={height}
                     width={width}
@@ -469,15 +529,16 @@ function Table({
                     style={
                       isFirstFetched && rows.length
                         ? GRID_PARENT_STYLE
-                        : {display: 'none'}
+                        : {visibility: 'hidden'}
                     }
-                    itemData={{rows, columns, isItemLoaded}}
+                    itemData={{rows, columns: adjustedColumns, isItemLoaded}}
                     onItemsRendered={({
                       visibleRowStartIndex,
                       visibleRowStopIndex,
                       overscanRowStartIndex,
                       overscanRowStopIndex,
                     }) => {
+                      stretchColumns()
                       onItemsRendered({
                         overscanStartIndex: overscanRowStartIndex,
                         overscanStopIndex: overscanRowStopIndex,
@@ -485,7 +546,11 @@ function Table({
                         visibleStopIndex: visibleRowStopIndex,
                       })
                     }}
-                    ref={ref}
+                    ref={(componentRef: any) => {
+                      ref(componentRef)
+                      gridComponentRef.current = componentRef
+                    }}
+                    outerRef={outerRef}
                   >
                     {Cell}
                   </Grid>
