@@ -18,7 +18,7 @@ import UpdateGroup from './UpdateGroup'
 import {PUT_GROUP} from '../../../constants/events'
 
 const columns = [
-  {label: 'Group Name', width: 200},
+  {label: 'Group Name', width: 200, canGrow: true},
   {label: 'OPTIONS', width: 50},
 ]
 

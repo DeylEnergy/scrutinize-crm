@@ -7,9 +7,9 @@ import {PageWrapper} from '../../layouts'
 
 const columns = [
   {label: 'Period', width: 150},
-  {label: 'Sold Sum', width: 150},
-  {label: 'Income Sum', width: 150},
-  {label: 'Spent Sum', width: 150},
+  {label: 'Sold Sum', width: 150, canGrow: true},
+  {label: 'Income Sum', width: 150, canGrow: true},
+  {label: 'Spent Sum', width: 150, canGrow: true},
 ]
 
 const FETCH_ITEM_LIMIT = 20

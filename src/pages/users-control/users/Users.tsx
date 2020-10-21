@@ -21,10 +21,10 @@ import {PageWrapper, ControlWrapper} from '../../../layouts'
 
 const columns = [
   {label: '', width: 70},
-  {label: 'Name', width: 200},
+  {label: 'Name', width: 200, canGrow: true},
   {label: 'Group', width: 150},
   {label: 'Phone Number', width: 200},
-  {label: 'Extra', width: 350},
+  {label: 'Extra', width: 350, canGrow: true},
   {label: 'OPTIONS', width: 50},
 ]
 
