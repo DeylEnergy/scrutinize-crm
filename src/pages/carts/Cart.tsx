@@ -32,7 +32,7 @@ const columns = [
   {label: 'Count', width: 70},
   {label: 'Sum', width: 90},
   {label: 'Product Id', width: 270},
-  {label: 'Note', width: 202},
+  {label: 'Note', width: 202, canGrow: true},
   {label: 'OPTIONS', width: 50},
 ]
 
