@@ -5,6 +5,7 @@ export const STORE_NAME = {
   SALES: 'sales',
   ACQUISITIONS: 'acquisitions',
   BUDGET: 'budget',
+  CASHBOX_HISTORY: 'cashboxHistory',
   CUSTOMERS: 'customers',
   USERS: 'users',
   GROUPS: 'groups',
