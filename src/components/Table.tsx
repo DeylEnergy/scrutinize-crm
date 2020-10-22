@@ -206,9 +206,11 @@ function StickyHeader({
 
   return (
     <Header style={headerContainerStyle}>
-      <HeaderCell sticky style={stickyHeaderColumnStyle}>
-        #
-      </HeaderCell>
+      {Boolean(stickyColumnWidth) && (
+        <HeaderCell sticky style={stickyHeaderColumnStyle}>
+          #
+        </HeaderCell>
+      )}
       <ScrollableHeader>
         {headers.map(({label, left, width}, i) => (
           <HeaderCell
@@ -350,7 +352,11 @@ function createStickyColumns(minRow: number, maxRow: number) {
   return rows
 }
 
-const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
+const innerElementTypeRender = (
+  columns: HeaderColumns,
+  rows: any,
+  isRowNumberShown: boolean,
+) => ({
   children,
   //@ts-ignore
   style,
@@ -363,25 +369,29 @@ const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
 
   const stickyColumnRows = createStickyColumns(minRow, maxRow)
 
+  const extraColumnWidth = isRowNumberShown ? STICKY_COLUMN_WIDTH : 0
+
   return (
     <GridContainer
       height={style.height + ROW_HEIGHT}
-      width={style.width + STICKY_COLUMN_WIDTH}
+      width={style.width + extraColumnWidth}
     >
       <StickyHeader
         columns={columns}
-        stickyColumnWidth={STICKY_COLUMN_WIDTH}
+        stickyColumnWidth={extraColumnWidth}
         headers={headers}
       />
-      <StickyColumn
-        stickyColumnRows={stickyColumnRows}
-        gridHeight={style.height}
-      />
+      {isRowNumberShown && (
+        <StickyColumn
+          stickyColumnRows={stickyColumnRows}
+          gridHeight={style.height}
+        />
+      )}
       <GridData
         style={{
           ...style,
           top: ROW_HEIGHT,
-          left: STICKY_COLUMN_WIDTH,
+          left: extraColumnWidth,
         }}
       >
         {children}
@@ -408,6 +418,8 @@ interface TableProps {
     isDisabled?: boolean
   }[]
 
+  isRowNumberShown?: boolean
+
   hasNextPage: any
 
   isItemLoaded: any
@@ -418,6 +430,7 @@ interface TableProps {
 function Table({
   rows,
   columns,
+  isRowNumberShown = true,
   hasNextPage,
   isItemLoaded,
   loadMoreItems,
@@ -448,7 +461,7 @@ function Table({
 
       const columnsTotalWidth = columns.reduce(
         (a, b) => a + b.width,
-        STICKY_COLUMN_WIDTH,
+        isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
       )
 
       if (gridWidth > columnsTotalWidth) {
@@ -500,7 +513,11 @@ function Table({
     }
   }, [rows])
 
-  const innerElementType = innerElementTypeRender(adjustedColumns, rows)
+  const innerElementType = innerElementTypeRender(
+    adjustedColumns,
+    rows,
+    isRowNumberShown,
+  )
 
   const itemCount = hasNextPage ? rows.length + 1 : rows.length
 
