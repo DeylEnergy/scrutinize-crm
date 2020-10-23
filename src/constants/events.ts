@@ -11,6 +11,9 @@ export const DELETE_TO_BUY_ITEM = 'deleteToBuyItem'
 export const RECOMPUTE_BUDGET = 'recomputeBudget'
 export const PUT_BUDGET = 'putBudget'
 
+// cashboxHistory
+export const PUT_CASHBOX_OPERATION = 'putCashboxOperation'
+
 // sale
 export const PUT_SALE = 'putSale'
 export const DELETE_SALE_ITEM = 'deleteSaleItem'
