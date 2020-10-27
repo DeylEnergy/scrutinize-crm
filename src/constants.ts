@@ -33,7 +33,3 @@ export const TO_BUY_FILTER_OPTIONS = {
   BOUGHT: 'bought',
   FROZEN: 'frozen',
 }
-
-export const ADD_PRODUCT = 'ADD_PRODUCT'
-export const ADD_ACQUISITION = 'ADD_ACQUISITION'
-export const UPDATE_BUDGET = 'UPDATE_BUDGET'
