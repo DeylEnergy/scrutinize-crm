@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
 import {getRowFromStore} from '../queries'
-import {STORE_NAME as SN} from '../../constants'
+import {STORE_NAME as SN, CASHBOX_OPERATION} from '../../constants'
 import {PUT_BUDGET, PUT_CASHBOX_OPERATION} from '../../constants/events'
 import send from './index'
 
@@ -18,9 +18,9 @@ export default async function updateCashbox({payload}: any) {
 
   let operationSign
 
-  if (payload.action === 'ADD') {
+  if (payload.action === CASHBOX_OPERATION.ADD) {
     operationSign = 1
-  } else if (payload.action === 'SUBTRACT') {
+  } else if (payload.action === CASHBOX_OPERATION.SUBTRACT) {
     operationSign = -1
   } else {
     return Promise.reject('Update cashbox action is incorrectly specified.')
