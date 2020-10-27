@@ -33,3 +33,8 @@ export const TO_BUY_FILTER_OPTIONS = {
   BOUGHT: 'bought',
   FROZEN: 'frozen',
 }
+
+export const CASHBOX_OPERATION = {
+  ADD: 'ADD',
+  SUBTRACT: 'SUBTRACT',
+}
