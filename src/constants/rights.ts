@@ -16,4 +16,6 @@ export default {
   CAN_SEE_CARTS: 'canSeeCarts',
   CAN_SEE_STICKERS_MANAGER: 'canSeeStickersManager',
   CAN_SEE_STATS: 'canSeeStats',
+  CAN_SEE_CASHBOX: 'canSeeCashbox',
+  CAN_PERFORM_CASHBOX_OPERATIONS: 'canPerformCashboxOperations',
 }

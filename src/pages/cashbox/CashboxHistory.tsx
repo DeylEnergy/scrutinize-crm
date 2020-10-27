@@ -3,6 +3,7 @@ import {Pane, SmallPlusIcon, SmallMinusIcon, toaster} from 'evergreen-ui'
 import {useDatabase, useAccount, withErrorBoundary} from '../../utilities'
 import {SPACING, STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {UPDATE_CASHBOX} from '../../constants/events'
+import RIGHTS from '../../constants/rights'
 import Table from '../../components/Table'
 import {PageWrapper} from '../../layouts'
 import NewCashboxOperation from './NewCashboxOperation'
@@ -29,7 +30,7 @@ const OPERATION_ICON_STYLE = {
 function CashboxHistory({}: any) {
   const db = useDatabase()
 
-  const [{user}] = useAccount()
+  const [{user, permissions}] = useAccount()
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -155,10 +156,12 @@ function CashboxHistory({}: any) {
         <Pane>
           <strong>Current Balance: </strong> {currentBalance}
         </Pane>
-        <NewCashboxOperation
-          currentBalance={currentBalance}
-          handleCashboxOperation={handleCashboxOperation}
-        />
+        {permissions?.includes(RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS) && (
+          <NewCashboxOperation
+            currentBalance={currentBalance}
+            handleCashboxOperation={handleCashboxOperation}
+          />
+        )}
       </Pane>
       <Pane flex={1}>
         <Table

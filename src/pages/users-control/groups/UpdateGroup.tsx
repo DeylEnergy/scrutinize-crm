@@ -39,6 +39,11 @@ const STATS_PERMISSIONS = [[RIGHTS.CAN_SEE_STATS, 'Can see statistics']]
 
 const CARTS_PERMISSIONS = [[RIGHTS.CAN_SEE_CARTS, 'Can see carts']]
 
+const CASHBOX_PERMISSIONS = [
+  [RIGHTS.CAN_SEE_CASHBOX, 'Can see cashbox'],
+  [RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS, 'Can perform cashbox operations'],
+]
+
 const STICKERS_MANAGER_PERMISSIONS = [
   [RIGHTS.CAN_SEE_STICKERS_MANAGER, 'Can see stickers manager'],
 ]
@@ -52,6 +57,7 @@ const PERMISSIONS = [
   ...USERS_GROUP,
   ...STATS_PERMISSIONS,
   ...CARTS_PERMISSIONS,
+  ...CASHBOX_PERMISSIONS,
   ...STICKERS_MANAGER_PERMISSIONS,
 ]
 

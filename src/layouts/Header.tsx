@@ -99,7 +99,7 @@ export default function Header() {
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
-        <Cashbox />
+        {permissions?.includes(RIGHTS.CAN_SEE_CASHBOX) && <Cashbox />}
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
         {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && (
           <UserProfilePopover />
