@@ -13,6 +13,7 @@ import IconButton from '../components/IconButton'
 import Carts from '../pages/carts'
 import {useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
+import Cashbox from '../pages/cashbox'
 import UserProfilePopover from './UserProfilePopover'
 
 const Stripe = styled.div`
@@ -98,6 +99,7 @@ export default function Header() {
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
+        <Cashbox />
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
         {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && (
           <UserProfilePopover />
