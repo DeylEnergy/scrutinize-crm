@@ -12,6 +12,7 @@ export const RECOMPUTE_BUDGET = 'recomputeBudget'
 export const PUT_BUDGET = 'putBudget'
 
 // cashboxHistory
+export const UPDATE_CASHBOX = 'updateCashbox'
 export const PUT_CASHBOX_OPERATION = 'putCashboxOperation'
 
 // sale
