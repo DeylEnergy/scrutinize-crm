@@ -8,6 +8,7 @@ import {
   PUT_STAT,
   PROCESS_ACQUISITIONS,
 } from '../../constants/events'
+import codePrefixes from '../../constants/codePrefixes'
 import send from './index'
 
 import pushEvents from '../pushEvents'
@@ -17,7 +18,15 @@ export default async function process() {
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
     filterBy: 'bought',
+    sort: 'asc',
   })
+
+  const stickersToPrint = boughtProducts.map((x: any) => ({
+    count: x.toPrintStickersCount,
+    id: x._productId,
+    code: `${codePrefixes[SN.ACQUISITIONS]}::${x.id}`,
+    nameModel: x?._product?.nameModel,
+  }))
 
   let successCount = 0
 
@@ -70,5 +79,6 @@ export default async function process() {
       successCount += 1
     }
   }
-  return {successCount}
+
+  return {successCount, stickersToPrint}
 }
