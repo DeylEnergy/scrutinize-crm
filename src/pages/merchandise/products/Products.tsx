@@ -8,16 +8,22 @@ import {
   EditIcon,
 } from 'evergreen-ui'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
+import Filters from './Filters'
 import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateProduct from './UpdateProduct'
-import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
+import {
+  STORE_NAME as SN,
+  INDEX_NAME as IN,
+  PRODUCTS_FILTER_OPTIONS as FILTER_OPTIONS,
+} from '../../../constants'
 import RIGHTS from '../../../constants/rights'
 import {
   withErrorBoundary,
   useAccount,
   useDatabase,
   useUpdate,
+  useLocalStorage,
 } from '../../../utilities'
 
 interface Supplier {
@@ -98,7 +104,7 @@ const SIDE_SHEET_DEFAULT = {
 }
 
 function Products() {
-  const [{permissions}] = useAccount()
+  const [{permissions, user}] = useAccount()
   const db = useDatabase()
 
   const itemsRef = React.useRef<any>(null)
@@ -111,6 +117,11 @@ function Products() {
       return updated
     },
     LOADED_ITEMS_DEFAULT,
+  )
+
+  const [filterBy, setFilterBy] = useLocalStorage(
+    `PRODUCTS_FILTERS_${user?.id}`,
+    FILTER_OPTIONS.IN_STOCK,
   )
 
   const [searchQuery, setSearchQuery] = React.useState('')
@@ -178,7 +189,7 @@ function Products() {
         indexName: IN.NAME_MODEL,
         limit: FETCH_ITEM_LIMIT,
         lastKey,
-        filterBy: 'consist',
+        filterBy,
         filterParams: {searchQuery},
       }).then((newItems: any) => {
         if (!newItems) {
@@ -193,18 +204,25 @@ function Products() {
         })
       })
     },
-    [setLoadedItems],
+    [setLoadedItems, filterBy],
   )
 
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
     fetchItems({lastKey, searchQuery})
-  }, [lastKey, searchQuery])
+  }, [fetchItems, lastKey, searchQuery])
 
   useUpdate(() => {
     fetchItems({searchQuery})
-  }, [searchQuery])
+  }, [searchQuery, filterBy])
+
+  const handleFilterChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setFilterBy(e.target.value)
+    },
+    [setFilterBy],
+  )
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
     setSideSheet(SIDE_SHEET_DEFAULT)
@@ -226,6 +244,7 @@ function Products() {
           value={searchQuery}
           handleSearchQuery={handleSearchQuery}
         />
+        <Filters value={filterBy} handleFilterChange={handleFilterChange} />
       </ControlWrapper>
       <Table
         columns={columns}
