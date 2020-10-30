@@ -106,7 +106,12 @@ function ToBuy() {
 
         const key = Object.keys(cellUpdate)[0]
 
-        if (key === 'price' || key === 'count' || key === 'lowestBoundCount') {
+        if (
+          key === 'price' ||
+          key === 'count' ||
+          key === 'lowestBoundCount' ||
+          key === 'toPrintStickersCount'
+        ) {
           updatedItem[key] = Number(updatedItem[key])
         }
 
@@ -379,6 +384,7 @@ function ToBuy() {
       storeName: 'acquisitions',
       indexName: 'neededSinceDatetime',
       direction: 'prev',
+      sort: 'asc',
       filterBy,
     }).then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
