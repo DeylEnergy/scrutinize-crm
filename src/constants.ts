@@ -34,6 +34,12 @@ export const TO_BUY_FILTER_OPTIONS = {
   FROZEN: 'frozen',
 }
 
+export const PRODUCTS_FILTER_OPTIONS = {
+  ALL: 'all',
+  IN_STOCK: 'inStock',
+  SOLD_OUT: 'soldOut',
+}
+
 export const CASHBOX_OPERATION = {
   ADD: 'ADD',
   SUBTRACT: 'SUBTRACT',
