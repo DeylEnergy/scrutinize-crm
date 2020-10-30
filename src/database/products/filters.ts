@@ -1,3 +1,4 @@
+import {PRODUCTS_FILTER_OPTIONS as FILTER_OPTIONS} from '../../constants'
 import {isSearchValueIncluded} from '../../utilities'
 
 export default function filters({searchQuery}: any) {
@@ -5,21 +6,49 @@ export default function filters({searchQuery}: any) {
     searchQuery = searchQuery.toLowerCase()
   }
 
-  return {
-    consist: (product: any) => {
-      const searchValues = []
-      const productNameModel = product.nameModel
-      if (productNameModel) {
-        searchValues.push(...productNameModel)
-      }
+  const consist = (product: any) => {
+    const searchValues = []
+    const productNameModel = product.nameModel
+    if (productNameModel) {
+      searchValues.push(...productNameModel)
+    }
 
-      for (const searchValue of searchValues) {
-        if (isSearchValueIncluded(searchValue, searchQuery)) {
-          return true
-        }
+    for (const searchValue of searchValues) {
+      if (isSearchValueIncluded(searchValue, searchQuery)) {
+        return true
       }
+    }
 
+    return false
+  }
+
+  const all = (product: any) => {
+    if (searchQuery && !consist(product)) {
       return false
-    },
+    }
+
+    return true
+  }
+
+  const inStock = (product: any) => {
+    if (searchQuery && !consist(product)) {
+      return false
+    }
+
+    return product.inStockCount > 0
+  }
+
+  const soldOut = (product: any) => {
+    if (searchQuery && !consist(product)) {
+      return false
+    }
+
+    return product.inStockCount <= 0
+  }
+
+  return {
+    [FILTER_OPTIONS.ALL]: all,
+    [FILTER_OPTIONS.IN_STOCK]: inStock,
+    [FILTER_OPTIONS.SOLD_OUT]: soldOut,
   }
 }
