@@ -6,11 +6,13 @@ import {
   Button,
   TickCircleIcon,
   BanCircleIcon,
+  toaster,
 } from 'evergreen-ui'
 import styled from 'styled-components'
-import {useDatabase} from '../../../utilities'
+import {useDatabase, handleAsync} from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
+import createStickers from './createStickers'
 
 const ProcessIndicatorWrapper = styled.span`
   position: relative;
@@ -73,6 +75,8 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
     },
   )
 
+  const [printStickers, setPrintStickers] = React.useState<any>(null)
+
   React.useEffect(() => {
     if (isShown) {
       db.getRows({
@@ -108,12 +112,21 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
         footer={({close}: any) => {
           return (
             <>
-              {done && (
+              {done && !printStickers && (
                 <Button tabIndex={0} onClick={() => close()}>
                   Close
                 </Button>
               )}
-
+              {printStickers && (
+                <Button
+                  tabIndex={0}
+                  marginLeft={8}
+                  appearance="primary"
+                  onClick={printStickers.handler}
+                >
+                  Print stickers
+                </Button>
+              )}
               {!done && (
                 <Button
                   tabIndex={0}
@@ -122,22 +135,42 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
                   isLoading={isProcessing}
                   onClick={() => {
                     setState({acquisitionsProcessing: true})
-                    db.sendEvent({type: PROCESS_ACQUISITIONS}).then(() => {
-                      setState({
-                        acquisitionsProcessing: false,
-                        acquisitionsSuccess: true,
-                        stickersProcessing: true,
-                      })
-                      refetchAll()
-                      // TODO: replace with stickers generation
-                      setTimeout(() => {
+                    db.sendEvent({type: PROCESS_ACQUISITIONS}).then(
+                      async (result: any) => {
                         setState({
-                          stickersProcessing: false,
-                          stickersSuccess: false,
+                          acquisitionsProcessing: false,
+                          acquisitionsSuccess: true,
+                          stickersProcessing: true,
+                        })
+                        refetchAll()
+
+                        if (result.stickersToPrint.length) {
+                          const [
+                            stickersControl,
+                            stickersControlError,
+                          ] = await handleAsync(
+                            createStickers(result.stickersToPrint),
+                          )
+
+                          if (stickersControlError) {
+                            return toaster.danger('Stickers creation failed.')
+                          }
+
+                          setPrintStickers({
+                            handler: () => {
+                              setIsShown(false)
+                              stickersControl.printStickers()
+                            },
+                          })
+                        }
+
+                        setState({
+                          stickersProcessing: true,
+                          stickersSuccess: true,
                           done: true,
                         })
-                      }, 3000)
-                    })
+                      },
+                    )
                   }}
                 >
                   Continue
