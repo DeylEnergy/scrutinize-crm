@@ -21,12 +21,21 @@ export default async function process() {
     sort: 'asc',
   })
 
-  const stickersToPrint = boughtProducts.map((x: any) => ({
-    count: x.toPrintStickersCount,
-    id: x._productId,
-    code: `${codePrefixes[SN.ACQUISITIONS]}::${x.id}`,
-    nameModel: x?._product?.nameModel,
-  }))
+  const stickersToPrint = boughtProducts.reduce(
+    (total: any[], cur: any) =>
+      cur.toPrintStickersCount
+        ? [
+            ...total,
+            {
+              count: cur.toPrintStickersCount,
+              id: cur._productId,
+              code: `${codePrefixes[SN.ACQUISITIONS]}::${cur.id}`,
+              nameModel: cur?._product?.nameModel,
+            },
+          ]
+        : total,
+    [],
+  )
 
   let successCount = 0
 
