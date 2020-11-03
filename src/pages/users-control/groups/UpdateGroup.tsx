@@ -58,7 +58,7 @@ const PERMISSIONS = [
   ...STATS_PERMISSIONS,
   ...CARTS_PERMISSIONS,
   ...CASHBOX_PERMISSIONS,
-  ...STICKERS_MANAGER_PERMISSIONS,
+  // ...STICKERS_MANAGER_PERMISSIONS,
 ]
 
 function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {

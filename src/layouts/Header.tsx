@@ -89,13 +89,14 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
-        {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
+        {/* No manual stickers for the first version. */}
+        {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
           <Link to="/">
             <Tooltip content="Stickers manager">
               <IconButton icon={<FaQrcode />} />
             </Tooltip>
           </Link>
-        )}
+        )} */}
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
