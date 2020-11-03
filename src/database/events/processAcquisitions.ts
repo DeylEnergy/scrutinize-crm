@@ -6,6 +6,7 @@ import {
   COMPLETE_ACQUISITION,
   RECOMPUTE_BUDGET,
   PUT_STAT,
+  PUT_USER_STATS,
   PROCESS_ACQUISITIONS,
 } from '../../constants/events'
 import codePrefixes from '../../constants/codePrefixes'
@@ -81,6 +82,24 @@ export default async function process() {
           }),
       },
     ]
+
+    if (bought._userId) {
+      events.push({
+        storeName: SN.USERS_STATS,
+        cb: ({store}: any) =>
+          send({
+            type: PUT_USER_STATS,
+            payload: {
+              ...bought,
+              _userId: bought._userId,
+              currentDate,
+            },
+            parentEvent: PROCESS_ACQUISITIONS,
+            store,
+            emitEvent: false,
+          }),
+      })
+    }
 
     const [wasProcessed] = await handleAsync(pushEvents(events))
 
