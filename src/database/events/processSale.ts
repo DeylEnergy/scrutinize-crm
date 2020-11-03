@@ -1,10 +1,11 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore} from '../queries'
+import {getFullIndexStore, getRowFromIndexStore} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
   PUT_SALE,
   PUT_STAT,
+  PUT_USER_STATS,
   PROCESS_SALE,
   PUT_ACQUISITION,
 } from '../../constants/events'
@@ -93,6 +94,32 @@ export default async function processSale({payload}: any) {
           }),
       },
     ]
+
+    const cartParticipants: any = await getRowFromIndexStore({
+      storeName: SN.SALES,
+      indexName: IN.CART_PARTICIPANTS,
+      key: cartItem.__cartId__,
+    })
+
+    if (cartParticipants) {
+      if (cartParticipants._userId) {
+        events.push({
+          storeName: SN.USERS_STATS,
+          cb: ({store}: any) =>
+            send({
+              type: PUT_USER_STATS,
+              payload: {
+                ...cartItem,
+                _userId: cartParticipants._userId,
+                currentDate,
+              },
+              parentEvent: PROCESS_SALE,
+              store,
+              emitEvent: false,
+            }),
+        })
+      }
+    }
 
     if (
       productShapeAfterSale.inStockCount <=
