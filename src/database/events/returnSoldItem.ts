@@ -1,10 +1,15 @@
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getFullIndexStore} from '../queries'
+import {
+  getRowFromStore,
+  getFullIndexStore,
+  getRowFromIndexStore,
+} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
   PUT_SALE,
   PUT_STAT,
+  PUT_USER_STATS,
   DELETE_TO_BUY_ITEM,
 } from '../../constants/events'
 import {getPeriodOfDate} from '../../utilities'
@@ -48,6 +53,30 @@ async function getStatsItemShapeAfterUpdate(
     ...statsItem,
     incomeSum: statsItem.incomeSum - soldItem.income,
     soldSum: statsItem.soldSum - soldItem.sum,
+    lastChangeDatetime: eventDatetime,
+  }
+}
+
+async function getUsersStatsItemShapeAfterReturn(
+  userId: string,
+  soldItem: any,
+  eventDatetime: number,
+) {
+  const soldDate = new Date(soldItem.datetime[0])
+  const period = getPeriodOfDate(soldDate)
+
+  const [usersStatsItem] = await handleAsync(
+    getRowFromStore(SN.USERS_STATS, [userId, period]),
+  )
+
+  if (!usersStatsItem) {
+    return Promise.reject('Cannot find period of sold item.')
+  }
+
+  return {
+    ...usersStatsItem,
+    incomeSum: usersStatsItem.incomeSum - soldItem.income,
+    soldSum: usersStatsItem.soldSum - soldItem.sum,
     lastChangeDatetime: eventDatetime,
   }
 }
@@ -120,6 +149,42 @@ export default async function returnSoldItem({payload, emitEvent = true}: any) {
         }),
     },
   ]
+
+  const cartParticipants: any = await getRowFromIndexStore({
+    storeName: SN.SALES,
+    indexName: IN.CART_PARTICIPANTS,
+    key: soldItem.cartId,
+  })
+
+  if (cartParticipants) {
+    if (cartParticipants._userId) {
+      const [
+        usersStatsItemShapeAfterReturn,
+        usersStatsItemShapeAfterReturnError,
+      ] = await handleAsync(
+        getUsersStatsItemShapeAfterReturn(
+          cartParticipants._userId,
+          soldItem,
+          eventDatetime,
+        ),
+      )
+
+      if (usersStatsItemShapeAfterReturnError) {
+        return Promise.reject(usersStatsItemShapeAfterReturnError)
+      }
+
+      events.push({
+        storeName: SN.USERS_STATS,
+        cb: ({store}: any) =>
+          send({
+            type: PUT_USER_STATS,
+            payload: usersStatsItemShapeAfterReturn,
+            store,
+            emitEvent: false,
+          }),
+      })
+    }
+  }
 
   if (
     productShapeAfterReturn.inStockCount >
