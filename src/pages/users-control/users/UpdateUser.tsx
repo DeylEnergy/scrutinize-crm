@@ -16,6 +16,7 @@ import {STORE_NAME as SN, SPACING} from '../../../constants'
 import SeeSecretKeyPopover from './SeeSecretKeyPopover'
 import {useAccount, useDatabase} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
+import UserStats from './UserStats'
 
 const NOTE_INPUT_STYLE = {
   resize: 'vertical' as 'vertical',
@@ -49,6 +50,8 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   const [secretKey, setSecretKey] = React.useState(
     () => doc.secretKey || uuidv4(),
   )
+
+  const [isStatsShown, setIsStatsShown] = React.useState(false)
 
   React.useEffect(() => {
     db.getRows({storeName: SN.GROUPS}).then(setGroups)
@@ -90,6 +93,10 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     )
   }, [setSecretKey])
 
+  const handleStatsDisplay = React.useCallback(() => {
+    setIsStatsShown(true)
+  }, [setIsStatsShown])
+
   const saveChanges = React.useCallback(() => {
     handleUpdateUser({
       id: doc.id,
@@ -122,6 +129,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
       title={userExists ? 'Edit user' : 'Add user'}
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
+      onOpenComplete={handleStatsDisplay}
       onCloseComplete={onCloseComplete}
       canSave={canBeSaved}
     >
@@ -189,7 +197,11 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
           >
             Credentials
           </Heading>
-          <Pane display="flex" justifyContent="space-between">
+          <Pane
+            display="flex"
+            justifyContent="space-between"
+            marginBottom={SPACING * 1.5}
+          >
             <SeeSecretKeyPopover
               userName={input.name}
               secretKey={secretKey}
@@ -205,6 +217,22 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             >
               Generate new key
             </Button>
+          </Pane>
+        </>
+      )}
+      {userExists && (
+        <>
+          <Heading
+            size={400}
+            fontWeight={500}
+            color="#425A70"
+            marginTop={SPACING / 2}
+            marginBottom={SPACING / 2}
+          >
+            User stats
+          </Heading>
+          <Pane marginBottom={SPACING} padding={2}>
+            {isStatsShown && <UserStats userId={doc.id} />}
           </Pane>
         </>
       )}
