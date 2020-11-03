@@ -45,12 +45,12 @@ export default async function process() {
   for (const bought of boughtProducts.reverse()) {
     const events = [
       {
-        storeName: 'products',
+        storeName: SN.PRODUCTS,
         cb: ({store}: any) =>
           send({type: PUT_PRODUCT, payload: bought, store, emitEvent: false}),
       },
       {
-        storeName: 'acquisitions',
+        storeName: SN.ACQUISITIONS,
         cb: ({store, eventsResults}: any) =>
           send({
             type: COMPLETE_ACQUISITION,
@@ -61,7 +61,7 @@ export default async function process() {
           }),
       },
       {
-        storeName: 'budget',
+        storeName: SN.BUDGET,
         cb: ({store}: any) =>
           send({
             type: RECOMPUTE_BUDGET,
@@ -71,7 +71,7 @@ export default async function process() {
           }),
       },
       {
-        storeName: 'stats',
+        storeName: SN.STATS,
         cb: ({store}: any) =>
           send({
             type: PUT_STAT,
