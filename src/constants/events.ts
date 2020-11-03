@@ -27,5 +27,8 @@ export const PUT_STAT = 'putStat'
 // users
 export const PUT_USER = 'putUser'
 
+// usersStats
+export const PUT_USER_STATS = 'putUserStats'
+
 // groups
 export const PUT_GROUP = 'putGroup'
