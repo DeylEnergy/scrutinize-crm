@@ -7,11 +7,13 @@ import {Divider, DIVIDER_VARIANT, Small, Subtitle} from '../elements'
 import InfiniteLoader from 'react-window-infinite-loader'
 import {Spinner} from 'evergreen-ui'
 import Tooltip from './Tooltip'
-import {useUpdate} from '../utilities'
+import {useUpdate, useOneTime} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
 const HEADER_SUBTITLE_PADDING = 11
+
+function noop() {}
 
 type Column = {
   label: string
@@ -425,6 +427,8 @@ interface TableProps {
   isItemLoaded: any
 
   loadMoreItems: any
+
+  onFirstFetchComplete?: (rows: any) => void
 }
 
 function Table({
@@ -434,6 +438,7 @@ function Table({
   hasNextPage,
   isItemLoaded,
   loadMoreItems,
+  onFirstFetchComplete = noop,
 }: TableProps) {
   const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
   const [selectedRow, setSelectedRow] = React.useState<any>({
@@ -512,6 +517,14 @@ function Table({
       clearTimeout(deferred)
     }
   }, [rows])
+
+  useOneTime(
+    isFirstFetched,
+    () => {
+      onFirstFetchComplete(rows)
+    },
+    [isFirstFetched, setIsFirstFetched, onFirstFetchComplete, rows],
+  )
 
   const innerElementType = innerElementTypeRender(
     adjustedColumns,
