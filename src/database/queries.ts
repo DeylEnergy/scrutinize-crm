@@ -19,7 +19,7 @@ async function getFilter(
 
 export function getRowFromStore(
   storeName: string,
-  id: string | number,
+  id: any,
   store?: IDBObjectStore | null,
   tx?: IDBTransaction,
 ) {
@@ -48,7 +48,7 @@ export function getRowFromIndexStore(params: any) {
   }: {
     storeName: string
     indexName: string
-    key: string
+    key: any
   } = params
   return new Promise((resolve, reject) => {
     const {objectStore} = setupTransaction(storeName, 'readonly', true)
