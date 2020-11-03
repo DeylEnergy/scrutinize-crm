@@ -144,6 +144,7 @@ function Products() {
 
     return {
       id: item.id,
+      isDisabled: item.inStockCount <= 0,
       cells: [
         item.nameModel[0],
         item.nameModel[1],
