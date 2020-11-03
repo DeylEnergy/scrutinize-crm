@@ -6,7 +6,12 @@ import SalesPage from './pages/sales'
 import StatsPage from './pages/stats'
 import UsersControlPage from './pages/users-control'
 import SignInPage from './pages/sign-in'
-import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
+import {
+  Switch,
+  Route,
+  BrowserRouter as Router,
+  Redirect,
+} from 'react-router-dom'
 import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
 import GlobalScannerContext from './contexts/globalScannerContext'
@@ -87,6 +92,7 @@ const App = () => {
             <SignInPage />
           </Route>
           <Route path="/">
+            <Redirect to="/" />
             <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
           </Route>
         </Switch>
