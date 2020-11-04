@@ -1,5 +1,6 @@
 import React from 'react'
 import {SelectField} from 'evergreen-ui'
+import {useLocale} from '../../../utilities'
 import {
   PRODUCTS_FILTER_OPTIONS as FILTER_OPTIONS,
   SPACING,
@@ -7,11 +8,13 @@ import {
 import FiltersPopoverButton from '../../../components/FiltersPopoverButton'
 
 function Filters({value, handleFilterChange}: any) {
+  const [locale] = useLocale()
+  const {FILTERS_CONTENT} = locale.vars.PAGES.PRODUCTS
   return (
     <FiltersPopoverButton
       content={
         <SelectField
-          label="Products type"
+          label={FILTERS_CONTENT.PRODUCT_TYPE}
           value={value}
           onChange={handleFilterChange}
           marginBottom={0}

@@ -11,7 +11,7 @@ import Block from '../../components/Block'
 import Products from './products/Products'
 import ToBuy from './to-buy/ToBuy'
 import Acquisitions from './acquisitions/Acquisitions'
-import {useAccount} from '../../utilities'
+import {useLocale, useAccount} from '../../utilities'
 import {MERCHANDISE_ROUTE} from '../../constants/routes'
 import RIGHTS from '../../constants/rights'
 
@@ -23,6 +23,8 @@ const ACQUISITIONS_PATH = `/${MERCHANDISE_ROUTE}/acquisitions`
 export default function Merchandise() {
   const history = useHistory()
   const location = useLocation()
+  const [locale] = useLocale()
+  const {PAGES} = locale.vars
   const [{permissions}] = useAccount()
   const [redirectToLink, setRedirectToLink] = React.useState('/')
 
@@ -31,7 +33,7 @@ export default function Merchandise() {
     let redirectPath
     if (permissions.includes(RIGHTS.CAN_SEE_PRODUCTS)) {
       allowedTabs.push({
-        label: 'Products',
+        label: PAGES.PRODUCTS.TITLE,
         path: PRODUCTS_PATH,
       })
       redirectPath = PRODUCTS_PATH
@@ -39,7 +41,7 @@ export default function Merchandise() {
 
     if (permissions.includes(RIGHTS.CAN_SEE_TO_BUY_LIST)) {
       allowedTabs.push({
-        label: 'To Buy List',
+        label: PAGES.TO_BUY_LIST.TITLE,
         path: TO_BUY_LIST_PATH,
       })
       if (!redirectPath) {
@@ -49,7 +51,7 @@ export default function Merchandise() {
 
     if (permissions.includes(RIGHTS.CAN_SEE_ACQUISITIONS)) {
       allowedTabs.push({
-        label: 'Acquisitions',
+        label: PAGES.ACQUISITIONS.TITLE,
         path: ACQUISITIONS_PATH,
       })
       if (!redirectPath) {

@@ -20,6 +20,7 @@ import {
 import RIGHTS from '../../../constants/rights'
 import {
   withErrorBoundary,
+  useLocale,
   useAccount,
   useDatabase,
   useUpdate,
@@ -77,19 +78,6 @@ interface ProductsShape {
   acquisitions: [AcquisitionShape] | []
 }
 
-const columns = [
-  {label: 'Name', width: 150},
-  {label: 'Model', width: 150},
-  {label: 'Real Price', width: 150},
-  {label: 'Sale Price', width: 150},
-  {label: 'In Stock', width: 150},
-  {label: 'Sold', width: 150},
-  {label: 'Last Sold', width: 150},
-  {label: 'Last Acquired', width: 150},
-  {label: 'Lowest Bound', width: 150},
-  {label: 'OPTIONS', width: 50},
-]
-
 const FETCH_ITEM_LIMIT = 20
 
 const LOADED_ITEMS_DEFAULT = {
@@ -104,6 +92,8 @@ const SIDE_SHEET_DEFAULT = {
 }
 
 function Products() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.PRODUCTS
   const [{permissions, user}] = useAccount()
   const db = useDatabase()
 
@@ -236,12 +226,28 @@ function Products() {
     [setSearchQuery],
   )
 
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.NAME, width: 150},
+      {label: COLUMNS.MODEL, width: 150},
+      {label: COLUMNS.REAL_PRICE, width: 150},
+      {label: COLUMNS.SALE_PRICE, width: 150},
+      {label: COLUMNS.IN_STOCK, width: 150},
+      {label: COLUMNS.SOLD, width: 150},
+      {label: COLUMNS.LAST_SOLD, width: 150},
+      {label: COLUMNS.LAST_ACQUIRED, width: 150},
+      {label: COLUMNS.LOWEST_BOUND, width: 150},
+      {label: 'OPTIONS', width: 50},
+    ]
+  }, [PAGE_CONST])
+
   return (
     <PageWrapper>
       <ControlWrapper>
         <SearchInput
           width={210}
-          placeholder="Name or Model and tap Enter..."
+          placeholder={PAGE_CONST.SEARCH_PLACEHOLDER}
           value={searchQuery}
           handleSearchQuery={handleSearchQuery}
         />
