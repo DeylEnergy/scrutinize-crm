@@ -12,6 +12,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom'
+import LocaleContext from './contexts/localeContext'
 import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
 import GlobalScannerContext from './contexts/globalScannerContext'
@@ -19,7 +20,7 @@ import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
 import createDbWorker from 'workerize-loader!./database' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
-import {useAccount} from './utilities'
+import {useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
 
 const fns: any = createDbWorker()
@@ -126,7 +127,10 @@ const ACCOUNT_MOCK = {
   groupName: 'Administrator',
 }
 
+const LOCALE_DEFAULT = {language: 'en'}
+
 function AppProvider() {
+  const [locale, setLocale] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
   // TODO: implement auth logic
   const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
@@ -136,20 +140,41 @@ function AppProvider() {
 
   const [scannerListener, setScannerListener] = React.useState<any>(null)
 
+  React.useEffect(() => {
+    import(`./locales/${locale.language}`).then(
+      ({default: _, ...vars}: any) => {
+        setLocale({...locale, vars})
+      },
+    )
+  }, [locale.language, setLocale])
+
+  const handleLocaleChange = React.useCallback(
+    (language: string) => {
+      setLocale((locale: any) => ({...locale, language}))
+    },
+    [setLocale],
+  )
+
+  if (!locale.vars) {
+    return null
+  }
+
   return (
-    <AccountContext.Provider value={[account, setAccount]}>
-      <DatabaseContext.Provider value={dbWorker}>
-        <GlobalScannerContext.Provider
-          value={[globalScanner, setGlobalScanner]}
-        >
-          <ScannerListenerContext.Provider
-            value={[scannerListener, setScannerListener]}
+    <LocaleContext.Provider value={[locale, handleLocaleChange]}>
+      <AccountContext.Provider value={[account, setAccount]}>
+        <DatabaseContext.Provider value={dbWorker}>
+          <GlobalScannerContext.Provider
+            value={[globalScanner, setGlobalScanner]}
           >
-            <App />
-          </ScannerListenerContext.Provider>
-        </GlobalScannerContext.Provider>
-      </DatabaseContext.Provider>
-    </AccountContext.Provider>
+            <ScannerListenerContext.Provider
+              value={[scannerListener, setScannerListener]}
+            >
+              <App />
+            </ScannerListenerContext.Provider>
+          </GlobalScannerContext.Provider>
+        </DatabaseContext.Provider>
+      </AccountContext.Provider>
+    </LocaleContext.Provider>
   )
 }
 
