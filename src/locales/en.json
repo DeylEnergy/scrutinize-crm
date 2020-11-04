@@ -1,0 +1,51 @@
+{
+  "GENERAL": {},
+  "PAGES": {
+    "MERCHANDISE": {
+      "TITLE": "Merchandise"
+    },
+    "PRODUCTS": {
+      "TITLE": "Products",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": "Name",
+          "MODEL": "Model",
+          "REAL_PRICE": "Real Price",
+          "SALE_PRICE": "Sale Price",
+          "IN_STOCK": "In Stock",
+          "SOLD": "Sold",
+          "LAST_SOLD": "Last Sold",
+          "LAST_ACQUIRED": "Last Acquired",
+          "LOWEST_BOUND": "Lowest Bound"
+        }
+      },
+      "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
+      "FILTERS_CONTENT": {
+        "PRODUCT_TYPE": "Product type"
+      },
+      "DRAWER": {
+        "TITLE_NEW_PRODUCT": "Add product",
+        "TITLE_EDIT_PRODUCT": "Edit product",
+        "INPUTS": {
+          "EXPECTED_COST": "Expected cost",
+          "COUNT": "Count"
+        }
+      }
+    },
+    "TO_BUY_LIST": {
+      "TITLE": "To Buy List"
+    },
+    "ACQUISITIONS": {
+      "TITLE": "Acquisitions"
+    },
+    "SALES": {
+      "TITLE": "Sales"
+    },
+    "STATS": {
+      "TITLE": "Stats"
+    },
+    "USERS_CONTROL": {
+      "TITLE": "Users Control"
+    }
+  }
+}
