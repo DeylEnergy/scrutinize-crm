@@ -11,7 +11,7 @@ import {
 import {Tooltip} from 'evergreen-ui'
 import IconButton from '../components/IconButton'
 import Carts from '../pages/carts'
-import {useAccount} from '../utilities'
+import {useLocale, useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
 import Cashbox from '../pages/cashbox'
 import UserProfilePopover from './UserProfilePopover'
@@ -47,6 +47,8 @@ const Logo = styled.div`
 `
 
 export default function Header() {
+  const [locale] = useLocale()
+  const {PAGES} = locale.vars
   const [{permissions}] = useAccount()
 
   const canSeeMerchandise =
@@ -63,28 +65,28 @@ export default function Header() {
       <ActionsContainer>
         {canSeeMerchandise && (
           <Link to="/merchandise">
-            <Tooltip content="Merchandise">
+            <Tooltip content={PAGES.MERCHANDISE.TITLE}>
               <IconButton icon={<FaDatabase />} />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
           <Link to="/sales">
-            <Tooltip content="Sales">
+            <Tooltip content={PAGES.SALES.TITLE}>
               <IconButton icon={<FaList />} />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
           <Link to="/stats">
-            <Tooltip content="Statistics">
+            <Tooltip content={PAGES.STATS.TITLE}>
               <IconButton icon={<FaChartBar />} />
             </Tooltip>
           </Link>
         )}
         {canSeeUsersControl && (
           <Link to="/users-control">
-            <Tooltip content="Users Control">
+            <Tooltip content={PAGES.USERS_CONTROL.TITLE}>
               <IconButton icon={<FaUserCog />} />
             </Tooltip>
           </Link>

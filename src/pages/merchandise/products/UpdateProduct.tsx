@@ -1,7 +1,7 @@
 import React from 'react'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
-import {useDatabase} from '../../../utilities'
+import {useLocale, useDatabase} from '../../../utilities'
 import {PUT_PRODUCT} from '../../../constants/events'
 
 type SideSheetType = {
@@ -82,7 +82,10 @@ function UpdateProduct({
   onCloseComplete,
 }: any) {
   // console.log('<UpdateProduct />')
-
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.PRODUCTS
+  const {DRAWER} = PAGE_CONST
+  const {COLUMNS} = PAGE_CONST.TABLE
   const db = useDatabase()
 
   const doc = sideSheet.value
@@ -194,7 +197,9 @@ function UpdateProduct({
 
   return (
     <SideSheet
-      title={productExists ? 'Edit product' : 'Add product'}
+      title={
+        productExists ? DRAWER.TITLE_EDIT_PRODUCT : DRAWER.TITLE_NEW_PRODUCT
+      }
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onCloseComplete={onCloseComplete}
@@ -219,8 +224,8 @@ function UpdateProduct({
         value={input.name}
         // @ts-ignore
         onChange={handleInput}
-        label="Name"
-        placeholder="Name..."
+        label={COLUMNS.NAME}
+        placeholder={`${COLUMNS.NAME}...`}
         required
       />
       <TextInputField
@@ -228,8 +233,8 @@ function UpdateProduct({
         value={input.model}
         // @ts-ignore
         onChange={handleInput}
-        label="Model"
-        placeholder="Model..."
+        label={COLUMNS.MODEL}
+        placeholder={`${COLUMNS.MODEL}...`}
         required
       />
       <TextInputField
@@ -238,7 +243,7 @@ function UpdateProduct({
         value={productExists ? input.realPrice : input.price}
         // @ts-ignore
         onChange={handleInput}
-        label={productExists ? 'Real price' : 'Expected cost'}
+        label={productExists ? COLUMNS.REAL_PRICE : DRAWER.INPUTS.EXPECTED_COST}
         placeholder="1000"
         required
       />
@@ -249,7 +254,7 @@ function UpdateProduct({
           value={input.salePrice}
           // @ts-ignore
           onChange={handleInput}
-          label="Sale price"
+          label={COLUMNS.SALE_PRICE}
           placeholder="1000"
           required
         />
@@ -260,7 +265,7 @@ function UpdateProduct({
         value={productExists ? input.inStockCount : input.count}
         // @ts-ignore
         onChange={handleInput}
-        label={productExists ? 'In stock' : 'Count'}
+        label={productExists ? COLUMNS.IN_STOCK : DRAWER.INPUTS.COUNT}
         placeholder="99"
         required
       />
@@ -271,7 +276,7 @@ function UpdateProduct({
           value={input.soldCount}
           // @ts-ignore
           onChange={handleInput}
-          label="Sold"
+          label={COLUMNS.SOLD}
           placeholder="99"
           required
         />
@@ -283,7 +288,7 @@ function UpdateProduct({
           value={input.lowestBoundCount}
           // @ts-ignore
           onChange={handleInput}
-          label="Lowest Bound"
+          label={COLUMNS.LOWEST_BOUND}
           placeholder="10"
           required
         />
