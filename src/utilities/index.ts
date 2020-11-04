@@ -1,6 +1,7 @@
 export {default as handleAsync} from './handleAsync'
 export {default as debounce} from './debounce'
 export {default as throttle} from './throttle'
+export {default as useLocale} from './useLocale'
 export {default as useTasksAfterUpdate} from './useTasksAfterUpdate'
 export {default as useLocalStorage} from './useLocalStorage'
 export {default as useUpdate} from './useUpdate'
