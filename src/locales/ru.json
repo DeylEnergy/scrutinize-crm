@@ -1,0 +1,17 @@
+{
+  "MAIN": {},
+  "PAGES": {
+    "MERCHANDISE": {
+      "TITLE": "Товары"
+    },
+    "SALES": {
+      "TITLE": "Продажи"
+    },
+    "STATS": {
+      "TITLE": "Статистика"
+    },
+    "USERS_CONTROL": {
+      "TITLE": "Управление пользователями"
+    }
+  }
+}
