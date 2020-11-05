@@ -2,15 +2,8 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../components/Table'
 import {STORE_NAME as SN} from '../../constants'
-import {useDatabase, withErrorBoundary} from '../../utilities'
+import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
 import {PageWrapper} from '../../layouts'
-
-const columns = [
-  {label: 'Period', width: 150},
-  {label: 'Sold Sum', width: 150, canGrow: true},
-  {label: 'Income Sum', width: 150, canGrow: true},
-  {label: 'Spent Sum', width: 150, canGrow: true},
-]
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -21,6 +14,8 @@ const LOADED_ITEMS_DEFAULT = {
 }
 
 function Stats() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.STATS
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
 
@@ -69,6 +64,16 @@ function Stats() {
       })
     })
   }, [lastKey])
+
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.PERIOD, width: 150},
+      {label: COLUMNS.SOLD_SUM, width: 150, canGrow: true},
+      {label: COLUMNS.INCOME_SUM, width: 150, canGrow: true},
+      {label: COLUMNS.SPENT_SUM, width: 150, canGrow: true},
+    ]
+  }, [PAGE_CONST])
 
   return (
     <PageWrapper>

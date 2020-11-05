@@ -134,7 +134,15 @@
       }
     },
     "STATS": {
-      "TITLE": "Stats"
+      "TITLE": "Stats",
+      "TABLE": {
+        "COLUMNS": {
+          "PERIOD": "Period",
+          "SOLD_SUM": "Sold Sum",
+          "INCOME_SUM": "Income Sum",
+          "SPENT_SUM": "Spent Sum"
+        }
+      }
     },
     "USERS_CONTROL": {
       "TITLE": "Users Control"
