@@ -146,6 +146,46 @@
     },
     "USERS_CONTROL": {
       "TITLE": "Users Control"
+    },
+    "USERS": {
+      "TITLE": "Products",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": "Name",
+          "GROUP": "Group",
+          "PHONE_NUMBER": "Phone Number",
+          "NOTE": "Note"
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_USER": {
+          "BUTTON_TITLE": "User"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_USER": "Add user",
+        "TITLE_EDIT_USER": "Edit user",
+        "BUTTONS": {
+          "SEE_AUTHORIZATION_KEY": "See authorization key",
+          "GENERATE_NEW_KEY": "Generate new key"
+        },
+        "LABELS": {
+          "CREDENTIALS": "Credentials",
+          "USER_STATS": "User stats"
+        },
+        "TOASTER": {
+          "NEW_SECRET_KEY_GENERATION_SUCCESS": "New secret key was created. Don't forget to click 'Save' button"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": "Period",
+            "SOLD_SUM": "Sold Sum",
+            "INCOME_SUM": "Income Sum",
+            "SPENT_SUM": "Spent Sum"
+          }
+        }
+      }
     }
   }
 }

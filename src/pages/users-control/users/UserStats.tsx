@@ -2,15 +2,8 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../../components/Table'
 import {STORE_NAME as SN} from '../../../constants'
-import {useDatabase, withErrorBoundary} from '../../../utilities'
+import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
 import {PageWrapper} from '../../../layouts'
-
-const columns = [
-  {label: 'Period', width: 80},
-  {label: 'Sold Sum', width: 100, canGrow: true},
-  {label: 'Income Sum', width: 100, canGrow: true},
-  {label: 'Spent Sum', width: 100, canGrow: true},
-]
 
 const TABLE_HEIGHT = 250
 
@@ -25,6 +18,8 @@ const LOADED_ITEMS_DEFAULT = {
 }
 
 function UserStats({userId}: any) {
+  const [locale] = useLocale()
+  const {DRAWER} = locale.vars.PAGES.USERS
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
 
@@ -79,6 +74,16 @@ function UserStats({userId}: any) {
       })
     })
   }, [lastKey])
+
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = DRAWER.TABLE
+    return [
+      {label: COLUMNS.PERIOD, width: 80},
+      {label: COLUMNS.SOLD_SUM, width: 100, canGrow: true},
+      {label: COLUMNS.INCOME_SUM, width: 100, canGrow: true},
+      {label: COLUMNS.SPENT_SUM, width: 100, canGrow: true},
+    ]
+  }, [DRAWER])
 
   return (
     <Pane

@@ -15,18 +15,9 @@ import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateUser from './UpdateUser'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../../constants'
-import {useDatabase, withErrorBoundary} from '../../../utilities'
+import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
 import {PUT_USER} from '../../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
-
-const columns = [
-  {label: '', width: 70},
-  {label: 'Name', width: 200, canGrow: true},
-  {label: 'Group', width: 150},
-  {label: 'Phone Number', width: 200},
-  {label: 'Extra', width: 350, canGrow: true},
-  {label: 'OPTIONS', width: 50},
-]
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -48,6 +39,8 @@ const NEW_USER_VALUE = {
 }
 
 function Users() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.USERS
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
@@ -193,12 +186,24 @@ function Users() {
     [],
   )
 
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: '', width: 70},
+      {label: COLUMNS.NAME, width: 200, canGrow: true},
+      {label: COLUMNS.GROUP, width: 150},
+      {label: COLUMNS.PHONE_NUMBER, width: 200},
+      {label: COLUMNS.NOTE, width: 350, canGrow: true},
+      {label: 'OPTIONS', width: 50},
+    ]
+  }, [PAGE_CONST])
+
   return (
     <PageWrapper>
       <ControlWrapper>
         <SearchInput
           width={250}
-          placeholder="Name, phone, or note and tap Enter..."
+          placeholder={PAGE_CONST.CONTROLS.SEARCH_PLACEHOLDER}
           value={searchQuery}
           handleSearchQuery={handleSearchQuery}
         />

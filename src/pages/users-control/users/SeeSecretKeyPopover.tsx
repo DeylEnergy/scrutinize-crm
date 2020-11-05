@@ -3,8 +3,12 @@ import {Popover, Pane, Position, Button, EyeOpenIcon} from 'evergreen-ui'
 import {SPACING} from '../../../constants'
 import CODE_PREFIXES from '../../../constants/codePrefixes'
 import QRCode from 'qrcode'
+import {useLocale} from '../../../utilities'
 
 function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
+  const [locale] = useLocale()
+  const {DRAWER} = locale.vars.PAGES.USERS
+
   const [authKey, setAuthKey] = React.useState<any>('')
   React.useEffect(() => {
     if (disabled) {
@@ -44,7 +48,7 @@ function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
         width="49%"
         disabled={disabled}
       >
-        See authorization key
+        {DRAWER.BUTTONS.SEE_AUTHORIZATION_KEY}
       </Button>
     </Popover>
   )

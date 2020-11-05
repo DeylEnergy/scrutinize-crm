@@ -14,7 +14,7 @@ import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
 import SeeSecretKeyPopover from './SeeSecretKeyPopover'
-import {useAccount, useDatabase} from '../../../utilities'
+import {useLocale, useAccount, useDatabase} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
 import UserStats from './UserStats'
 
@@ -23,6 +23,10 @@ const NOTE_INPUT_STYLE = {
 }
 
 function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.USERS
+  const {DRAWER} = PAGE_CONST
+  const {COLUMNS} = PAGE_CONST.TABLE
   const [{permissions, user}] = useAccount()
 
   const db = useDatabase()
@@ -88,9 +92,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
 
   const handleGenerateSecretKey = React.useCallback(() => {
     setSecretKey(uuidv4())
-    toaster.success(
-      `New secret key was created. Don't forget to click "Save" button`,
-    )
+    toaster.success(DRAWER.TOASTER.NEW_SECRET_KEY_GENERATION_SUCCESS)
   }, [setSecretKey])
 
   const handleStatsDisplay = React.useCallback(() => {
@@ -126,7 +128,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
 
   return (
     <SideSheet
-      title={userExists ? 'Edit user' : 'Add user'}
+      title={userExists ? DRAWER.TITLE_EDIT_USER : DRAWER.TITLE_NEW_USER}
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onOpenComplete={handleStatsDisplay}
@@ -154,12 +156,12 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         value={input.name}
         // @ts-ignore
         onChange={handleInput}
-        label="Name"
-        placeholder="Name..."
+        label={COLUMNS.NAME}
+        placeholder={`${COLUMNS.NAME}...`}
         required
       />
       <SelectField
-        label="Group"
+        label={COLUMNS.GROUP}
         marginBottom={SPACING * 1.5}
         inputHeight={SPACING * 5}
         value={groupId}
@@ -176,11 +178,11 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         value={input.phone ?? ''}
         // @ts-ignore
         onChange={handleInput}
-        label="Phone number"
-        placeholder="Phone number..."
+        label={COLUMNS.PHONE_NUMBER}
+        placeholder={`${COLUMNS.PHONE_NUMBER}...`}
       />
       <TextareaField
-        label="Note"
+        label={COLUMNS.NOTE}
         value={input.note ?? ''}
         onChange={handleNoteInput}
         style={NOTE_INPUT_STYLE}
@@ -195,7 +197,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             marginTop={SPACING / 2}
             marginBottom={SPACING / 2}
           >
-            Credentials
+            {DRAWER.LABELS.CREDENTIALS}
           </Heading>
           <Pane
             display="flex"
@@ -215,7 +217,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
               onClick={handleGenerateSecretKey}
               disabled={!canBeSaved}
             >
-              Generate new key
+              {DRAWER.BUTTONS.GENERATE_NEW_KEY}
             </Button>
           </Pane>
         </>
@@ -229,7 +231,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             marginTop={SPACING / 2}
             marginBottom={SPACING / 2}
           >
-            User stats
+            {DRAWER.LABELS.USER_STATS}
           </Heading>
           <Pane marginBottom={SPACING} padding={2}>
             {isStatsShown && <UserStats userId={doc.id} />}
