@@ -12,7 +12,7 @@ import {
 import IconButton from '../../components/IconButton'
 import {FaUser} from 'react-icons/fa'
 import {SPACING} from '../../constants'
-import {useAccount} from '../../utilities'
+import {useLocale, useAccount} from '../../utilities'
 
 const TextRow = styled.div`
   width: 150px;
@@ -22,6 +22,10 @@ const TextRow = styled.div`
 `
 
 function UserProfilePopover() {
+  const [locale] = useLocale()
+
+  const {USER_PROFILE} = locale.vars.PAGES
+
   const [account, setAccount] = useAccount()
 
   const {user, groupName} = account
@@ -59,7 +63,7 @@ function UserProfilePopover() {
             justifyContent="center"
             onClick={handleLogOut}
           >
-            Log Out
+            {USER_PROFILE.LOGOUT_BUTTON}
           </Button>
         </Pane>
       }

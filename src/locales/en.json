@@ -247,6 +247,9 @@
         }
       }
     },
+    "USER_PROFILE": {
+      "LOGOUT_BUTTON": "Log Out"
+    },
     "CARTS": {
       "TITLE": "Carts",
       "TABLE": {
