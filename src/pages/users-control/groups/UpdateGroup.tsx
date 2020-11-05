@@ -4,64 +4,13 @@ import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {SPACING} from '../../../constants'
 import RIGHTS from '../../../constants/rights'
-
-const PRODUCT_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_PRODUCTS, 'Can see products'],
-  [RIGHTS.CAN_EDIT_PRODUCTS, 'Can edit products'],
-]
-
-const TO_BUY_LIST_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_TO_BUY_LIST, 'Can see to buy list'],
-  [RIGHTS.CAN_EDIT_ITEMS_IN_TO_BUY_LIST, 'Can edit items in to buy list'],
-  [RIGHTS.CAN_ADD_ITEM_TO_BUY_LIST, 'Can add items to buy list'],
-  [RIGHTS.CAN_PRINT_TO_BUY_LIST, 'Can print to buy list'],
-  [RIGHTS.CAN_COMPLETE_TO_BUY_LIST, 'Can process to buy list'],
-]
-
-const ACQUISITIONS_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_ACQUISITIONS, 'Can see acquisitions'],
-]
-
-const SALES_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_SALES, 'Can see sales'],
-  [RIGHTS.CAN_RETURN_SALES_ITEMS, 'Can return sales items'],
-]
-
-const USERS_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_USERS, 'Can see users'],
-  [RIGHTS.CAN_SEE_USER_PROFILE, 'Can see user profile'],
-  [RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS, 'Can see other users secret keys'],
-]
-
-const USERS_GROUP = [[RIGHTS.CAN_SEE_USERS_GROUP, 'Can see users group']]
-
-const STATS_PERMISSIONS = [[RIGHTS.CAN_SEE_STATS, 'Can see statistics']]
-
-const CARTS_PERMISSIONS = [[RIGHTS.CAN_SEE_CARTS, 'Can see carts']]
-
-const CASHBOX_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_CASHBOX, 'Can see cashbox'],
-  [RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS, 'Can perform cashbox operations'],
-]
-
-const STICKERS_MANAGER_PERMISSIONS = [
-  [RIGHTS.CAN_SEE_STICKERS_MANAGER, 'Can see stickers manager'],
-]
-
-const PERMISSIONS = [
-  ...PRODUCT_PERMISSIONS,
-  ...TO_BUY_LIST_PERMISSIONS,
-  ...ACQUISITIONS_PERMISSIONS,
-  ...SALES_PERMISSIONS,
-  ...USERS_PERMISSIONS,
-  ...USERS_GROUP,
-  ...STATS_PERMISSIONS,
-  ...CARTS_PERMISSIONS,
-  ...CASHBOX_PERMISSIONS,
-  // ...STICKERS_MANAGER_PERMISSIONS,
-]
+import {useLocale} from '../../../utilities'
 
 function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.USER_GROUPS
+  const {DRAWER} = PAGE_CONST
+
   const doc = sideSheet.value
 
   const [name, setName] = React.useState(doc.name)
@@ -81,9 +30,91 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
 
   const groupExists = Boolean(doc.id)
 
+  const permissionsList = React.useMemo(() => {
+    const {PERMISSIONS} = DRAWER
+
+    const PRODUCT_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_PRODUCTS, PERMISSIONS.PRODUCTS.CAN_SEE_PRODUCTS],
+      [RIGHTS.CAN_EDIT_PRODUCTS, PERMISSIONS.PRODUCTS.CAN_EDIT_PRODUCTS],
+    ]
+
+    const TO_BUY_LIST_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_TO_BUY_LIST, PERMISSIONS.TO_BUY_LIST.CAN_SEE_TO_BUY_LIST],
+      [
+        RIGHTS.CAN_EDIT_ITEMS_IN_TO_BUY_LIST,
+        PERMISSIONS.TO_BUY_LIST.CAN_EDIT_ITEMS_IN_TO_BUY_LIST,
+      ],
+      [
+        RIGHTS.CAN_ADD_ITEM_TO_BUY_LIST,
+        PERMISSIONS.TO_BUY_LIST.CAN_ADD_ITEM_TO_BUY_LIST,
+      ],
+      [
+        RIGHTS.CAN_PRINT_TO_BUY_LIST,
+        PERMISSIONS.TO_BUY_LIST.CAN_PRINT_TO_BUY_LIST,
+      ],
+      [
+        RIGHTS.CAN_COMPLETE_TO_BUY_LIST,
+        PERMISSIONS.TO_BUY_LIST.CAN_COMPLETE_TO_BUY_LIST,
+      ],
+    ]
+
+    const ACQUISITIONS_PERMISSIONS = [
+      [
+        RIGHTS.CAN_SEE_ACQUISITIONS,
+        PERMISSIONS.ACQUISITIONS.CAN_SEE_ACQUISITIONS,
+      ],
+    ]
+
+    const SALES_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_SALES, PERMISSIONS.SALES.CAN_SEE_SALES],
+      [RIGHTS.CAN_RETURN_SALES_ITEMS, PERMISSIONS.SALES.CAN_RETURN_SALES_ITEMS],
+    ]
+
+    const USERS_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_USERS, PERMISSIONS.USERS.CAN_SEE_USERS],
+      [RIGHTS.CAN_SEE_USER_PROFILE, PERMISSIONS.USERS.CAN_SEE_USER_PROFILE],
+      [
+        RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS,
+        PERMISSIONS.USERS.CAN_SEE_OTHER_USER_SECRET_KEYS,
+      ],
+    ]
+
+    const USERS_GROUP = [
+      [RIGHTS.CAN_SEE_USERS_GROUP, PERMISSIONS.USER_GROUPS.CAN_SEE_USER_GROUPS],
+    ]
+
+    const STATS_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_STATS, PERMISSIONS.STATS.CAN_SEE_STATS],
+    ]
+
+    const CARTS_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_CARTS, PERMISSIONS.CARTS.CAN_SEE_CARTS],
+    ]
+
+    const CASHBOX_PERMISSIONS = [
+      [RIGHTS.CAN_SEE_CASHBOX, PERMISSIONS.CASHBOX.CAN_SEE_CASHBOX],
+      [
+        RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS,
+        PERMISSIONS.CASHBOX.CAN_PERFORM_CASHBOX_OPERATIONS,
+      ],
+    ]
+
+    return [
+      ...PRODUCT_PERMISSIONS,
+      ...TO_BUY_LIST_PERMISSIONS,
+      ...ACQUISITIONS_PERMISSIONS,
+      ...SALES_PERMISSIONS,
+      ...USERS_PERMISSIONS,
+      ...USERS_GROUP,
+      ...STATS_PERMISSIONS,
+      ...CARTS_PERMISSIONS,
+      ...CASHBOX_PERMISSIONS,
+    ]
+  }, [DRAWER])
+
   return (
     <SideSheet
-      title={groupExists ? 'Edit group' : 'Add group'}
+      title={groupExists ? DRAWER.TITLE_EDIT_GROUP : DRAWER.TITLE_NEW_GROUP}
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onCloseComplete={onCloseComplete}
@@ -92,8 +123,8 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       <TextInputField
         value={name}
         onChange={handleName}
-        label="Group name"
-        placeholder="Group name..."
+        label={DRAWER.INPUTS.GROUP_NAME}
+        placeholder={`${DRAWER.INPUTS.GROUP_NAME}...`}
         required
       />
       <Heading
@@ -106,7 +137,7 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
         Permissions
       </Heading>
       <Pane padding={SPACING / 2} paddingTop={0}>
-        {PERMISSIONS.map(([value, label]: any) => (
+        {permissionsList.map(([value, label]: any) => (
           <Checkbox
             key={value}
             label={label}

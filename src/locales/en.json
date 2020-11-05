@@ -186,6 +186,66 @@
           }
         }
       }
+    },
+    "USER_GROUPS": {
+      "TABLE": {
+        "COLUMNS": {
+          "GROUP_NAME": "Group Name"
+        },
+        "OPTIONS": {
+          "EDIT": "Edit"
+        }
+      },
+      "CONTROLS": {
+        "ADD_GROUP": {
+          "BUTTON_TITLE": "Group"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_GROUP": "Add group",
+        "TITLE_EDIT_GROUP": "Edit group",
+        "INPUTS": {
+          "GROUP_NAME": "Group Name"
+        },
+        "PERMISSIONS": {
+          "PRODUCTS": {
+            "CAN_SEE_PRODUCTS": "Can see products",
+            "CAN_EDIT_PRODUCTS": "Can edit products"
+          },
+          "TO_BUY_LIST": {
+            "CAN_SEE_TO_BUY_LIST": "Can see to buy list",
+            "CAN_EDIT_ITEMS_IN_TO_BUY_LIST": "Can edit items in to buy list",
+            "CAN_ADD_ITEM_TO_BUY_LIST": "Can add items to buy list",
+            "CAN_PRINT_TO_BUY_LIST": "Can print to buy list",
+            "CAN_COMPLETE_TO_BUY_LIST": "Can process to buy list"
+          },
+          "ACQUISITIONS": {
+            "CAN_SEE_ACQUISITIONS": "Can see acquisitions"
+          },
+          "SALES": {
+            "CAN_SEE_SALES": "Can see sales",
+            "CAN_RETURN_SALES_ITEMS": "Can return sales items"
+          },
+          "USERS": {
+            "CAN_SEE_USERS": "Can see users",
+            "CAN_SEE_USER_PROFILE": "Can see user profile",
+            "CAN_SEE_OTHER_USER_SECRET_KEYS": "Can see other users secret keys"
+          },
+          "USER_GROUPS": {
+            "CAN_SEE_USER_GROUPS": "Can see user groups"
+          },
+          "STATS": {
+            "CAN_SEE_STATS": "Can see stats"
+          },
+          "CARTS": {
+            "CAN_SEE_CARTS": "Can see carts"
+          },
+          "CASHBOX": {
+            "CAN_SEE_CASHBOX": "Can see cashbox",
+            "CAN_PERFORM_CASHBOX_OPERATIONS": "Can perform cashbox operations"
+          }
+        }
+      }
     }
   }
 }

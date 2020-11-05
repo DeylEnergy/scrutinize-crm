@@ -12,15 +12,15 @@ import {
 } from 'evergreen-ui'
 import Table from '../../../components/Table'
 import {STORE_NAME as SN} from '../../../constants'
-import {useAccount, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useAccount,
+  useDatabase,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import UpdateGroup from './UpdateGroup'
 import {PUT_GROUP} from '../../../constants/events'
-
-const columns = [
-  {label: 'Group Name', width: 200, canGrow: true},
-  {label: 'OPTIONS', width: 50},
-]
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -42,6 +42,8 @@ const NEW_GROUP_VALUE = {
 }
 
 function Groups() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.USER_GROUPS
   const [account, setAccount] = useAccount()
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
@@ -80,7 +82,7 @@ function Groups() {
             <Menu>
               <Menu.Group>
                 <Menu.Item onSelect={() => {}} icon={EditIcon}>
-                  Edit
+                  {PAGE_CONST.TABLE.OPTIONS.EDIT}
                 </Menu.Item>
               </Menu.Group>
             </Menu>
@@ -161,6 +163,14 @@ function Groups() {
     [db, serializeItem],
   )
 
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.GROUP_NAME, width: 200, canGrow: true},
+      {label: 'OPTIONS', width: 50},
+    ]
+  }, [PAGE_CONST])
+
   return (
     <PageWrapper>
       <ControlWrapper>
@@ -171,7 +181,7 @@ function Groups() {
           iconBefore={AddIcon}
           onClick={handleNewGroupClick}
         >
-          Add
+          {PAGE_CONST.CONTROLS.ADD_GROUP.BUTTON_TITLE}
         </Button>
       </ControlWrapper>
       <Pane flex={1}>
