@@ -106,7 +106,32 @@
       }
     },
     "SALES": {
-      "TITLE": "Sales"
+      "TITLE": "Sales",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": "Time",
+          "NAME": "Name",
+          "MODEL": "Model",
+          "SALE_PRICE": "Sale Price",
+          "COUNT": "Count",
+          "SUM": "Sum",
+          "SALESPERSON": "Salesperson",
+          "CUSTOMER": "Customer",
+          "NOTE": "Note"
+        },
+        "OPTIONS": {
+          "RETURN": "Return"
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
+        "FILTERS": {
+          "PERIOD": {
+            "TITLE": "Period",
+            "OPTION_ALL_TIME": "All time"
+          }
+        }
+      }
     },
     "STATS": {
       "TITLE": "Stats"

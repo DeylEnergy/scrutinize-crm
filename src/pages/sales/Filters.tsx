@@ -1,7 +1,7 @@
 import React from 'react'
 import {SelectField} from 'evergreen-ui'
 import FiltersPopoverButton from '../../components/FiltersPopoverButton'
-import {useDatabase} from '../../utilities'
+import {useLocale, useDatabase} from '../../utilities'
 import {STORE_NAME as SN, SPACING} from '../../constants'
 
 export const FILTER_PARAMS_DEFAULT = {
@@ -11,6 +11,9 @@ export const FILTER_PARAMS_DEFAULT = {
 }
 
 function Options({period, handleFilterChange}: any) {
+  const [locale] = useLocale()
+  const {FILTERS} = locale.vars.PAGES.SALES.CONTROLS
+  const {PERIOD} = FILTERS
   const db = useDatabase()
   const [periodOptions, setPeriodOptions] = React.useState([])
 
@@ -34,7 +37,7 @@ function Options({period, handleFilterChange}: any) {
         handleFilterChange({from, to, period: selectedPeriod})
       }}
     >
-      <option value="all">All time</option>
+      <option value="all">{PERIOD.OPTION_ALL_TIME}</option>
       {periodOptions.map((x: any) => (
         <option key={x.label} value={x.label}>
           {x.label}

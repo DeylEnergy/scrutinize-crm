@@ -14,22 +14,14 @@ import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import RIGHTS from '../../constants/rights'
-import {useAccount, useDatabase, withErrorBoundary} from '../../utilities'
+import {
+  useLocale,
+  useAccount,
+  useDatabase,
+  withErrorBoundary,
+} from '../../utilities'
 import {RETURN_SOLD_ITEM} from '../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../layouts'
-
-const columns = [
-  {label: 'Time', width: 150},
-  {label: 'Name', width: 150},
-  {label: 'Model', width: 150},
-  {label: 'Sale Price', width: 150},
-  {label: 'Count', width: 150},
-  {label: 'Sum', width: 150},
-  {label: 'Salesperson', width: 150},
-  {label: 'Customer', width: 150},
-  {label: 'Note', width: 150},
-  {label: 'OPTIONS', width: 50},
-]
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -60,6 +52,8 @@ function ReturnSoldItemDialog({isShown, onClose, onConfirm}: any) {
 }
 
 function Sales() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.SALES
   const [{permissions}] = useAccount()
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
@@ -135,7 +129,7 @@ function Sales() {
             <Menu>
               <Menu.Group>
                 <Menu.Item onSelect={returnSoldItem} icon={EditIcon}>
-                  Return
+                  {PAGE_CONST.OPTIONS.RETURN}
                 </Menu.Item>
               </Menu.Group>
             </Menu>
@@ -219,12 +213,28 @@ function Sales() {
     [setFilterParams],
   )
 
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.TIME, width: 150},
+      {label: COLUMNS.NAME, width: 150},
+      {label: COLUMNS.MODEL, width: 150},
+      {label: COLUMNS.SALE_PRICE, width: 150},
+      {label: COLUMNS.COUNT, width: 150},
+      {label: COLUMNS.SUM, width: 150},
+      {label: COLUMNS.SALESPERSON, width: 150},
+      {label: COLUMNS.CUSTOMER, width: 150},
+      {label: COLUMNS.NOTE, width: 150},
+      {label: 'OPTIONS', width: 50},
+    ]
+  }, [PAGE_CONST])
+
   return (
     <PageWrapper>
       <ControlWrapper>
         <SearchInput
           width={210}
-          placeholder="Name or Model and tap Enter..."
+          placeholder={PAGE_CONST.CONTROLS.SEARCH_PLACEHOLDER}
           value={searchQuery}
           handleSearchQuery={handleSearchQuery}
         />
