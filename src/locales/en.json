@@ -250,6 +250,14 @@
     "USER_PROFILE": {
       "LOGOUT_BUTTON": "Log Out"
     },
+    "SIGN_IN": {
+      "ALERT": {
+        "TITLE": "You are not authorized.",
+        "PLEASE": "Please",
+        "SCAN": "scan",
+        "YOUR_AUTH_KEY": "your authorization key to work with the app."
+      }
+    },
     "CARTS": {
       "TITLE": "Carts",
       "TABLE": {

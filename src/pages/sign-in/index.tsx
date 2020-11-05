@@ -1,13 +1,15 @@
 import React from 'react'
 import {Pane, Alert} from 'evergreen-ui'
-import {useGlobalScanner} from '../../utilities'
+import {useLocale, useGlobalScanner} from '../../utilities'
 
 function SignIn() {
+  const [locale] = useLocale()
+  const {ALERT} = locale.vars.PAGES.SIGN_IN
   const [, setGlobalScanner] = useGlobalScanner()
   return (
     <Pane margin={16}>
-      <Alert intent="danger" title="You are not authorized.">
-        Please{' '}
+      <Alert intent="danger" title={ALERT.TITLE}>
+        {ALERT.PLEASE}{' '}
         <a
           href="#scan"
           onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -15,9 +17,9 @@ function SignIn() {
             setGlobalScanner((prev: any) => ({...prev, isShown: true}))
           }}
         >
-          scan
+          {ALERT.SCAN}
         </a>{' '}
-        your authorization key to work with the app.
+        {ALERT.YOUR_AUTH_KEY}
       </Alert>
     </Pane>
   )
