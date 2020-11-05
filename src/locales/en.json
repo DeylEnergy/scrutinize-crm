@@ -90,7 +90,20 @@
       }
     },
     "ACQUISITIONS": {
-      "TITLE": "Acquisitions"
+      "TITLE": "Acquisitions",
+      "TABLE": {
+        "COLUMNS": {
+          "DATE": "Date",
+          "NAME": "Name",
+          "MODEL": "Model",
+          "PRICE": "Price",
+          "COUNT": "Count",
+          "SUM": "Sum",
+          "SUPPLIER": "Supplier",
+          "EXECUTOR": "Executor",
+          "PRODUCT_ID": "Product Id"
+        }
+      }
     },
     "SALES": {
       "TITLE": "Sales"

@@ -1,18 +1,6 @@
 import React from 'react'
 import Table from '../../../components/Table'
-import {useDatabase, withErrorBoundary} from '../../../utilities'
-
-const columns = [
-  {label: 'Date', width: 150},
-  {label: 'Name', width: 150},
-  {label: 'Model', width: 150},
-  {label: 'Price', width: 150},
-  {label: 'Count', width: 150},
-  {label: 'Sum', width: 150},
-  {label: 'Supplier', width: 150},
-  {label: 'Buyer', width: 150},
-  {label: 'Product Id', width: 250},
-]
+import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -40,6 +28,8 @@ function serializeItem(item: any) {
 }
 
 function Acquisitions() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.ACQUISITIONS
   const db = useDatabase()
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -70,6 +60,21 @@ function Acquisitions() {
       })
     })
   }, [loadedItems.items])
+
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.DATE, width: 150},
+      {label: COLUMNS.NAME, width: 150},
+      {label: COLUMNS.MODEL, width: 150},
+      {label: COLUMNS.PRICE, width: 150},
+      {label: COLUMNS.COUNT, width: 150},
+      {label: COLUMNS.SUM, width: 150},
+      {label: COLUMNS.SUPPLIER, width: 150},
+      {label: COLUMNS.EXECUTOR, width: 150},
+      {label: COLUMNS.PRODUCT_ID, width: 250},
+    ]
+  }, [PAGE_CONST])
 
   return (
     <Table
