@@ -56,7 +56,7 @@ const App = () => {
 
   const canSeeUsersControl =
     permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
-    permissions?.includes(RIGHTS.CAN_SEE_USERS_GROUP)
+    permissions?.includes(RIGHTS.CAN_SEE_USER_GROUPS)
 
   return (
     <div
@@ -109,7 +109,7 @@ const ACCOUNT_MOCK = {
   },
   permissions: [
     'canSeeUsers',
-    'canSeeUsersGroup',
+    'canSeeUserGroups',
     'canSeeSales',
     'canSeeProducts',
     'canEditProducts',

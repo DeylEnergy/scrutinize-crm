@@ -79,8 +79,8 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       ],
     ]
 
-    const USERS_GROUP = [
-      [RIGHTS.CAN_SEE_USERS_GROUP, PERMISSIONS.USER_GROUPS.CAN_SEE_USER_GROUPS],
+    const USER_GROUPS = [
+      [RIGHTS.CAN_SEE_USER_GROUPS, PERMISSIONS.USER_GROUPS.CAN_SEE_USER_GROUPS],
     ]
 
     const STATS_PERMISSIONS = [
@@ -105,7 +105,7 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       ...ACQUISITIONS_PERMISSIONS,
       ...SALES_PERMISSIONS,
       ...USERS_PERMISSIONS,
-      ...USERS_GROUP,
+      ...USER_GROUPS,
       ...STATS_PERMISSIONS,
       ...CARTS_PERMISSIONS,
       ...CASHBOX_PERMISSIONS,

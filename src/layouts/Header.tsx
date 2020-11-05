@@ -58,7 +58,7 @@ export default function Header() {
 
   const canSeeUsersControl =
     permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
-    permissions?.includes(RIGHTS.CAN_SEE_USERS_GROUP)
+    permissions?.includes(RIGHTS.CAN_SEE_USER_GROUPS)
 
   return (
     <Stripe>
