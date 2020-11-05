@@ -1,6 +1,6 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
-import {useDatabase} from '../../utilities'
+import {useLocale, useDatabase} from '../../utilities'
 import {PROCESS_SALE} from '../../constants/events'
 import TextInputField from '../../components/TextInputField'
 
@@ -11,6 +11,9 @@ export default function CheckoutDialog({
   totalSum,
   cartId,
 }: any) {
+  const [locale] = useLocale()
+  const {CHECKOUT} = locale.vars.PAGES.CARTS.DIALOG
+
   const db = useDatabase()
 
   const [paidSum, setPaidSum] = React.useState<any>('')
@@ -25,12 +28,12 @@ export default function CheckoutDialog({
     <>
       <Dialog
         isShown={isShown}
-        title="Checkout"
+        title={CHECKOUT.TITLE}
         onCloseComplete={handleClose}
         width={300}
         topOffset="auto"
         isConfirmDisabled={changeSum < 0}
-        confirmLabel="Finish"
+        confirmLabel={CHECKOUT.CONFIRM_BUTTON_TITLE}
         onConfirm={() => {
           db.sendEvent({type: PROCESS_SALE, payload: {cartId}}).then(
             handleCheckoutSuccess,
@@ -47,7 +50,7 @@ export default function CheckoutDialog({
         />
         <TextInputField
           readOnly
-          label={changeSum > 0 ? 'Change' : 'Need'}
+          label={changeSum > 0 ? CHECKOUT.INPUTS.CHANGE : CHECKOUT.INPUTS.NEED}
           value={Math.abs(changeSum)}
           isInvalid={changeSum < 0}
         />

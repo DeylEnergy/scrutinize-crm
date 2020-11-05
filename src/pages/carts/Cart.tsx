@@ -8,6 +8,7 @@ import {
   toaster,
 } from 'evergreen-ui'
 import {
+  useLocale,
   useDatabase,
   useTasksAfterUpdate,
   useScannerListener,
@@ -24,18 +25,6 @@ import Popover from '../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 import AddProduct from './AddProduct'
 
-const columns = [
-  {label: 'Done', width: 50},
-  {label: 'Name', width: 150},
-  {label: 'Model', width: 170},
-  {label: 'Price', width: 120},
-  {label: 'Count', width: 70},
-  {label: 'Sum', width: 90},
-  {label: 'Product Id', width: 270},
-  {label: 'Note', width: 202, canGrow: true},
-  {label: 'OPTIONS', width: 50},
-]
-
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
   items: [],
@@ -48,6 +37,9 @@ interface CartProps {
 }
 
 function Cart({cartId, fetchComputedCartSum}: CartProps) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.CARTS
+  const {TABLE} = PAGE_CONST
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
@@ -167,7 +159,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
 
       const inStockTooltip = item._productId && (
         <>
-          <b>In stock:</b> {item._product.inStockCount}
+          <b>{TABLE.TOOLTIP.IN_STOCK}:</b> {item._product.inStockCount}
         </>
       )
 
@@ -195,7 +187,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         ),
         tooltipContent: item._productId && (
           <>
-            <b>Real price:</b> {item._product.realPrice}
+            <b>{TABLE.TOOLTIP.REAL_PRICE}:</b> {item._product.realPrice}
           </>
         ),
       }
@@ -210,7 +202,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         value: item.sum,
         tooltipContent: item._productId && (
           <>
-            <b>Income:</b> {item.income}
+            <b>{TABLE.TOOLTIP.INCOME}:</b> {item.income}
           </>
         ),
       }
@@ -237,7 +229,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
                   }}
                   icon={EditIcon}
                 >
-                  Remove
+                  {TABLE.OPTIONS.REMOVE}
                 </Menu.Item>
               </Menu.Group>
             </Menu>
@@ -323,7 +315,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
           handleSelectedProduct({value: aq._productId})
         })
       } else {
-        toaster.warning('Unknown type of QR code.')
+        toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE)
       }
     },
     [db, handleSelectedProduct],
@@ -332,6 +324,21 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   useScannerListener({
     onChange: handleNewScannedProduct,
   })
+
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = TABLE
+    return [
+      {label: COLUMNS.DONE, width: 50},
+      {label: COLUMNS.NAME, width: 150, canGrow: true},
+      {label: COLUMNS.MODEL, width: 170, canGrow: true},
+      {label: COLUMNS.PRICE, width: 120},
+      {label: COLUMNS.COUNT, width: 70},
+      {label: COLUMNS.SUM, width: 90},
+      {label: COLUMNS.PRODUCT_ID, width: 270},
+      {label: COLUMNS.NOTE, width: 200, canGrow: true},
+      {label: 'OPTIONS', width: 50},
+    ]
+  }, [TABLE])
 
   return (
     <PageWrapper>

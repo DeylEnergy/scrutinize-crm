@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
-import {useDatabase} from '../../utilities'
+import {useLocale, useDatabase} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
@@ -12,6 +12,10 @@ const TABS = {
 }
 
 export default function CartsDialog({isShown, setIsShown}: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.CARTS
+  const {DIALOG} = PAGE_CONST
+
   const db = useDatabase()
   // @ts-ignore
   const [state, setState] = React.useReducer((s, v) => ({...s, ...v}), TABS)
@@ -56,7 +60,7 @@ export default function CartsDialog({isShown, setIsShown}: any) {
     <>
       <Dialog
         isShown={isShown}
-        title="Carts"
+        title={DIALOG.TITLE}
         onCloseComplete={() => setIsShown(false)}
         width="100%"
         footer={

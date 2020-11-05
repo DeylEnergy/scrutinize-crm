@@ -1,10 +1,13 @@
 import React from 'react'
 import {Button, Pane, FollowerIcon, FollowingIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
-import {useDatabase, handleAsync} from '../../utilities'
+import {useLocale, useDatabase, handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 
 function CartParticipants({selectedCartId}: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.CARTS
+  const {CONTROLS} = PAGE_CONST
   const db = useDatabase()
   const [hasLoaded, setHasLoaded] = React.useState(false)
   const [cartParticipants, setCartParticipants] = React.useReducer(
@@ -78,7 +81,7 @@ function CartParticipants({selectedCartId}: any) {
         style={{marginRight: 8}}
         iconBefore={FollowerIcon}
       >
-        {cartParticipants?._userName || 'Salesperson'}
+        {cartParticipants?._userName || CONTROLS.SALESPERSON.BUTTON_TITLE}
       </Button>
     )
   }, [cartParticipants?._userName])
@@ -86,7 +89,7 @@ function CartParticipants({selectedCartId}: any) {
   const customerButton = React.useMemo(() => {
     return (
       <Button appearance="minimal" iconBefore={FollowingIcon} intent="warning">
-        {cartParticipants?._customerName || 'Customer'}
+        {cartParticipants?._customerName || CONTROLS.CUSTOMER.BUTTON_TITLE}
       </Button>
     )
   }, [cartParticipants?._customerName])
@@ -99,7 +102,7 @@ function CartParticipants({selectedCartId}: any) {
     <>
       <AsyncSelectMenu
         selected={cartParticipants._userId}
-        title="Select Salesperson"
+        title={CONTROLS.SALESPERSON.POPOVER_TITLE}
         onSelect={handleUserSelect}
         storeName={SN.USERS}
       >
@@ -107,7 +110,7 @@ function CartParticipants({selectedCartId}: any) {
       </AsyncSelectMenu>
       <AsyncSelectMenu
         selected={cartParticipants._customerId}
-        title="Select Customer"
+        title={CONTROLS.CUSTOMER.POPOVER_TITLE}
         onSelect={handleCustomerSelect}
         storeName={SN.CUSTOMERS}
       >

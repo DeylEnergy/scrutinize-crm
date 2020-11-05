@@ -246,6 +246,67 @@
           }
         }
       }
+    },
+    "CARTS": {
+      "TITLE": "Carts",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": "Done",
+          "NAME": "Name",
+          "MODEL": "Model",
+          "PRICE": "Price",
+          "COUNT": "Count",
+          "SUM": "Sum",
+          "PRODUCT_ID": "Product Id",
+          "NOTE": "Note"
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "In Stock",
+          "REAL_PRICE": "Real Price",
+          "INCOME": "Income"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Carts",
+        "CHECKOUT": {
+          "TITLE": "Checkout",
+          "CONFIRM_BUTTON_TITLE": "Finish",
+          "INPUTS": {
+            "CHANGE": "Change",
+            "NEED": "Need"
+          }
+        }
+      },
+      "CONTROLS": {
+        "CARTS_LIST": {
+          "CART_TITLE": "Cart"
+        },
+        "ADD_PRODUCT": {
+          "POPOVER_TITLE": "Add product",
+          "BUTTON_TITLE": "Product",
+          "NO_RESULTS": "No item found."
+        },
+        "SALESPERSON": {
+          "POPOVER_TITLE": "Select Salesperson",
+          "BUTTON_TITLE": "Salesperson"
+        },
+        "CUSTOMER": {
+          "POPOVER_TITLE": "Select Customer",
+          "BUTTON_TITLE": "Customer"
+        },
+        "TOTAL_SUM": {
+          "TITLE": "Total Sum"
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Confirm"
+        }
+      },
+      "TOASTER": {
+        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+      }
     }
   }
 }

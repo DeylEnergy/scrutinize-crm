@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Pane} from 'evergreen-ui'
 import CartParticipants from './CartParticipants'
 import QrScannerDialog from '../../components/QrScannerDialog'
-import {useGlobalScanner, useScannerListener} from '../../utilities'
+import {useLocale, useGlobalScanner, useScannerListener} from '../../utilities'
 
 function CartsFooter({
   selectedCartId,
@@ -10,6 +10,10 @@ function CartsFooter({
   currentCartSum,
   openCheckoutDialog,
 }: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.CARTS
+  const {CONTROLS} = PAGE_CONST
+
   const [isQRScannerShown, setIsQRScannerShown] = React.useState(false)
   const [, setGlobalScanner] = useGlobalScanner()
 
@@ -39,7 +43,7 @@ function CartsFooter({
         <Pane>
           {Boolean(tabs.length) && currentCartSum > 0 && (
             <span>
-              <b>Total Sum:</b> {currentCartSum}
+              <b>{CONTROLS.TOTAL_SUM.TITLE}:</b> {currentCartSum}
             </span>
           )}
           <QrScannerDialog
@@ -52,7 +56,7 @@ function CartsFooter({
             appearance="primary"
             onClick={openCheckoutDialog}
           >
-            Confirm
+            {CONTROLS.CONFIRM.BUTTON_TITLE}
           </Button>
         </Pane>
       </Pane>
