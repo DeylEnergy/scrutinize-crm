@@ -14,7 +14,7 @@ import Carts from '../pages/carts'
 import {useLocale, useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
 import Cashbox from '../pages/cashbox'
-import UserProfilePopover from './UserProfilePopover'
+import UserProfile from '../pages/user-profile'
 
 const Stripe = styled.div`
   color: #fff;
@@ -104,9 +104,7 @@ export default function Header() {
       <ActionsContainer last>
         {permissions?.includes(RIGHTS.CAN_SEE_CASHBOX) && <Cashbox />}
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
-        {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && (
-          <UserProfilePopover />
-        )}
+        {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && <UserProfile />}
       </ActionsContainer>
     </Stripe>
   )

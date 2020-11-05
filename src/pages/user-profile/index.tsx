@@ -9,10 +9,10 @@ import {
   Button,
   LogOutIcon,
 } from 'evergreen-ui'
-import IconButton from '../components/IconButton'
+import IconButton from '../../components/IconButton'
 import {FaUser} from 'react-icons/fa'
-import {SPACING} from '../constants'
-import {useAccount} from '../utilities'
+import {SPACING} from '../../constants'
+import {useAccount} from '../../utilities'
 
 const TextRow = styled.div`
   width: 150px;
