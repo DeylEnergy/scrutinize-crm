@@ -18,24 +18,12 @@ import AddProduct from './AddProduct'
 import Filters from './Filters'
 import Options from './Options'
 import UpdateProduct from '../products/UpdateProduct'
-import {useAccount, useDatabase, withErrorBoundary} from '../../../utilities'
-
-const columns = [
-  {label: 'Done', width: 50},
-  {label: 'Name', width: 150},
-  {label: 'Model', width: 170},
-  {label: 'Price', width: 120},
-  {label: 'Count', width: 70},
-  {label: 'Sum', width: 90},
-  {label: 'Sale Price', width: 100},
-  {label: 'Lowest Bound', width: 120},
-  {label: 'Stickers', width: 100},
-  {label: 'Supplier', width: 150},
-  {label: 'Executor', width: 150},
-  {label: 'Frozen', width: 65},
-  {label: 'Date', width: 190},
-  {label: 'Product Id', width: 270},
-]
+import {
+  useLocale,
+  useAccount,
+  useDatabase,
+  withErrorBoundary,
+} from '../../../utilities'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -57,6 +45,8 @@ const SELECT_MENU_STYLE = {
 }
 
 function ToBuy() {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.TO_BUY_LIST
   const [{permissions}] = useAccount()
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
@@ -471,6 +461,26 @@ function ToBuy() {
     fetchAcquisitions()
     fetchComputedOfToBuyList()
   }
+
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = PAGE_CONST.TABLE
+    return [
+      {label: COLUMNS.DONE, width: 50},
+      {label: COLUMNS.NAME, width: 150},
+      {label: COLUMNS.MODEL, width: 170},
+      {label: COLUMNS.PRICE, width: 120},
+      {label: COLUMNS.COUNT, width: 70},
+      {label: COLUMNS.SUM, width: 90},
+      {label: COLUMNS.SALE_PRICE, width: 100},
+      {label: COLUMNS.LOWEST_BOUND, width: 120},
+      {label: COLUMNS.STICKERS, width: 100},
+      {label: COLUMNS.SUPPLIER, width: 150},
+      {label: COLUMNS.EXECUTOR, width: 150},
+      {label: COLUMNS.FROZEN, width: 65},
+      {label: COLUMNS.DATE, width: 190},
+      {label: COLUMNS.PRODUCT_ID, width: 270},
+    ]
+  }, [])
 
   const hasBoughtItems = computedBuyList.spent > 0
 

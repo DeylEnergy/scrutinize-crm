@@ -9,7 +9,7 @@ import {
   toaster,
 } from 'evergreen-ui'
 import styled from 'styled-components'
-import {useDatabase, handleAsync} from '../../../utilities'
+import {useLocale, useDatabase, handleAsync} from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
 import createStickers from './createStickers'
@@ -59,6 +59,8 @@ const ProcessIndicator = ({isProcessing, success}: ProcessIndicatorProps) => {
 }
 
 export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
+  const [locale] = useLocale()
+  const {PROCESS_BOUGHT_ITEMS} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS.OPTIONS
   const db = useDatabase()
   const [state, setState] = React.useReducer(
     // @ts-ignore
@@ -106,7 +108,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
     <Pane>
       <Dialog
         isShown={isShown}
-        title="Process bought products"
+        title={PROCESS_BOUGHT_ITEMS.TITLE}
         onCloseComplete={() => setIsShown(false)}
         preventBodyScrolling
         footer={({close}: any) => {
@@ -114,7 +116,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
             <>
               {done && !printStickers && (
                 <Button tabIndex={0} onClick={() => close()}>
-                  Close
+                  {PROCESS_BOUGHT_ITEMS.MODAL_BUTTON_CLOSE}
                 </Button>
               )}
               {printStickers && (
@@ -124,7 +126,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
                   appearance="primary"
                   onClick={printStickers.handler}
                 >
-                  Print stickers
+                  {PROCESS_BOUGHT_ITEMS.MODAL_BUTTON_PRINT}
                 </Button>
               )}
               {!done && (
@@ -173,7 +175,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
                     )
                   }}
                 >
-                  Continue
+                  {PROCESS_BOUGHT_ITEMS.MODAL_BUTTON_CONTINUE}
                 </Button>
               )}
             </>
@@ -184,18 +186,19 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
           {' '}
           {data ? (
             <>
-              Products are going to be added to the database. Operation cannot
-              be interrupted.
+              {PROCESS_BOUGHT_ITEMS.MODAL_WARNING}
               <ul>
                 <li style={{marginBottom: 8}}>
-                  <b>Products:</b> {data.productsTotal}{' '}
+                  <b>{PROCESS_BOUGHT_ITEMS.MODAL_PRODUCTS}:</b>{' '}
+                  {data.productsTotal}{' '}
                   <ProcessIndicator
                     isProcessing={acquisitionsProcessing}
                     success={acquisitionsSuccess}
                   />
                 </li>
                 <li>
-                  <b>Stickers:</b> {data.stickersTotal}{' '}
+                  <b>{PROCESS_BOUGHT_ITEMS.MODAL_STICKERS}:</b>{' '}
+                  {data.stickersTotal}{' '}
                   <ProcessIndicator
                     isProcessing={stickersProcessing}
                     success={stickersSuccess}

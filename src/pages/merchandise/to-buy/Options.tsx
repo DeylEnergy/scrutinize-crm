@@ -11,7 +11,7 @@ import Popover from '../../../components/Popover'
 import ProcessAcquisitionsDialog from './ProcessAcquisitionsDialog'
 import print from './print'
 import RIGHTS from '../../../constants/rights'
-import {useAccount, useDatabase} from '../../../utilities'
+import {useLocale, useAccount, useDatabase} from '../../../utilities'
 
 interface OptionsProps {
   refetchAll: () => void
@@ -19,6 +19,8 @@ interface OptionsProps {
 }
 
 function Options({refetchAll, hasBoughtItems}: OptionsProps) {
+  const [locale] = useLocale()
+  const {OPTIONS} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS
   const [{permissions}] = useAccount()
   const db = useDatabase()
   const [isShown, setIsShown] = React.useState(false)
@@ -38,7 +40,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
                     close()
                   }}
                 >
-                  Print document
+                  {OPTIONS.PRINT_DOCUMENT}
                 </Menu.Item>
               )}
               {hasBoughtItems &&
@@ -50,7 +52,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
                       setIsShown(true)
                     }}
                   >
-                    Process bought items
+                    {OPTIONS.PROCESS_BOUGHT_ITEMS.TITLE}
                   </Menu.Item>
                 )}
             </Menu.Group>
@@ -58,7 +60,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
         )}
       >
         <Button height={20} iconBefore={CogIcon}>
-          Options
+          {OPTIONS.BUTTON_TITLE}
         </Button>
       </Popover>
       {isShown && (

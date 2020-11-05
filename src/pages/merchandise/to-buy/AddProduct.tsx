@@ -1,9 +1,12 @@
 import React from 'react'
 import {Button, Pane, AddIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
-import {useDatabase} from '../../../utilities'
+import {useLocale, useDatabase} from '../../../utilities'
 
 function EmptyView({onEmptyButtonClick, searchValue}: any) {
+  const [locale] = useLocale()
+  const {ADD_PRODUCT} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS
+
   return (
     <Pane
       height="100%"
@@ -17,18 +20,21 @@ function EmptyView({onEmptyButtonClick, searchValue}: any) {
         iconBefore={AddIcon}
         onClick={onEmptyButtonClick.bind(null, searchValue)}
       >
-        Add new item
+        {ADD_PRODUCT.NO_RESULTS_BUTTON_TITLE}
       </Button>
     </Pane>
   )
 }
 
 function AddProduct({handleSelectedProduct, handleNewProductDrawer}: any) {
+  const [locale] = useLocale()
+  const {ADD_PRODUCT} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS
+
   const db = useDatabase()
 
   return (
     <AsyncSelectMenu
-      title="Add product"
+      title={ADD_PRODUCT.POPOVER_TITLE}
       onSelect={handleSelectedProduct}
       searchFn={db.search}
       storeName={'products'}
@@ -47,7 +53,7 @@ function AddProduct({handleSelectedProduct, handleNewProductDrawer}: any) {
         intent="success"
         iconBefore={AddIcon}
       >
-        Add
+        {ADD_PRODUCT.BUTTON_TITLE}
       </Button>
     </AsyncSelectMenu>
   )

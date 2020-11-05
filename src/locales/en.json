@@ -33,7 +33,61 @@
       }
     },
     "TO_BUY_LIST": {
-      "TITLE": "To Buy List"
+      "TITLE": "To Buy List",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": "Done",
+          "NAME": "Name",
+          "MODEL": "Model",
+          "PRICE": "Price",
+          "COUNT": "Count",
+          "SUM": "Sum",
+          "SALE_PRICE": "Sale Price",
+          "LOWEST_BOUND": "Lowest Bound",
+          "STICKERS": "Stickers",
+          "SUPPLIER": "Supplier",
+          "EXECUTOR": "Executor",
+          "FROZEN": "Frozen",
+          "DATE": "Date",
+          "PRODUCT_ID": "Product Id"
+        }
+      },
+      "CONTROLS": {
+        "FUND_PANEL": {
+          "NEEDED": "Needed",
+          "BUDGET": "Budget",
+          "SPENT": "Spent",
+          "REMAINS": "Remains"
+        },
+        "ADD_PRODUCT": {
+          "POPOVER_TITLE": "Add product",
+          "BUTTON_TITLE": "Product",
+          "NO_RESULTS_BUTTON_TITLE": "Add new item"
+        },
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "List type",
+            "OPTION_ACTIVE": "Active",
+            "OPTION_HAVE_TO_BUY": "Have to buy",
+            "OPTION_BOUGHT": "Bought",
+            "OPTION_FROZEN": "Frozen"
+          }
+        },
+        "OPTIONS": {
+          "BUTTON_TITLE": "Options",
+          "PROCESS_BOUGHT_ITEMS": {
+            "TITLE": "Process bought items",
+            "MODAL_BUTTON_CONTINUE": "Continue",
+            "MODAL_BUTTON_CLOSE": "Close",
+            "MODAL_BUTTON_PRINT": "Print sti",
+            "MODAL_WARNING": "Products are going to be added to the database. Operation cannot be interrupted.",
+            "MODAL_PRODUCTS": "Products",
+            "MODAL_STICKERS": "Stickers"
+          },
+
+          "PRINT_DOCUMENT": "Print document"
+        }
+      }
     },
     "ACQUISITIONS": {
       "TITLE": "Acquisitions"

@@ -9,7 +9,7 @@ import {
   TintIcon,
 } from 'evergreen-ui'
 import EditablePopoverInput from '../../../components/EditablePopoverInput'
-import {useDatabase} from '../../../utilities'
+import {useLocale, useDatabase} from '../../../utilities'
 import {PUT_BUDGET} from '../../../constants/events'
 
 function FundPanelItemWrapper({className, children, innerRef, ...props}: any) {
@@ -27,6 +27,9 @@ const StyledFundPanelItemWrapper = styled(FundPanelItemWrapper)`
 `
 
 function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
+  const [locale] = useLocale()
+  const {FUND_PANEL} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS
+
   const db = useDatabase()
 
   const onSaveBudget = React.useCallback(
@@ -47,12 +50,12 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
     return [
       {
         icon: <PieChartIcon color="grey" marginRight={4} />,
-        label: 'Needed',
+        label: FUND_PANEL.NEEDED,
         value: needed,
       },
       {
         icon: <BankAccountIcon color="orange" marginRight={4} />,
-        label: 'Budget',
+        label: FUND_PANEL.BUDGET,
         value: budget && (
           <EditablePopoverInput
             value={budget}
@@ -65,16 +68,16 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       },
       {
         icon: <ArrowDownIcon color="red" marginRight={2} />,
-        label: 'Spent',
+        label: FUND_PANEL.SPENT,
         value: spent,
       },
       {
         icon: <TintIcon color="blue" marginRight={2} />,
-        label: 'Remains',
+        label: FUND_PANEL.REMAINS,
         value: remains,
       },
     ]
-  }, [computedBuyList])
+  }, [FUND_PANEL, computedBuyList])
 
   return (
     <Pane display="inline-flex" alignItems="flex-end">
