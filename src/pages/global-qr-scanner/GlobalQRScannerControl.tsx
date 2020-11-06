@@ -15,7 +15,7 @@ import codePrefixes from '../../constants/codePrefixes'
 
 function GlobalQRScannerControl(props: any) {
   const [locale] = useLocale()
-  const {TOASTER} = locale.vars.PAGES.GLOBAL_SCANNER
+  const {TOASTER, BUTTON_TITLE} = locale.vars.PAGES.GLOBAL_SCANNER
   const db = useDatabase()
   const [, setAccount] = useAccount()
   const [, setGlobalScanner] = useGlobalScanner()
@@ -72,7 +72,7 @@ function GlobalQRScannerControl(props: any) {
     onChange: handleNewScannedProduct,
   })
 
-  return <QrScannerPopover {...props} />
+  return <QrScannerPopover buttonTitle={BUTTON_TITLE} {...props} />
 }
 
 export default GlobalQRScannerControl

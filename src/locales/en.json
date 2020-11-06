@@ -351,6 +351,7 @@
       }
     },
     "GLOBAL_SCANNER": {
+      "BUTTON_TITLE": "Scanner",
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "was added.",
         "SUCCESSFULLY AUTHORIZED": "successfully authorized.",
