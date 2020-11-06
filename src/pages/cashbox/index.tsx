@@ -4,8 +4,12 @@ import IconButton from '../../components/IconButton'
 import {FaDonate} from 'react-icons/fa'
 import {SPACING} from '../../constants'
 import CashboxHistory from './CashboxHistory'
+import {useLocale} from '../../utilities'
 
 function Cashbox() {
+  const [locale] = useLocale()
+  const {CASHBOX} = locale.vars.PAGES
+
   const [isShown, setIsShown] = React.useState(false)
 
   return (
@@ -41,7 +45,7 @@ function Cashbox() {
       position={Position.BOTTOM_RIGHT}
     >
       <span>
-        <Tooltip content="Cashbox">
+        <Tooltip content={CASHBOX.TITLE}>
           <IconButton
             onClick={() => {
               setIsShown(true)

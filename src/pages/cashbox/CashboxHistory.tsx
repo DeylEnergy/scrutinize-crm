@@ -1,18 +1,17 @@
 import React from 'react'
 import {Pane, SmallPlusIcon, SmallMinusIcon, toaster} from 'evergreen-ui'
-import {useDatabase, useAccount, withErrorBoundary} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useAccount,
+  withErrorBoundary,
+} from '../../utilities'
 import {SPACING, STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {UPDATE_CASHBOX} from '../../constants/events'
 import RIGHTS from '../../constants/rights'
 import Table from '../../components/Table'
 import {PageWrapper} from '../../layouts'
 import NewCashboxOperation from './NewCashboxOperation'
-
-const columns = [
-  {label: 'Time', width: 150},
-  {label: 'Amount', width: 120},
-  {label: 'Performer', width: 165},
-]
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -28,6 +27,10 @@ const OPERATION_ICON_STYLE = {
 }
 
 function CashboxHistory({}: any) {
+  const [locale] = useLocale()
+  const PAGE_CONST = locale.vars.PAGES.CASHBOX
+  const {TABLE} = PAGE_CONST
+
   const db = useDatabase()
 
   const [{user, permissions}] = useAccount()
@@ -73,10 +76,10 @@ function CashboxHistory({}: any) {
       tooltipContent: (
         <>
           <div>
-            <b>Before</b>: {item.beforeValue}
+            <b>{TABLE.TOOLTIP.AMOUNT_BEFORE}</b>: {item.beforeValue}
           </div>
           <div>
-            <b>After</b>: {item.afterValue}
+            <b>{TABLE.TOOLTIP.AMOUNT_AFTER}</b>: {item.afterValue}
           </div>
         </>
       ),
@@ -119,7 +122,7 @@ function CashboxHistory({}: any) {
   const handleCashboxOperation = React.useCallback(
     ({actionType, sumValue}: any) => {
       if (!user?.id) {
-        const errMsg = 'You are not authorized to perform operations.'
+        const errMsg = PAGE_CONST.TOASTER.NOT_AUTHORIZED_TO_PERFORM
         toaster.danger(errMsg)
         return Promise.reject(errMsg)
       }
@@ -146,6 +149,15 @@ function CashboxHistory({}: any) {
     [loadedItems.items, setLoadedItems, serializeItem, user],
   )
 
+  const columns = React.useMemo(() => {
+    const {COLUMNS} = TABLE
+    return [
+      {label: COLUMNS.TIME, width: 150},
+      {label: COLUMNS.AMOUNT, width: 120},
+      {label: COLUMNS.PERFORMER, width: 165},
+    ]
+  }, [TABLE])
+
   return (
     <PageWrapper>
       <Pane
@@ -154,7 +166,8 @@ function CashboxHistory({}: any) {
         marginBottom={SPACING}
       >
         <Pane>
-          <strong>Current Balance: </strong> {currentBalance}
+          <strong>{PAGE_CONST.CONTROLS.CURRENT_BALANCE.TITLE}: </strong>{' '}
+          {currentBalance}
         </Pane>
         {permissions?.includes(RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS) && (
           <NewCashboxOperation

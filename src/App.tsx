@@ -123,6 +123,8 @@ const ACCOUNT_MOCK = {
     'canSeeCarts',
     'canSeeStickersManager',
     'canSeeStats',
+    'canSeeCashbox',
+    'canPerformCashboxOperations',
   ],
   groupName: 'Administrator',
 }

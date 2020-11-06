@@ -318,6 +318,37 @@
       "TOASTER": {
         "UNKNOWN_QR_CODE": "Unknown type of QR code."
       }
+    },
+    "CASHBOX": {
+      "TITLE": "Cashbox",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": "Time",
+          "AMOUNT": "Amount",
+          "PERFORMER": "Performer"
+        },
+        "TOOLTIP": {
+          "AMOUNT_BEFORE": "Before",
+          "AMOUNT_AFTER": "After"
+        }
+      },
+      "CONTROLS": {
+        "CURRENT_BALANCE": {
+          "TITLE": "Current Balance"
+        }
+      },
+      "INPUTS": {
+        "ACTION": "Action",
+        "SUM": "Sum",
+        "SUM_PLACEHOLDER": "max",
+        "OPTION_WITHDRAW": "Withdraw",
+        "OPTION_ADD": "Add",
+        "APPLY_BUTTON_TITLE": "Apply",
+        "CHANGE_BALANCE_BUTTON_TITLE": "Change Balance"
+      },
+      "TOASTER": {
+        "NOT_AUTHORIZED_TO_PERFORM": "You are not authorized to perform operations."
+      }
     }
   }
 }
