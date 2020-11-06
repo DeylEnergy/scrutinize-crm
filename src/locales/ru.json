@@ -1,17 +1,377 @@
 {
-  "MAIN": {},
+  "GENERAL": {},
   "PAGES": {
     "MERCHANDISE": {
-      "TITLE": "Товары"
+      "TITLE": "Продукция"
+    },
+    "PRODUCTS": {
+      "TITLE": "Товары",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": "Название",
+          "MODEL": "Модель",
+          "REAL_PRICE": "Покупная цена",
+          "SALE_PRICE": "Цена в продаже",
+          "IN_STOCK": "В наличии",
+          "SOLD": "Продано",
+          "LAST_SOLD": "Последняя продажа",
+          "LAST_ACQUIRED": "Последнее привоз",
+          "LOWEST_BOUND": "Мин. количество"
+        }
+      },
+      "SEARCH_PLACEHOLDER": "Название или Модель",
+      "FILTERS_CONTENT": {
+        "PRODUCT_TYPE": "Тип товара"
+      },
+      "DRAWER": {
+        "TITLE_NEW_PRODUCT": "Добавить товар",
+        "TITLE_EDIT_PRODUCT": "Изменить товар",
+        "INPUTS": {
+          "EXPECTED_COST": "Примерная цена",
+          "COUNT": "Кол-во"
+        }
+      }
+    },
+    "TO_BUY_LIST": {
+      "TITLE": "Список закупок",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": "Done",
+          "NAME": "Название",
+          "MODEL": "Модель",
+          "PRICE": "Цена",
+          "COUNT": "Кол-во",
+          "SUM": "Сумма",
+          "SALE_PRICE": "Цена в продаже",
+          "LOWEST_BOUND": "Мин. количество",
+          "STICKERS": "Кол-во стикеров",
+          "SUPPLIER": "Поставщик",
+          "EXECUTOR": "Выполнил",
+          "FROZEN": "Заморожен",
+          "DATE": "Дата",
+          "PRODUCT_ID": "Id товара"
+        }
+      },
+      "CONTROLS": {
+        "FUND_PANEL": {
+          "NEEDED": "Необходимо",
+          "BUDGET": "Бюджет",
+          "SPENT": "Потрачено",
+          "REMAINS": "Осталось"
+        },
+        "ADD_PRODUCT": {
+          "POPOVER_TITLE": "Добавить товар",
+          "BUTTON_TITLE": "Товар",
+          "NO_RESULTS_BUTTON_TITLE": "Добавить товар"
+        },
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "Статус",
+            "OPTION_ACTIVE": "Активный",
+            "OPTION_HAVE_TO_BUY": "Нужно купить",
+            "OPTION_BOUGHT": "Куплен",
+            "OPTION_FROZEN": "Заморожен"
+          }
+        },
+        "OPTIONS": {
+          "BUTTON_TITLE": "Опции",
+          "PROCESS_BOUGHT_ITEMS": {
+            "TITLE": "Завершить список покупок",
+            "MODAL_BUTTON_CONTINUE": "Продолжить",
+            "MODAL_BUTTON_CLOSE": "Закрыть",
+            "MODAL_BUTTON_PRINT": "Печатать стикеры",
+            "MODAL_WARNING": "Товары будут добавлены в базу данных. Действие нельзя будет остановить.",
+            "MODAL_PRODUCTS": "Товары",
+            "MODAL_STICKERS": "Стикеры"
+          },
+
+          "PRINT_DOCUMENT": "Печать списка"
+        }
+      }
+    },
+    "ACQUISITIONS": {
+      "TITLE": "Приобретения",
+      "TABLE": {
+        "COLUMNS": {
+          "DATE": "Дата",
+          "NAME": "Название",
+          "MODEL": "Модель",
+          "PRICE": "Цена",
+          "COUNT": "Кол-во",
+          "SUM": "Сумма",
+          "SUPPLIER": "Поставщик",
+          "EXECUTOR": "Выполнил",
+          "PRODUCT_ID": "Id товара"
+        }
+      }
     },
     "SALES": {
-      "TITLE": "Продажи"
+      "TITLE": "Продажи",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": "Время",
+          "NAME": "Название",
+          "MODEL": "Модель",
+          "SALE_PRICE": "Цена в продаже",
+          "COUNT": "Кол-во",
+          "SUM": "Сумма",
+          "SALESPERSON": "Продавец",
+          "CUSTOMER": "Покупатель",
+          "NOTE": "Заметка"
+        },
+        "OPTIONS": {
+          "RETURN": "Вернуть"
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Название или Модель...",
+        "FILTERS": {
+          "PERIOD": {
+            "TITLE": "Период",
+            "OPTION_ALL_TIME": "Все время"
+          }
+        }
+      }
     },
     "STATS": {
-      "TITLE": "Статистика"
+      "TITLE": "Статистика",
+      "TABLE": {
+        "COLUMNS": {
+          "PERIOD": "Период",
+          "SOLD_SUM": "Продано",
+          "INCOME_SUM": "Доход",
+          "SPENT_SUM": "Потрачено"
+        }
+      }
     },
     "USERS_CONTROL": {
       "TITLE": "Управление пользователями"
+    },
+    "USERS": {
+      "TITLE": "Пользователи",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": "Имя",
+          "GROUP": "Группа",
+          "PHONE_NUMBER": "Номер телефона",
+          "NOTE": "Заметка"
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Название, телефон, заметка...",
+        "ADD_USER": {
+          "BUTTON_TITLE": "Пользователь"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_USER": "Добавить пользователя",
+        "TITLE_EDIT_USER": "Редактировать пользователя",
+        "BUTTONS": {
+          "SEE_AUTHORIZATION_KEY": "Ключ авторизации",
+          "GENERATE_NEW_KEY": "Создать новый ключ"
+        },
+        "LABELS": {
+          "CREDENTIALS": "Авторизация",
+          "USER_STATS": "Статистика пользователя"
+        },
+        "TOASTER": {
+          "NEW_SECRET_KEY_GENERATION_SUCCESS": "Новый ключ был создан. Не забудьте нажать кнопку 'Сохранить'."
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": "Период",
+            "SOLD_SUM": "Продано Сумма",
+            "INCOME_SUM": "Доход Сумма",
+            "SPENT_SUM": "Потрачено Сумма"
+          }
+        }
+      }
+    },
+    "USER_GROUPS": {
+      "TABLE": {
+        "COLUMNS": {
+          "GROUP_NAME": "Название"
+        },
+        "OPTIONS": {
+          "EDIT": "Редактировать"
+        }
+      },
+      "CONTROLS": {
+        "ADD_GROUP": {
+          "BUTTON_TITLE": "Группа"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_GROUP": "Добавить группу",
+        "TITLE_EDIT_GROUP": "Редактировать группу",
+        "INPUTS": {
+          "GROUP_NAME": "Группа Название"
+        },
+        "PERMISSIONS": {
+          "PRODUCTS": {
+            "CAN_SEE_PRODUCTS": "Может видеть товары",
+            "CAN_EDIT_PRODUCTS": "Может редактировать товары"
+          },
+          "TO_BUY_LIST": {
+            "CAN_SEE_TO_BUY_LIST": "Может видеть список закупов",
+            "CAN_EDIT_ITEMS_IN_TO_BUY_LIST": "Может редактировать список закупок",
+            "CAN_ADD_ITEM_TO_BUY_LIST": "Может пополнять список закупок",
+            "CAN_PRINT_TO_BUY_LIST": "Может печатать список закупок",
+            "CAN_COMPLETE_TO_BUY_LIST": "Может завершить список закупок"
+          },
+          "ACQUISITIONS": {
+            "CAN_SEE_ACQUISITIONS": "Может видеть приобретения"
+          },
+          "SALES": {
+            "CAN_SEE_SALES": "Может видеть продажи",
+            "CAN_RETURN_SALES_ITEMS": "Может возвращать проданный товар"
+          },
+          "USERS": {
+            "CAN_SEE_USERS": "Может видеть пользователей",
+            "CAN_SEE_USER_PROFILE": "Может видеть профиль пользователя",
+            "CAN_SEE_OTHER_USER_SECRET_KEYS": "Может видеть чужие ключи авторизации"
+          },
+          "USER_GROUPS": {
+            "CAN_SEE_USER_GROUPS": "Может видеть группы"
+          },
+          "STATS": {
+            "CAN_SEE_STATS": "Может видеть статистику"
+          },
+          "CARTS": {
+            "CAN_SEE_CARTS": "Может видеть корзины"
+          },
+          "CASHBOX": {
+            "CAN_SEE_CASHBOX": "Может видеть кассу",
+            "CAN_PERFORM_CASHBOX_OPERATIONS": "Может управлять кассой"
+          }
+        }
+      }
+    },
+    "USER_PROFILE": {
+      "LOGOUT_BUTTON": "Выйти"
+    },
+    "SIGN_IN": {
+      "ALERT": {
+        "TITLE": "Вы не авторизованы.",
+        "PLEASE": "Пожалуйста",
+        "SCAN": "отсканируйте",
+        "YOUR_AUTH_KEY": "ваш код авторизации."
+      }
+    },
+    "CARTS": {
+      "TITLE": "Корзины",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": "Done",
+          "NAME": "Название",
+          "MODEL": "Модель",
+          "PRICE": "Цена",
+          "COUNT": "Кол-во",
+          "SUM": "Сумма",
+          "PRODUCT_ID": "Id товара",
+          "NOTE": "Заметка"
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "В наличии",
+          "REAL_PRICE": "Покупная цена",
+          "INCOME": "Доход"
+        },
+        "OPTIONS": {
+          "REMOVE": "Удалить"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Корзины",
+        "CHECKOUT": {
+          "TITLE": "Завершение продажи",
+          "CONFIRM_BUTTON_TITLE": "Завершить",
+          "INPUTS": {
+            "CHANGE": "Сдача",
+            "NEED": "Нужно"
+          }
+        }
+      },
+      "CONTROLS": {
+        "CARTS_LIST": {
+          "CART_TITLE": "Корзина"
+        },
+        "ADD_PRODUCT": {
+          "POPOVER_TITLE": "Добавить товар",
+          "BUTTON_TITLE": "Товар",
+          "NO_RESULTS": "Не найдено товаров."
+        },
+        "SALESPERSON": {
+          "POPOVER_TITLE": "Выбор продавца",
+          "BUTTON_TITLE": "Продавец"
+        },
+        "CUSTOMER": {
+          "POPOVER_TITLE": "Выбор покупателя",
+          "BUTTON_TITLE": "Покупатель"
+        },
+        "TOTAL_SUM": {
+          "TITLE": "Сумма"
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Подтвердить"
+        },
+        "SCANNER": {
+          "BUTTON_TITLE": "Сканер"
+        }
+      },
+      "TOASTER": {
+        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+      }
+    },
+    "CASHBOX": {
+      "TITLE": "Касса",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": "Время",
+          "AMOUNT": "Кол-во",
+          "PERFORMER": "Выполнил"
+        },
+        "TOOLTIP": {
+          "AMOUNT_BEFORE": "До",
+          "AMOUNT_AFTER": "После"
+        }
+      },
+      "CONTROLS": {
+        "CURRENT_BALANCE": {
+          "TITLE": "В кассе"
+        }
+      },
+      "INPUTS": {
+        "ACTION": "Действие",
+        "SUM": "Сумма",
+        "SUM_PLACEHOLDER": "макс",
+        "OPTION_WITHDRAW": "Снять",
+        "OPTION_ADD": "Вложить",
+        "APPLY_BUTTON_TITLE": "Выполнить",
+        "CHANGE_BALANCE_BUTTON_TITLE": "Изменить баланс"
+      },
+      "TOASTER": {
+        "NOT_AUTHORIZED_TO_PERFORM": "Вы не авторизованы, чтобы производить операции."
+      }
+    },
+    "GLOBAL_SCANNER": {
+      "BUTTON_TITLE": "Сканер",
+      "TOASTER": {
+        "PRODUCT_ADDED_TO_CART": "был добавлен.",
+        "SUCCESSFULLY AUTHORIZED": "успешно авторизован.",
+        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+      }
+    },
+    "SETTINGS": {
+      "TITLE": "Настройки",
+      "INPUTS": {
+        "LANGUAGE": "Язык"
+      },
+      "CONTROLS": {
+        "SAVE_BUTTON_TITLE": "Сохранить"
+      },
+      "TOASTER": {
+        "CHANGES_SAVED": "Изменения сохранены."
+      }
     }
   }
 }
