@@ -27,6 +27,7 @@ function QRScannerPopover({
   isGlobal = false,
   isShown,
   setIsShown,
+  buttonTitle = 'Scanner',
 }: any) {
   const [, setScannerListener] = useScannerListener()
 
@@ -58,7 +59,7 @@ function QRScannerPopover({
     >
       <StyledSpan isGlobal={isGlobal}>
         <Button onClick={() => setIsShown(true)} iconBefore={CameraIcon}>
-          Open Scanner
+          {buttonTitle}
         </Button>
       </StyledSpan>
     </Popover>
