@@ -349,6 +349,13 @@
       "TOASTER": {
         "NOT_AUTHORIZED_TO_PERFORM": "You are not authorized to perform operations."
       }
+    },
+    "GLOBAL_SCANNER": {
+      "TOASTER": {
+        "PRODUCT_ADDED_TO_CART": "was added.",
+        "SUCCESSFULLY AUTHORIZED": "successfully authorized.",
+        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+      }
     }
   }
 }

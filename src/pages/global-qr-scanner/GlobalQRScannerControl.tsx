@@ -2,6 +2,7 @@ import React from 'react'
 import {toaster} from 'evergreen-ui'
 import QrScannerDialog from '../../components/QrScannerDialog'
 import {
+  useLocale,
   useScannerListener,
   recognizeQRCode,
   useAccount,
@@ -13,6 +14,8 @@ import {PUT_SALE} from '../../constants/events'
 import codePrefixes from '../../constants/codePrefixes'
 
 function GlobalQRScannerControl(props: any) {
+  const [locale] = useLocale()
+  const {TOASTER} = locale.vars.PAGES.GLOBAL_SCANNER
   const db = useDatabase()
   const [, setAccount] = useAccount()
   const [, setGlobalScanner] = useGlobalScanner()
@@ -33,7 +36,7 @@ function GlobalQRScannerControl(props: any) {
             consumer: 'client',
           }).then((result: any) => {
             const [name, model] = result._product.nameModel
-            toaster.success(`${name} ${model} was added.`)
+            toaster.success(`${name} ${model} ${TOASTER.PRODUCT_ADDED_TO_CART}`)
           })
         })
       } else if (prefix === codePrefixes.users) {
@@ -56,10 +59,10 @@ function GlobalQRScannerControl(props: any) {
             groupId: group.id,
           })
           setGlobalScanner((prev: any) => ({...prev, isShown: false}))
-          toaster.success(`${user.name} successfully authorized.`)
+          toaster.success(`${user.name} ${TOASTER.SUCCESSFULLY_AUTHORIZED}`)
         })
       } else {
-        toaster.warning('Unknown type of QR code.')
+        toaster.warning(TOASTER.UNKNOWN_QR_CODE)
       }
     },
     [db],
