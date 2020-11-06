@@ -360,6 +360,18 @@
         "SUCCESSFULLY AUTHORIZED": "successfully authorized.",
         "UNKNOWN_QR_CODE": "Unknown type of QR code."
       }
+    },
+    "SETTINGS": {
+      "TITLE": "Settings",
+      "INPUTS": {
+        "LANGUAGE": "Language"
+      },
+      "CONTROLS": {
+        "SAVE_BUTTON_TITLE": "Save"
+      },
+      "TOASTER": {
+        "CHANGES_SAVED": "Changes saved."
+      }
     }
   }
 }
