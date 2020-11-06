@@ -6,6 +6,7 @@ import SalesPage from './pages/sales'
 import StatsPage from './pages/stats'
 import UsersControlPage from './pages/users-control'
 import SignInPage from './pages/sign-in'
+import Settings from './pages/settings'
 import {
   Switch,
   Route,
@@ -91,6 +92,9 @@ const App = () => {
           )}
           <Route path="/sign-in">
             <SignInPage />
+          </Route>
+          <Route path="/settings">
+            <Settings />
           </Route>
           <Route path="/">
             <Redirect to="/" />

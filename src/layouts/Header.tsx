@@ -7,6 +7,7 @@ import {
   FaQrcode,
   FaChartBar,
   FaUserCog,
+  FaCog,
 } from 'react-icons/fa'
 import {Tooltip} from 'evergreen-ui'
 import IconButton from '../components/IconButton'
@@ -91,6 +92,11 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
+        <Link to="/settings">
+          <Tooltip content={PAGES.SETTINGS.TITLE}>
+            <IconButton icon={<FaCog />} />
+          </Tooltip>
+        </Link>
         {/* No manual stickers for the first version. */}
         {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
           <Link to="/">
