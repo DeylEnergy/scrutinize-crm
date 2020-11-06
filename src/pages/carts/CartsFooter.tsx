@@ -49,6 +49,7 @@ function CartsFooter({
           <QrScannerPopover
             isShown={isQRScannerShown}
             setIsShown={setIsQRScannerShown}
+            buttonTitle={CONTROLS.SCANNER.BUTTON_TITLE}
           />
           <Button
             tabIndex={0}
