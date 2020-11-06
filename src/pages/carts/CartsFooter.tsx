@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Pane} from 'evergreen-ui'
 import CartParticipants from './CartParticipants'
-import QrScannerDialog from '../../components/QrScannerDialog'
+import QrScannerPopover from '../../components/QrScannerPopover'
 import {useLocale, useGlobalScanner, useScannerListener} from '../../utilities'
 
 function CartsFooter({
@@ -46,7 +46,7 @@ function CartsFooter({
               <b>{CONTROLS.TOTAL_SUM.TITLE}:</b> {currentCartSum}
             </span>
           )}
-          <QrScannerDialog
+          <QrScannerPopover
             isShown={isQRScannerShown}
             setIsShown={setIsQRScannerShown}
           />

@@ -1,6 +1,6 @@
 import React from 'react'
 import {toaster} from 'evergreen-ui'
-import QrScannerDialog from '../../components/QrScannerDialog'
+import QrScannerPopover from '../../components/QrScannerPopover'
 import {
   useLocale,
   useScannerListener,
@@ -72,7 +72,7 @@ function GlobalQRScannerControl(props: any) {
     onChange: handleNewScannedProduct,
   })
 
-  return <QrScannerDialog {...props} />
+  return <QrScannerPopover {...props} />
 }
 
 export default GlobalQRScannerControl
