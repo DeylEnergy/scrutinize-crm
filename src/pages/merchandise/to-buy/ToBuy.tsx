@@ -46,6 +46,7 @@ const SELECT_MENU_STYLE = {
 
 function ToBuy() {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.TO_BUY_LIST
   const [{permissions}] = useAccount()
   const db = useDatabase()
@@ -229,11 +230,12 @@ function ToBuy() {
 
       const price = item.price
       const priceCell = {
-        value: price,
+        value: Number(price).toLocaleString(STRING_FORMAT),
         onDoubleClick: handleCellDblClick.bind(null, 'price', price, 'number'),
         tooltipContent: item._productId && (
           <>
-            <b>Previous price:</b> {item._product.realPrice}
+            <b>Previous price:</b>{' '}
+            {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
       }
@@ -252,7 +254,7 @@ function ToBuy() {
       const salePrice =
         item.salePrice || (item._productId && item._product.salePrice)
       const salePriceCell = {
-        value: salePrice,
+        value: Number(salePrice).toLocaleString(STRING_FORMAT),
         onDoubleClick: handleCellDblClick.bind(
           null,
           'salePrice',
@@ -353,8 +355,7 @@ function ToBuy() {
           supplierCell,
           executorCell,
           frozenCell,
-          // new Date(item.neededSinceDatetime).toLocaleDateString(),
-          item.neededSinceDatetime,
+          new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
           item._productId,
         ],
       }
