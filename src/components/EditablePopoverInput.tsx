@@ -30,7 +30,7 @@ function Input({value, inputType = 'string', onSave, togglePopover}: any) {
 }
 
 interface Props {
-  children: React.ReactElement
+  children: React.ReactNode
   value: number | string | undefined | null
   inputType: string
   onSave: (updatedValue: number | string) => any
