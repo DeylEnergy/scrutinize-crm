@@ -133,10 +133,11 @@ const ACCOUNT_MOCK = {
   groupName: 'Administrator',
 }
 
-const LOCALE_DEFAULT = {language: 'en'}
+const LOCALE_DEFAULT = 'en'
 
 function AppProvider() {
-  const [locale, setLocale] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
+  const [language, setLanguage] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
+  const [locale, setLocale] = React.useState<any>(null)
   // TODO: implement auth logic
   const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
@@ -147,26 +148,17 @@ function AppProvider() {
   const [scannerListener, setScannerListener] = React.useState<any>(null)
 
   React.useEffect(() => {
-    import(`./locales/${locale.language}`).then(
-      ({default: _, ...vars}: any) => {
-        setLocale({...locale, vars})
-      },
-    )
-  }, [locale.language, setLocale])
+    import(`./locales/${language}`).then(({default: _, ...vars}: any) => {
+      setLocale({language, vars})
+    })
+  }, [language, setLocale])
 
-  const handleLocaleChange = React.useCallback(
-    (language: string) => {
-      setLocale((locale: any) => ({...locale, language}))
-    },
-    [setLocale],
-  )
-
-  if (!locale.vars) {
+  if (!locale) {
     return null
   }
 
   return (
-    <LocaleContext.Provider value={[locale, handleLocaleChange]}>
+    <LocaleContext.Provider value={[locale, setLanguage]}>
       <AccountContext.Provider value={[account, setAccount]}>
         <DatabaseContext.Provider value={dbWorker}>
           <GlobalScannerContext.Provider
