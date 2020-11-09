@@ -9,19 +9,24 @@ import FiltersPopoverButton from '../../../components/FiltersPopoverButton'
 
 function Filters({value, handleFilterChange}: any) {
   const [locale] = useLocale()
-  const {FILTERS_CONTENT} = locale.vars.PAGES.PRODUCTS
+  const {LIST_TYPE} = locale.vars.PAGES.PRODUCTS.CONTROLS.FILTERS
+
   return (
     <FiltersPopoverButton
       content={
         <SelectField
-          label={FILTERS_CONTENT.PRODUCT_TYPE}
+          label={LIST_TYPE.TITLE}
           value={value}
           onChange={handleFilterChange}
           marginBottom={0}
         >
-          <option value={FILTER_OPTIONS.ALL}>All</option>
-          <option value={FILTER_OPTIONS.IN_STOCK}>In stock</option>
-          <option value={FILTER_OPTIONS.SOLD_OUT}>Sold out</option>
+          <option value={FILTER_OPTIONS.ALL}>{LIST_TYPE.OPTION_ALL}</option>
+          <option value={FILTER_OPTIONS.IN_STOCK}>
+            {LIST_TYPE.OPTION_IN_STOCK}
+          </option>
+          <option value={FILTER_OPTIONS.SOLD_OUT}>
+            {LIST_TYPE.OPTION_SOLD_OUT}
+          </option>
         </SelectField>
       }
       isIndicatorShown={value !== FILTER_OPTIONS.IN_STOCK}

@@ -247,7 +247,7 @@ function Products() {
       <ControlWrapper>
         <SearchInput
           width={210}
-          placeholder={PAGE_CONST.SEARCH_PLACEHOLDER}
+          placeholder={PAGE_CONST.CONTROLS.SEARCH_PLACEHOLDER}
           value={searchQuery}
           handleSearchQuery={handleSearchQuery}
         />

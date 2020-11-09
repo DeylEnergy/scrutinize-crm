@@ -26,9 +26,16 @@
           "LOWEST_BOUND": "Мин. количество"
         }
       },
-      "SEARCH_PLACEHOLDER": "Название или Модель",
-      "FILTERS_CONTENT": {
-        "PRODUCT_TYPE": "Тип товара"
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Название или Модель...",
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "Тип товара",
+            "OPTION_ALL": "Все",
+            "OPTION_IN_STOCK": "В наличии",
+            "OPTION_SOLD_OUT": "Закончившиеся"
+          }
+        }
       },
       "DRAWER": {
         "TITLE_NEW_PRODUCT": "Добавить товар",

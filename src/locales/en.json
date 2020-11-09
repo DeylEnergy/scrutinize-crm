@@ -26,9 +26,16 @@
           "LOWEST_BOUND": "Lowest Bound"
         }
       },
-      "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
-      "FILTERS_CONTENT": {
-        "PRODUCT_TYPE": "Product type"
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "Product type",
+            "OPTION_ALL": "All",
+            "OPTION_IN_STOCK": "In stock",
+            "OPTION_SOLD_OUT": "Sold out"
+          }
+        }
       },
       "DRAWER": {
         "TITLE_NEW_PRODUCT": "Add product",
