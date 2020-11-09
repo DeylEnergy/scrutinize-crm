@@ -1,5 +1,11 @@
 {
-  "GENERAL": {},
+  "GENERAL": {
+    "COMPONENTS": {
+      "FILTERS_POPOVER": {
+        "BUTTON_TITLE": "Filters"
+      }
+    }
+  },
   "PAGES": {
     "MERCHANDISE": {
       "TITLE": "Merchandise"
