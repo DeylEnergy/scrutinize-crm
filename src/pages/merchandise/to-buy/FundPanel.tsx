@@ -12,15 +12,7 @@ import EditablePopoverInput from '../../../components/EditablePopoverInput'
 import {useLocale, useDatabase} from '../../../utilities'
 import {PUT_BUDGET} from '../../../constants/events'
 
-function FundPanelItemWrapper({className, children, innerRef, ...props}: any) {
-  return (
-    <span ref={innerRef} className={className} {...props}>
-      {children}
-    </span>
-  )
-}
-
-const StyledFundPanelItemWrapper = styled(FundPanelItemWrapper)`
+const FundPanelItemWrapper = styled.span`
   display: flex;
   align-items: end;
   margin-right: 8px;
@@ -87,9 +79,9 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
           ({icon, label, value}: any, id: number) =>
             Boolean(value) && (
               <Tooltip content={label} key={id} showDelay={500}>
-                <StyledFundPanelItemWrapper>
+                <FundPanelItemWrapper>
                   {icon} {value}
-                </StyledFundPanelItemWrapper>
+                </FundPanelItemWrapper>
               </Tooltip>
             ),
         )}
