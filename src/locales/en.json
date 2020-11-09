@@ -1,5 +1,6 @@
 {
   "GENERAL": {
+    "STRING_FORMAT": "en-US",
     "COMPONENTS": {
       "FILTERS_POPOVER": {
         "BUTTON_TITLE": "Filters"

@@ -1,5 +1,6 @@
 {
   "GENERAL": {
+    "STRING_FORMAT": "ru-RU",
     "COMPONENTS": {
       "FILTERS_POPOVER": {
         "BUTTON_TITLE": "Фильтры"
