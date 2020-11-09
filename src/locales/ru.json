@@ -188,6 +188,7 @@
       }
     },
     "USER_GROUPS": {
+      "TITLE": "Группы",
       "TABLE": {
         "COLUMNS": {
           "GROUP_NAME": "Название"

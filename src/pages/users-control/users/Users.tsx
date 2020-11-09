@@ -215,7 +215,7 @@ function Users() {
           iconBefore={AddIcon}
           onClick={handleNewGroupClick}
         >
-          Add
+          {PAGE_CONST.CONTROLS.ADD_USER.BUTTON_TITLE}
         </Button>
       </ControlWrapper>
       <Pane flex={1}>

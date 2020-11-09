@@ -148,7 +148,7 @@
       "TITLE": "Users Control"
     },
     "USERS": {
-      "TITLE": "Products",
+      "TITLE": "Users",
       "TABLE": {
         "COLUMNS": {
           "NAME": "Name",
@@ -188,6 +188,7 @@
       }
     },
     "USER_GROUPS": {
+      "TITLE": "Groups",
       "TABLE": {
         "COLUMNS": {
           "GROUP_NAME": "Group Name"

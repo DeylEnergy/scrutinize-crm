@@ -11,30 +11,36 @@ import Block from '../../components/Block'
 import Users from './users/Users'
 import Groups from './groups/Groups'
 import {USERS_CONTROL_ROUTE} from '../../constants/routes'
+import {useLocale} from '../../utilities'
 
 const USERS_PATH = `/${USERS_CONTROL_ROUTE}/users`
 const GROUPS_PATH = `/${USERS_CONTROL_ROUTE}/group`
 
-const TABS = [
-  {
-    label: 'Users',
-    path: USERS_PATH,
-  },
-  {
-    label: 'Groups',
-    path: GROUPS_PATH,
-  },
-]
-
 export default function UsersControls() {
+  const [locale] = useLocale()
+  const {USERS: USERS_CONST, USER_GROUPS: USER_GROUPS_CONST} = locale.vars.PAGES
+
   const history = useHistory()
   const location = useLocation()
+
+  const tabs = React.useMemo(() => {
+    return [
+      {
+        label: USERS_CONST.TITLE,
+        path: USERS_PATH,
+      },
+      {
+        label: USER_GROUPS_CONST.TITLE,
+        path: GROUPS_PATH,
+      },
+    ]
+  }, [USERS_CONST, USER_GROUPS_CONST])
 
   return (
     <Block ratio={1}>
       <Pane height="100%" display="flex" flexDirection="column">
         <Tablist marginBottom={8}>
-          {TABS.map(({label, path}: any) => (
+          {tabs.map(({label, path}: any) => (
             <Tab
               key={label}
               id={label}
