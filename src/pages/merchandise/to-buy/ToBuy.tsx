@@ -194,6 +194,8 @@ function ToBuy() {
         }
       }
 
+      const {CELLS} = PAGE_CONST.TABLE
+
       const doneCell = {
         value: (
           <CellCheckbox
@@ -295,12 +297,14 @@ function ToBuy() {
                 ? {value: item._supplierId, label: item._supplier.name}
                 : {value: null, label: null}
             }
-            title="Select Supplier"
+            title={CELLS.SUPPLIER.POPOVER_TITLE}
             onSelect={handleSupplierPick}
             storeName="suppliers"
           >
             <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
-              {item._supplier ? item._supplier.name : 'Select supplier..'}
+              {item._supplier
+                ? item._supplier.name
+                : CELLS.SUPPLIER.BUTTON_TITLE}
             </Button>
           </AsyncSelectMenu>
         ),
@@ -316,12 +320,12 @@ function ToBuy() {
                 ? {value: item._supplierId, label: item._supplier.name}
                 : {value: null, label: null}
             }
-            title="Select Executor"
+            title={CELLS.EXECUTOR.POPOVER_TITLE}
             onSelect={handleExecutorPick}
             storeName="users"
           >
             <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
-              {item._user ? item._user.name : 'Select executor...'}
+              {item._user ? item._user.name : CELLS.EXECUTOR.BUTTON_TITLE}
             </Button>
           </AsyncSelectMenu>
         ),

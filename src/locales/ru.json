@@ -79,8 +79,8 @@
             "WIDTH": 130
           },
           "LOWEST_BOUND": {
-            "TITLE": "Мин. количество",
-            "WIDTH": 130
+            "TITLE": "Мин. кол-во",
+            "WIDTH": 100
           },
           "STICKERS": {
             "TITLE": "Кол-во стикеров",
@@ -88,11 +88,11 @@
           },
           "SUPPLIER": {
             "TITLE": "Поставщик",
-            "WIDTH": 150
+            "WIDTH": 200
           },
           "EXECUTOR": {
             "TITLE": "Выполнил",
-            "WIDTH": 150
+            "WIDTH": 200
           },
           "FROZEN": {
             "TITLE": "Заморожен",
@@ -100,11 +100,21 @@
           },
           "DATE": {
             "TITLE": "Дата",
-            "WIDTH": 190
+            "WIDTH": 100
           },
           "PRODUCT_ID": {
             "TITLE": "Id товара",
             "WIDTH": 270
+          }
+        },
+        "CELLS": {
+          "SUPPLIER": {
+            "BUTTON_TITLE": "Выбрать поставщика...",
+            "POPOVER_TITLE": "Выбрать поставщика"
+          },
+          "EXECUTOR": {
+            "BUTTON_TITLE": "Выбрать исполнителя...",
+            "POPOVER_TITLE": "Выбрать исполнителя"
           }
         }
       },

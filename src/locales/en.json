@@ -106,6 +106,16 @@
             "TITLE": "Product Id",
             "WIDTH": 270
           }
+        },
+        "CELLS": {
+          "SUPPLIER": {
+            "BUTTON_TITLE": "Select supplier...",
+            "POPOVER_TITLE": "Select supplier"
+          },
+          "EXECUTOR": {
+            "BUTTON_TITLE": "Select executor...",
+            "POPOVER_TITLE": "Select executor"
+          }
         }
       },
       "CONTROLS": {
