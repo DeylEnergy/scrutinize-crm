@@ -42,20 +42,62 @@
       "TITLE": "To Buy List",
       "TABLE": {
         "COLUMNS": {
-          "DONE": "Done",
-          "NAME": "Name",
-          "MODEL": "Model",
-          "PRICE": "Price",
-          "COUNT": "Count",
-          "SUM": "Sum",
-          "SALE_PRICE": "Sale Price",
-          "LOWEST_BOUND": "Lowest Bound",
-          "STICKERS": "Stickers",
-          "SUPPLIER": "Supplier",
-          "EXECUTOR": "Executor",
-          "FROZEN": "Frozen",
-          "DATE": "Date",
-          "PRODUCT_ID": "Product Id"
+          "DONE": {
+            "TITLE": "Done",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 120
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SALE_PRICE": {
+            "TITLE": "Sale Price",
+            "WIDTH": 100
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Lowest Bound",
+            "WIDTH": 120
+          },
+          "STICKERS": {
+            "TITLE": "Stickers",
+            "WIDTH": 100
+          },
+          "SUPPLIER": {
+            "TITLE": "Supplier",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Executor",
+            "WIDTH": 150
+          },
+          "FROZEN": {
+            "TITLE": "Frozen",
+            "WIDTH": 65
+          },
+          "DATE": {
+            "TITLE": "Date",
+            "WIDTH": 190
+          },
+          "PRODUCT_ID": {
+            "TITLE": "Product Id",
+            "WIDTH": 270
+          }
         }
       },
       "CONTROLS": {

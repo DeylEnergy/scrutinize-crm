@@ -42,20 +42,62 @@
       "TITLE": "Список закупок",
       "TABLE": {
         "COLUMNS": {
-          "DONE": "Done",
-          "NAME": "Название",
-          "MODEL": "Модель",
-          "PRICE": "Цена",
-          "COUNT": "Кол-во",
-          "SUM": "Сумма",
-          "SALE_PRICE": "Цена в продаже",
-          "LOWEST_BOUND": "Мин. количество",
-          "STICKERS": "Кол-во стикеров",
-          "SUPPLIER": "Поставщик",
-          "EXECUTOR": "Выполнил",
-          "FROZEN": "Заморожен",
-          "DATE": "Дата",
-          "PRODUCT_ID": "Id товара"
+          "DONE": {
+            "TITLE": "Done",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Цена",
+            "WIDTH": 120
+          },
+          "COUNT": {
+            "TITLE": "Кол-во",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Сумма",
+            "WIDTH": 90
+          },
+          "SALE_PRICE": {
+            "TITLE": "Цена в продаже",
+            "WIDTH": 130
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Мин. количество",
+            "WIDTH": 130
+          },
+          "STICKERS": {
+            "TITLE": "Кол-во стикеров",
+            "WIDTH": 130
+          },
+          "SUPPLIER": {
+            "TITLE": "Поставщик",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Выполнил",
+            "WIDTH": 150
+          },
+          "FROZEN": {
+            "TITLE": "Заморожен",
+            "WIDTH": 90
+          },
+          "DATE": {
+            "TITLE": "Дата",
+            "WIDTH": 190
+          },
+          "PRODUCT_ID": {
+            "TITLE": "Id товара",
+            "WIDTH": 270
+          }
         }
       },
       "CONTROLS": {

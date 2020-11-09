@@ -464,21 +464,23 @@ function ToBuy() {
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
+    console.log(COLUMNS)
+
     return [
-      {label: COLUMNS.DONE, width: 50},
-      {label: COLUMNS.NAME, width: 150},
-      {label: COLUMNS.MODEL, width: 170},
-      {label: COLUMNS.PRICE, width: 120},
-      {label: COLUMNS.COUNT, width: 70},
-      {label: COLUMNS.SUM, width: 90},
-      {label: COLUMNS.SALE_PRICE, width: 100},
-      {label: COLUMNS.LOWEST_BOUND, width: 120},
-      {label: COLUMNS.STICKERS, width: 100},
-      {label: COLUMNS.SUPPLIER, width: 150},
-      {label: COLUMNS.EXECUTOR, width: 150},
-      {label: COLUMNS.FROZEN, width: 65},
-      {label: COLUMNS.DATE, width: 190},
-      {label: COLUMNS.PRODUCT_ID, width: 270},
+      {label: COLUMNS.DONE.TITLE, width: COLUMNS.DONE.WIDTH},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH},
+      {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
+      {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
+      {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
+      {label: COLUMNS.SALE_PRICE.TITLE, width: COLUMNS.SALE_PRICE.WIDTH},
+      {label: COLUMNS.LOWEST_BOUND.TITLE, width: COLUMNS.LOWEST_BOUND.WIDTH},
+      {label: COLUMNS.STICKERS.TITLE, width: COLUMNS.STICKERS.WIDTH},
+      {label: COLUMNS.SUPPLIER.TITLE, width: COLUMNS.SUPPLIER.WIDTH},
+      {label: COLUMNS.EXECUTOR.TITLE, width: COLUMNS.EXECUTOR.WIDTH},
+      {label: COLUMNS.FROZEN.TITLE, width: COLUMNS.FROZEN.WIDTH},
+      {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
+      {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
     ]
   }, [])
 
