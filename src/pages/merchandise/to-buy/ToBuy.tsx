@@ -465,7 +465,6 @@ function ToBuy() {
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
-    console.log(COLUMNS)
 
     return [
       {label: COLUMNS.DONE.TITLE, width: COLUMNS.DONE.WIDTH},
