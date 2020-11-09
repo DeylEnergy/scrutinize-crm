@@ -69,7 +69,7 @@ function ToBuy() {
 
   const [editCell, setEditCell] = React.useState<any>(null)
 
-  const [computedBuyList, setComputedBuyList] = React.useState<any>({})
+  const [computedBuyList, setComputedBuyList] = React.useState<any>(null)
 
   const [sideSheet, setSideSheet] = React.useReducer(
     // @ts-ignore
@@ -488,15 +488,17 @@ function ToBuy() {
     ]
   }, [])
 
-  const hasBoughtItems = computedBuyList.spent > 0
+  const hasBoughtItems = computedBuyList?.spent > 0
 
   return (
     <PageWrapper>
       <ControlWrapper>
-        <FundPanel
-          computedBuyList={computedBuyList}
-          fetchComputedOfToBuyList={fetchComputedOfToBuyList}
-        />
+        {computedBuyList && (
+          <FundPanel
+            computedBuyList={computedBuyList}
+            fetchComputedOfToBuyList={fetchComputedOfToBuyList}
+          />
+        )}
         {permissions.includes(RIGHTS.CAN_ADD_ITEM_TO_BUY_LIST) && (
           <AddProduct
             handleSelectedProduct={handleSelectedProduct}
