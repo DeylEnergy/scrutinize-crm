@@ -28,6 +28,7 @@ const StyledFundPanelItemWrapper = styled(FundPanelItemWrapper)`
 
 function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const {FUND_PANEL} = locale.vars.PAGES.TO_BUY_LIST.CONTROLS
 
   const db = useDatabase()
@@ -51,7 +52,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       {
         icon: <PieChartIcon color="grey" marginRight={4} />,
         label: FUND_PANEL.NEEDED,
-        value: needed,
+        value: Number(needed).toLocaleString(STRING_FORMAT),
       },
       {
         icon: <BankAccountIcon color="orange" marginRight={4} />,
@@ -62,19 +63,19 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
             inputType="number"
             onSave={onSaveBudget}
           >
-            {budget}
+            {Number(budget).toLocaleString(STRING_FORMAT)}
           </EditablePopoverInput>
         ),
       },
       {
         icon: <ArrowDownIcon color="red" marginRight={2} />,
         label: FUND_PANEL.SPENT,
-        value: spent,
+        value: Number(spent).toLocaleString(STRING_FORMAT),
       },
       {
         icon: <TintIcon color="blue" marginRight={2} />,
         label: FUND_PANEL.REMAINS,
-        value: remains,
+        value: Number(remains).toLocaleString(STRING_FORMAT),
       },
     ]
   }, [FUND_PANEL, computedBuyList])
