@@ -331,14 +331,14 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
     return [
-      {label: COLUMNS.DONE, width: 50},
-      {label: COLUMNS.NAME, width: 150, canGrow: true},
-      {label: COLUMNS.MODEL, width: 170, canGrow: true},
-      {label: COLUMNS.PRICE, width: 120},
-      {label: COLUMNS.COUNT, width: 70},
-      {label: COLUMNS.SUM, width: 90},
-      {label: COLUMNS.PRODUCT_ID, width: 270},
-      {label: COLUMNS.NOTE, width: 200, canGrow: true},
+      {label: COLUMNS.DONE.TITLE, width: COLUMNS.DONE.WIDTH},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
+      {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
+      {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
+      {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
+      {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
+      {label: COLUMNS.NOTE.TITLE, width: COLUMNS.NOTE.WIDTH, canGrow: true},
       {label: 'OPTIONS', width: 50},
     ]
   }, [TABLE])

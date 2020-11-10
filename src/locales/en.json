@@ -440,14 +440,38 @@
       "TITLE": "Carts",
       "TABLE": {
         "COLUMNS": {
-          "DONE": "Done",
-          "NAME": "Name",
-          "MODEL": "Model",
-          "PRICE": "Price",
-          "COUNT": "Count",
-          "SUM": "Sum",
-          "PRODUCT_ID": "Product Id",
-          "NOTE": "Note"
+          "DONE": {
+            "TITLE": "Done",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "PRODUCT_ID": {
+            "TITLE": "Product Id",
+            "WIDTH": 270
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
         },
         "TOOLTIP": {
           "IN_STOCK": "In Stock",
