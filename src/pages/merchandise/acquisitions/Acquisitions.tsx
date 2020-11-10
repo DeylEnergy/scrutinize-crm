@@ -72,15 +72,15 @@ function Acquisitions() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.DATE, width: 150},
-      {label: COLUMNS.NAME, width: 150},
-      {label: COLUMNS.MODEL, width: 150},
-      {label: COLUMNS.PRICE, width: 150},
-      {label: COLUMNS.COUNT, width: 150},
-      {label: COLUMNS.SUM, width: 150},
-      {label: COLUMNS.SUPPLIER, width: 150},
-      {label: COLUMNS.EXECUTOR, width: 150},
-      {label: COLUMNS.PRODUCT_ID, width: 250},
+      {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH, canGrow: true},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH},
+      {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
+      {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
+      {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
+      {label: COLUMNS.SUPPLIER.TITLE, width: COLUMNS.SUPPLIER.WIDTH},
+      {label: COLUMNS.EXECUTOR.TITLE, width: COLUMNS.EXECUTOR.WIDTH},
+      {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
     ]
   }, [PAGE_CONST])
 

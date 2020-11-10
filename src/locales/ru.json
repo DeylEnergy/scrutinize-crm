@@ -192,15 +192,42 @@
       "TITLE": "Приобретения",
       "TABLE": {
         "COLUMNS": {
-          "DATE": "Дата",
-          "NAME": "Название",
-          "MODEL": "Модель",
-          "PRICE": "Цена",
-          "COUNT": "Кол-во",
-          "SUM": "Сумма",
-          "SUPPLIER": "Поставщик",
-          "EXECUTOR": "Выполнил",
-          "PRODUCT_ID": "Id товара"
+          "DATE": {
+            "TITLE": "Дата",
+            "WIDTH": 100
+          },
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Цена",
+            "WIDTH": 120
+          },
+          "COUNT": {
+            "TITLE": "Кол-во",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Сумма",
+            "WIDTH": 90
+          },
+          "SUPPLIER": {
+            "TITLE": "Поставщик",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Выполнил",
+            "WIDTH": 150
+          },
+          "PRODUCT_ID": {
+            "TITLE": "Id товара",
+            "WIDTH": 270
+          }
         }
       }
     },

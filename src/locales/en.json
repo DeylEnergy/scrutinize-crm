@@ -192,15 +192,42 @@
       "TITLE": "Acquisitions",
       "TABLE": {
         "COLUMNS": {
-          "DATE": "Date",
-          "NAME": "Name",
-          "MODEL": "Model",
-          "PRICE": "Price",
-          "COUNT": "Count",
-          "SUM": "Sum",
-          "SUPPLIER": "Supplier",
-          "EXECUTOR": "Executor",
-          "PRODUCT_ID": "Product Id"
+          "DATE": {
+            "TITLE": "Date",
+            "WIDTH": 100
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SUPPLIER": {
+            "TITLE": "Supplier",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Executor",
+            "WIDTH": 150
+          },
+          "PRODUCT_ID": {
+            "TITLE": "Product Id",
+            "WIDTH": 270
+          }
         }
       }
     },
