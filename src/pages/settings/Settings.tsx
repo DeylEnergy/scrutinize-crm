@@ -31,7 +31,7 @@ function Settings() {
   return (
     <Pane style={PAGE_WRAPPER_STYLE}>
       <SelectField
-        label="Language"
+        label={PAGE_CONST.INPUTS.LANGUAGE}
         width={200}
         marginBottom={SPACING * 1.5}
         value={language}
