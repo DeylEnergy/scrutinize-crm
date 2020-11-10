@@ -253,6 +253,8 @@ function ToBuy() {
         ),
       }
 
+      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+
       const salePrice =
         item.salePrice || (item._productId && item._product.salePrice)
       const salePriceCell = {
@@ -352,7 +354,7 @@ function ToBuy() {
           modelCell,
           priceCell,
           countCell,
-          item.sum,
+          sumCell,
           salePriceCell,
           lowestBoundCountCell,
           toPrintStickersCountCell,
@@ -364,7 +366,7 @@ function ToBuy() {
         ],
       }
     },
-    [filterBy],
+    [filterBy, STRING_FORMAT],
   )
 
   const isItemLoaded = React.useCallback(
