@@ -25,6 +25,7 @@ import {
   useDatabase,
   useUpdate,
   useLocalStorage,
+  getLocaleTimeString,
 } from '../../../utilities'
 
 interface Supplier {
@@ -137,6 +138,13 @@ function Products() {
 
     const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
 
+    const localeSoldDate = getLocaleTimeString(
+      item.lastSoldDatetime,
+      STRING_FORMAT,
+    )
+    const lastSoldTimeCell =
+      localeSoldDate && `${localeSoldDate.date} ${localeSoldDate.time}`
+
     return {
       id: item.id,
       isDisabled: item.inStockCount <= 0,
@@ -147,7 +155,7 @@ function Products() {
         salePriceCell,
         item.inStockCount,
         item.soldCount,
-        item.datetime, // last sold
+        lastSoldTimeCell,
         new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
         item.lowestBoundCount,
       ],
