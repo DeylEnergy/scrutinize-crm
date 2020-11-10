@@ -10,31 +10,39 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
-function serializeItem(item: any) {
-  return {
-    id: item.id,
-    cells: [
-      new Date(item.datetime).toLocaleDateString(),
-      item._product.nameModel[0],
-      item._product.nameModel[1],
-      item.price,
-      item.count,
-      item.sum,
-      item._supplier?.name,
-      item._user?.name,
-      item._productId,
-    ],
-  }
-}
-
 function Acquisitions() {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.ACQUISITIONS
   const db = useDatabase()
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => ({...s, ...v}),
     LOADED_ITEMS_DEFAULT,
+  )
+
+  const serializeItem = React.useCallback(
+    (item: any) => {
+      const priceCell = Number(item.price).toLocaleString(STRING_FORMAT)
+
+      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+
+      return {
+        id: item.id,
+        cells: [
+          new Date(item.datetime).toLocaleDateString(STRING_FORMAT),
+          item._product.nameModel[0],
+          item._product.nameModel[1],
+          priceCell,
+          item.count,
+          sumCell,
+          item._supplier?.name,
+          item._user?.name,
+          item._productId,
+        ],
+      }
+    },
+    [STRING_FORMAT],
   )
 
   const isItemLoaded = React.useCallback(

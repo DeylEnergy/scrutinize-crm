@@ -28,6 +28,7 @@ const OPERATION_ICON_STYLE = {
 
 function CashboxHistory({}: any) {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CASHBOX
   const {TABLE} = PAGE_CONST
 
@@ -53,43 +54,48 @@ function CashboxHistory({}: any) {
     fetchCurrentBalance()
   }, [fetchCurrentBalance])
 
-  const serializeItem = React.useCallback((item: any) => {
-    const datetime = new Date(item.datetime)
-    const datetimeCell = {
-      value: `${datetime.toLocaleDateString()} ${datetime.toLocaleTimeString()}`,
-    }
+  const serializeItem = React.useCallback(
+    (item: any) => {
+      const datetime = new Date(item.datetime)
+      const datetimeCell = {
+        value: `${datetime.toLocaleDateString()} ${datetime.toLocaleTimeString()}`,
+      }
 
-    const operationIcon =
-      item.action === 'ADD' ? (
-        <SmallPlusIcon color="green" {...OPERATION_ICON_STYLE} />
-      ) : (
-        <SmallMinusIcon color="red" {...OPERATION_ICON_STYLE} />
-      )
+      const operationIcon =
+        item.action === 'ADD' ? (
+          <SmallPlusIcon color="green" {...OPERATION_ICON_STYLE} />
+        ) : (
+          <SmallMinusIcon color="red" {...OPERATION_ICON_STYLE} />
+        )
 
-    const amountCell = {
-      value: (
-        <>
-          {operationIcon}
-          {item.actionValue}
-        </>
-      ),
-      tooltipContent: (
-        <>
-          <div>
-            <b>{TABLE.TOOLTIP.AMOUNT_BEFORE}</b>: {item.beforeValue}
-          </div>
-          <div>
-            <b>{TABLE.TOOLTIP.AMOUNT_AFTER}</b>: {item.afterValue}
-          </div>
-        </>
-      ),
-    }
+      const amountCell = {
+        value: (
+          <>
+            {operationIcon}
+            {Number(item.actionValue).toLocaleString(STRING_FORMAT)}
+          </>
+        ),
+        tooltipContent: (
+          <>
+            <div>
+              <b>{TABLE.TOOLTIP.AMOUNT_BEFORE}</b>:{' '}
+              {Number(item.beforeValue).toLocaleString(STRING_FORMAT)}
+            </div>
+            <div>
+              <b>{TABLE.TOOLTIP.AMOUNT_AFTER}</b>:{' '}
+              {Number(item.afterValue).toLocaleString(STRING_FORMAT)}
+            </div>
+          </>
+        ),
+      }
 
-    return {
-      id: item.id,
-      cells: [datetimeCell, amountCell, item?._user?.name],
-    }
-  }, [])
+      return {
+        id: item.id,
+        cells: [datetimeCell, amountCell, item?._user?.name],
+      }
+    },
+    [STRING_FORMAT],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {

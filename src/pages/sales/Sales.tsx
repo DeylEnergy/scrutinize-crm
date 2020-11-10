@@ -53,6 +53,7 @@ function ReturnSoldItemDialog({isShown, onClose, onConfirm}: any) {
 
 function Sales() {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.SALES
   const [{permissions}] = useAccount()
   const db = useDatabase()
@@ -82,65 +83,74 @@ function Sales() {
     RETURN_ITEM_DIALOG_PARAMS_DEFAULT,
   )
 
-  const serializeItem = React.useCallback(item => {
-    const confirmReturnSoldItem = (close: any) => {
-      db.sendEvent({
-        type: RETURN_SOLD_ITEM,
-        payload: {id: item.id},
-      }).then(() => {
-        const items = itemsRef.current
-        const foundIndex = items.findIndex((x: any) => x.id === item.id)
-        const updatedRow = {...item, returned: true}
-        items[foundIndex] = serializeItem(updatedRow)
-        setLoadedItems({items: [...items]})
-        setTimeout(close)
-      })
-    }
+  const serializeItem = React.useCallback(
+    item => {
+      const confirmReturnSoldItem = (close: any) => {
+        db.sendEvent({
+          type: RETURN_SOLD_ITEM,
+          payload: {id: item.id},
+        }).then(() => {
+          const items = itemsRef.current
+          const foundIndex = items.findIndex((x: any) => x.id === item.id)
+          const updatedRow = {...item, returned: true}
+          items[foundIndex] = serializeItem(updatedRow)
+          setLoadedItems({items: [...items]})
+          setTimeout(close)
+        })
+      }
 
-    const returnSoldItem = () => {
-      setReturnItemDialogParams({
-        isShown: true,
-        onConfirm: confirmReturnSoldItem,
-      })
-    }
+      const returnSoldItem = () => {
+        setReturnItemDialogParams({
+          isShown: true,
+          onConfirm: confirmReturnSoldItem,
+        })
+      }
 
-    const saleTime = new Date(item.datetime[0])
-    const saleTimeCell = {
-      value: `${saleTime.toLocaleDateString()} ${saleTime.toLocaleTimeString()}`,
-    }
+      const saleTime = new Date(item.datetime[0])
+      const saleTimeCell = {
+        value: `${saleTime.toLocaleDateString(
+          STRING_FORMAT,
+        )} ${saleTime.toLocaleTimeString(STRING_FORMAT)}`,
+      }
 
-    return {
-      id: item.id,
-      isDisabled: Boolean(item.returned),
-      cells: [
-        saleTimeCell,
-        item._product.nameModel[0],
-        item._product.nameModel[1],
-        item.salePrice,
-        item.count,
-        item.sum,
-        item?._user?.name,
-        item?._customer?.name,
-        item.note,
-      ],
-      optionsMenu: permissions.includes(RIGHTS.CAN_RETURN_SALES_ITEMS) && (
-        <Popover
-          content={
-            <Menu>
-              <Menu.Group>
-                <Menu.Item onSelect={returnSoldItem} icon={EditIcon}>
-                  {PAGE_CONST.OPTIONS.RETURN}
-                </Menu.Item>
-              </Menu.Group>
-            </Menu>
-          }
-          position={Position.BOTTOM_RIGHT}
-        >
-          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
-        </Popover>
-      ),
-    }
-  }, [])
+      const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+
+      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+
+      return {
+        id: item.id,
+        isDisabled: Boolean(item.returned),
+        cells: [
+          saleTimeCell,
+          item._product.nameModel[0],
+          item._product.nameModel[1],
+          salePriceCell,
+          item.count,
+          sumCell,
+          item?._user?.name,
+          item?._customer?.name,
+          item.note,
+        ],
+        optionsMenu: permissions.includes(RIGHTS.CAN_RETURN_SALES_ITEMS) && (
+          <Popover
+            content={
+              <Menu>
+                <Menu.Group>
+                  <Menu.Item onSelect={returnSoldItem} icon={EditIcon}>
+                    {PAGE_CONST.OPTIONS.RETURN}
+                  </Menu.Item>
+                </Menu.Group>
+              </Menu>
+            }
+            position={Position.BOTTOM_RIGHT}
+          >
+            <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+          </Popover>
+        ),
+      }
+    },
+    [STRING_FORMAT],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {

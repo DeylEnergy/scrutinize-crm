@@ -16,6 +16,7 @@ const LOADED_ITEMS_DEFAULT = {
 function Stats() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.STATS
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
 
@@ -29,12 +30,22 @@ function Stats() {
     LOADED_ITEMS_DEFAULT,
   )
 
-  const serializeItem = React.useCallback(item => {
-    return {
-      id: item.id,
-      cells: [item.period, item.soldSum, item.incomeSum, item.spentSum || ''],
-    }
-  }, [])
+  const serializeItem = React.useCallback(
+    item => {
+      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+
+      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+
+      const spentSumCell =
+        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+
+      return {
+        id: item.id,
+        cells: [item.period, soldSumCell, incomeSumCell, spentSumCell || ''],
+      }
+    },
+    [STRING_FORMAT],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {

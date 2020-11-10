@@ -94,6 +94,7 @@ const SIDE_SHEET_DEFAULT = {
 function Products() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.PRODUCTS
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const [{permissions, user}] = useAccount()
   const db = useDatabase()
 
@@ -132,18 +133,22 @@ function Products() {
 
     const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
 
+    const realPriceCell = Number(item.realPrice).toLocaleString(STRING_FORMAT)
+
+    const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+
     return {
       id: item.id,
       isDisabled: item.inStockCount <= 0,
       cells: [
         item.nameModel[0],
         item.nameModel[1],
-        item.realPrice,
-        item.salePrice,
+        realPriceCell,
+        salePriceCell,
         item.inStockCount,
         item.soldCount,
         item.datetime, // last sold
-        new Date(item.lastAcquiredDatetime).toLocaleDateString(), // last acquisition
+        new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
         item.lowestBoundCount,
       ],
       onDoubleClick: (canEditProducts && editSideSheet) || null,
@@ -195,7 +200,7 @@ function Products() {
         })
       })
     },
-    [setLoadedItems, filterBy],
+    [setLoadedItems, filterBy, STRING_FORMAT],
   )
 
   const {lastKey} = loadedItems

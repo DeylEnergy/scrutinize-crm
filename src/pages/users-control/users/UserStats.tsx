@@ -19,6 +19,7 @@ const LOADED_ITEMS_DEFAULT = {
 
 function UserStats({userId}: any) {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const {DRAWER} = locale.vars.PAGES.USERS
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
@@ -35,13 +36,24 @@ function UserStats({userId}: any) {
 
   const [firstFetched, setFirstFetched] = React.useState(false)
 
-  const serializeItem = React.useCallback(item => {
-    const [, period] = item.userIdPeriod
-    return {
-      id: item.id,
-      cells: [period, item.soldSum, item.incomeSum, item.spentSum || ''],
-    }
-  }, [])
+  const serializeItem = React.useCallback(
+    item => {
+      const [, period] = item.userIdPeriod
+
+      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+
+      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+
+      const spentSumCell =
+        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+
+      return {
+        id: item.id,
+        cells: [period, soldSumCell, incomeSumCell, spentSumCell || ''],
+      }
+    },
+    [STRING_FORMAT],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {

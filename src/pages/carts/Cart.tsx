@@ -38,6 +38,7 @@ interface CartProps {
 
 function Cart({cartId, fetchComputedCartSum}: CartProps) {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {TABLE} = PAGE_CONST
   const db = useDatabase()
@@ -178,7 +179,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
       const salePrice =
         item.salePrice || (item._productId && item._product.salePrice)
       const salePriceCell = {
-        value: salePrice,
+        value: Number(salePrice).toLocaleString(STRING_FORMAT),
         onDoubleClick: handleCellDblClick.bind(
           null,
           'salePrice',
@@ -187,7 +188,8 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         ),
         tooltipContent: item._productId && (
           <>
-            <b>{TABLE.TOOLTIP.REAL_PRICE}:</b> {item._product.realPrice}
+            <b>{TABLE.TOOLTIP.REAL_PRICE}:</b>{' '}
+            {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
       }
@@ -199,10 +201,11 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
       }
 
       const sumCell = {
-        value: item.sum,
-        tooltipContent: item._productId && (
+        value: Number(item.sum).toLocaleString(STRING_FORMAT),
+        tooltipContent: (
           <>
-            <b>{TABLE.TOOLTIP.INCOME}:</b> {item.income}
+            <b>{TABLE.TOOLTIP.INCOME}:</b>{' '}
+            {Number(item.income).toLocaleString(STRING_FORMAT)}
           </>
         ),
       }
@@ -255,7 +258,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
         optionsMenu,
       }
     },
-    [addTask],
+    [addTask, STRING_FORMAT],
   )
 
   const isItemLoaded = React.useCallback(

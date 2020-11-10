@@ -11,6 +11,7 @@ function CartsFooter({
   openCheckoutDialog,
 }: any) {
   const [locale] = useLocale()
+  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {CONTROLS} = PAGE_CONST
 
@@ -43,7 +44,8 @@ function CartsFooter({
         <Pane>
           {Boolean(tabs.length) && currentCartSum > 0 && (
             <span>
-              <b>{CONTROLS.TOTAL_SUM.TITLE}:</b> {currentCartSum}
+              <b>{CONTROLS.TOTAL_SUM.TITLE}:</b>{' '}
+              {Number(currentCartSum).toLocaleString(STRING_FORMAT)}
             </span>
           )}
           <QrScannerPopover
