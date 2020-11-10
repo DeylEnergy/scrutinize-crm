@@ -1,4 +1,5 @@
 import React from 'react'
+import {v4 as uuidv4} from 'uuid'
 import {
   useTasksAfterUpdate,
   useLocalStorage,
@@ -432,6 +433,7 @@ function ToBuy() {
     input => {
       const updatedRow = {
         neededSinceDatetime: Date.now(),
+        futureProductId: uuidv4(),
         _productId: null,
         _supplierId: null,
         ...input,

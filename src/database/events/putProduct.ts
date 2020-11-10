@@ -28,7 +28,11 @@ export default async function putProduct({
     }
     product = storedProduct
   } else {
-    product = {id: uuidv4(), inStockCount: 0, soldCount: 0}
+    product = {
+      id: payload.futureProductId ?? uuidv4(),
+      inStockCount: 0,
+      soldCount: 0,
+    }
   }
 
   const eventDatetime = Date.now()
