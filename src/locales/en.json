@@ -64,7 +64,7 @@
           },
           "PRICE": {
             "TITLE": "Price",
-            "WIDTH": 120
+            "WIDTH": 90
           },
           "COUNT": {
             "TITLE": "Count",
@@ -76,15 +76,15 @@
           },
           "SALE_PRICE": {
             "TITLE": "Sale Price",
-            "WIDTH": 100
+            "WIDTH": 90
           },
           "LOWEST_BOUND": {
             "TITLE": "Lowest Bound",
-            "WIDTH": 120
+            "WIDTH": 110
           },
           "STICKERS": {
             "TITLE": "Stickers",
-            "WIDTH": 100
+            "WIDTH": 80
           },
           "SUPPLIER": {
             "TITLE": "Supplier",
@@ -100,7 +100,7 @@
           },
           "DATE": {
             "TITLE": "Date",
-            "WIDTH": 190
+            "WIDTH": 100
           },
           "PRODUCT_ID": {
             "TITLE": "Product Id",
