@@ -4,6 +4,7 @@ import {
   useLocale,
   useDatabase,
   useAccount,
+  getLocaleTimeString,
   withErrorBoundary,
 } from '../../utilities'
 import {SPACING, STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
@@ -56,9 +57,9 @@ function CashboxHistory({}: any) {
 
   const serializeItem = React.useCallback(
     (item: any) => {
-      const datetime = new Date(item.datetime)
-      const datetimeCell = {
-        value: `${datetime.toLocaleDateString()} ${datetime.toLocaleTimeString()}`,
+      const dateTime = getLocaleTimeString(item.datetime, STRING_FORMAT)
+      const operationTimeCell = {
+        value: dateTime && `${dateTime.date} ${dateTime.time}`,
       }
 
       const operationIcon =
@@ -91,7 +92,7 @@ function CashboxHistory({}: any) {
 
       return {
         id: item.id,
-        cells: [datetimeCell, amountCell, item?._user?.name],
+        cells: [operationTimeCell, amountCell, item?._user?.name],
       }
     },
     [STRING_FORMAT],
