@@ -3,6 +3,7 @@ import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 import {PUT_BUDGET} from '../../constants/events'
+import {getRowFromStore} from '../queries'
 
 export default async function putBudget({
   store = null,
@@ -10,7 +11,15 @@ export default async function putBudget({
   payload,
   emitEvent = true,
 }: any) {
-  payload = {...payload, id: 1}
+  const [budget, budgetError] = await handleAsync(
+    getRowFromStore(SN.BUDGET, 1, store),
+  )
+
+  if (budgetError) {
+    return Promise.reject(`Error fetching budget`)
+  }
+
+  payload = {...budget, ...payload}
 
   const [, isBudgetUpdateError] = await handleAsync(
     putRow(SN.BUDGET, payload, store),
