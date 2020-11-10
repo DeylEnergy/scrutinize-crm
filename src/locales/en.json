@@ -116,6 +116,12 @@
             "BUTTON_TITLE": "Select executor...",
             "POPOVER_TITLE": "Select executor"
           }
+        },
+        "TOOLTIP": {
+          "NAME_BEFORE": "Before",
+          "MODEL_BEFORE": "After",
+          "PREVIOUS_PRICE": "Previous",
+          "IN_STOCK": "In stock"
         }
       },
       "CONTROLS": {

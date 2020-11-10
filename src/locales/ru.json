@@ -116,6 +116,12 @@
             "BUTTON_TITLE": "Выбрать исполнителя...",
             "POPOVER_TITLE": "Выбрать исполнителя"
           }
+        },
+        "TOOLTIP": {
+          "NAME_BEFORE": "До",
+          "MODEL_BEFORE": "До",
+          "PREVIOUS_PRICE": "Раньше",
+          "IN_STOCK": "В наличии"
         }
       },
       "CONTROLS": {

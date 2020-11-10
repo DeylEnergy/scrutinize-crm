@@ -48,6 +48,7 @@ function ToBuy() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.TO_BUY_LIST
+  const {TABLE} = PAGE_CONST
   const [{permissions}] = useAccount()
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
@@ -194,7 +195,7 @@ function ToBuy() {
         }
       }
 
-      const {CELLS} = PAGE_CONST.TABLE
+      const {CELLS, TOOLTIP} = TABLE
 
       const doneCell = {
         value: (
@@ -214,7 +215,7 @@ function ToBuy() {
         onDoubleClick: handleCellDblClick.bind(null, 'name', name, 'string'),
         tooltipContent: item.name && item._productId && (
           <>
-            <b>Before:</b> {item._product.nameModel[0]}
+            <b>{TOOLTIP.NAME_BEFORE}:</b> {item._product.nameModel[0]}
           </>
         ),
       }
@@ -225,7 +226,7 @@ function ToBuy() {
         onDoubleClick: handleCellDblClick.bind(null, 'model', model, 'string'),
         tooltipContent: item.model && item._productId && (
           <>
-            <b>Before:</b> {item._product.nameModel[1]}
+            <b>{TOOLTIP.MODEL_BEFORE}:</b> {item._product.nameModel[1]}
           </>
         ),
       }
@@ -236,7 +237,7 @@ function ToBuy() {
         onDoubleClick: handleCellDblClick.bind(null, 'price', price, 'number'),
         tooltipContent: item._productId && (
           <>
-            <b>Previous price:</b>{' '}
+            <b>{TOOLTIP.PREVIOUS_PRICE}:</b>{' '}
             {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
@@ -248,7 +249,7 @@ function ToBuy() {
         onDoubleClick: handleCellDblClick.bind(null, 'count', count, 'number'),
         tooltipContent: item._productId && (
           <>
-            <b>In stock:</b> {item._product.inStockCount}
+            <b>{TOOLTIP.IN_STOCK}:</b> {item._product.inStockCount}
           </>
         ),
       }
@@ -366,7 +367,7 @@ function ToBuy() {
         ],
       }
     },
-    [filterBy, STRING_FORMAT],
+    [filterBy, TABLE, STRING_FORMAT],
   )
 
   const isItemLoaded = React.useCallback(
