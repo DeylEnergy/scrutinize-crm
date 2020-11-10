@@ -15,15 +15,42 @@
       "TITLE": "Товары",
       "TABLE": {
         "COLUMNS": {
-          "NAME": "Название",
-          "MODEL": "Модель",
-          "REAL_PRICE": "Покупная цена",
-          "SALE_PRICE": "Цена в продаже",
-          "IN_STOCK": "В наличии",
-          "SOLD": "Продано",
-          "LAST_SOLD": "Последняя продажа",
-          "LAST_ACQUIRED": "Последний привоз",
-          "LOWEST_BOUND": "Мин. количество"
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 170
+          },
+          "REAL_PRICE": {
+            "TITLE": "Покупная цена",
+            "WIDTH": 115
+          },
+          "SALE_PRICE": {
+            "TITLE": "Цена в продаже",
+            "WIDTH": 120
+          },
+          "IN_STOCK": {
+            "TITLE": "В наличии",
+            "WIDTH": 90
+          },
+          "SOLD": {
+            "TITLE": "Продано",
+            "WIDTH": 90
+          },
+          "LAST_SOLD": {
+            "TITLE": "Последняя продажа",
+            "WIDTH": 150
+          },
+          "LAST_ACQUIRED": {
+            "TITLE": "Последний привоз",
+            "WIDTH": 140
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Мин. кол-во",
+            "WIDTH": 110
+          }
         }
       },
       "CONTROLS": {

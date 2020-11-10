@@ -15,15 +15,42 @@
       "TITLE": "Products",
       "TABLE": {
         "COLUMNS": {
-          "NAME": "Name",
-          "MODEL": "Model",
-          "REAL_PRICE": "Real Price",
-          "SALE_PRICE": "Sale Price",
-          "IN_STOCK": "In Stock",
-          "SOLD": "Sold",
-          "LAST_SOLD": "Last Sold",
-          "LAST_ACQUIRED": "Last Acquired",
-          "LOWEST_BOUND": "Lowest Bound"
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "REAL_PRICE": {
+            "TITLE": "Real Price",
+            "WIDTH": 90
+          },
+          "SALE_PRICE": {
+            "TITLE": "Sale Price",
+            "WIDTH": 90
+          },
+          "IN_STOCK": {
+            "TITLE": "In Stock",
+            "WIDTH": 90
+          },
+          "SOLD": {
+            "TITLE": "Sold",
+            "WIDTH": 90
+          },
+          "LAST_SOLD": {
+            "TITLE": "Last Sold",
+            "WIDTH": 130
+          },
+          "LAST_ACQUIRED": {
+            "TITLE": "Last Acquired",
+            "WIDTH": 110
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Lowest Bound",
+            "WIDTH": 110
+          }
         }
       },
       "CONTROLS": {

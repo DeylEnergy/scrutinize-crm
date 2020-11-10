@@ -242,15 +242,15 @@ function Products() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.NAME, width: 150},
-      {label: COLUMNS.MODEL, width: 150},
-      {label: COLUMNS.REAL_PRICE, width: 150},
-      {label: COLUMNS.SALE_PRICE, width: 150},
-      {label: COLUMNS.IN_STOCK, width: 150},
-      {label: COLUMNS.SOLD, width: 150},
-      {label: COLUMNS.LAST_SOLD, width: 150},
-      {label: COLUMNS.LAST_ACQUIRED, width: 150},
-      {label: COLUMNS.LOWEST_BOUND, width: 150},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
+      {label: COLUMNS.REAL_PRICE.TITLE, width: COLUMNS.REAL_PRICE.WIDTH},
+      {label: COLUMNS.SALE_PRICE.TITLE, width: COLUMNS.SALE_PRICE.WIDTH},
+      {label: COLUMNS.IN_STOCK.TITLE, width: COLUMNS.IN_STOCK.WIDTH},
+      {label: COLUMNS.SOLD.TITLE, width: COLUMNS.SOLD.WIDTH},
+      {label: COLUMNS.LAST_SOLD.TITLE, width: COLUMNS.LAST_SOLD.WIDTH},
+      {label: COLUMNS.LAST_ACQUIRED.TITLE, width: COLUMNS.LAST_ACQUIRED.WIDTH},
+      {label: COLUMNS.LOWEST_BOUND.TITLE, width: COLUMNS.LOWEST_BOUND.WIDTH},
       {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])
