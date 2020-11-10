@@ -22,7 +22,7 @@
           "IN_STOCK": "В наличии",
           "SOLD": "Продано",
           "LAST_SOLD": "Последняя продажа",
-          "LAST_ACQUIRED": "Последнее привоз",
+          "LAST_ACQUIRED": "Последний привоз",
           "LOWEST_BOUND": "Мин. количество"
         }
       },
@@ -51,7 +51,7 @@
       "TABLE": {
         "COLUMNS": {
           "DONE": {
-            "TITLE": "Done",
+            "TITLE": "",
             "WIDTH": 50
           },
           "NAME": {
@@ -246,9 +246,9 @@
         "TABLE": {
           "COLUMNS": {
             "PERIOD": "Период",
-            "SOLD_SUM": "Продано Сумма",
-            "INCOME_SUM": "Доход Сумма",
-            "SPENT_SUM": "Потрачено Сумма"
+            "SOLD_SUM": "Продано на сумму",
+            "INCOME_SUM": "Доход на сумму",
+            "SPENT_SUM": "Расходы на сумму"
           }
         }
       }
@@ -326,10 +326,10 @@
       }
     },
     "CARTS": {
-      "TITLE": "Корзины",
+      "TITLE": "Список корзин",
       "TABLE": {
         "COLUMNS": {
-          "DONE": "Done",
+          "DONE": "",
           "NAME": "Название",
           "MODEL": "Модель",
           "PRICE": "Цена",
@@ -348,7 +348,7 @@
         }
       },
       "DIALOG": {
-        "TITLE": "Корзины",
+        "TITLE": "Список корзин",
         "CHECKOUT": {
           "TITLE": "Завершение продажи",
           "CONFIRM_BUTTON_TITLE": "Завершить",
