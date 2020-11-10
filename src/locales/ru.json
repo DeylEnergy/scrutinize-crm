@@ -235,15 +235,42 @@
       "TITLE": "Продажи",
       "TABLE": {
         "COLUMNS": {
-          "TIME": "Время",
-          "NAME": "Название",
-          "MODEL": "Модель",
-          "SALE_PRICE": "Цена в продаже",
-          "COUNT": "Кол-во",
-          "SUM": "Сумма",
-          "SALESPERSON": "Продавец",
-          "CUSTOMER": "Покупатель",
-          "NOTE": "Заметка"
+          "TIME": {
+            "TITLE": "Время",
+            "WIDTH": 150
+          },
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 170
+          },
+          "SALE_PRICE": {
+            "TITLE": "Цена",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Кол-во",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Сумма",
+            "WIDTH": 90
+          },
+          "SALESPERSON": {
+            "TITLE": "Продавец",
+            "WIDTH": 150
+          },
+          "CUSTOMER": {
+            "TITLE": "Покупатель",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Заметка",
+            "WIDTH": 170
+          }
         },
         "OPTIONS": {
           "RETURN": "Вернуть"

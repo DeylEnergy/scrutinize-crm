@@ -226,15 +226,15 @@ function Sales() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.TIME, width: 150},
-      {label: COLUMNS.NAME, width: 150},
-      {label: COLUMNS.MODEL, width: 150},
-      {label: COLUMNS.SALE_PRICE, width: 150},
-      {label: COLUMNS.COUNT, width: 150},
-      {label: COLUMNS.SUM, width: 150},
-      {label: COLUMNS.SALESPERSON, width: 150},
-      {label: COLUMNS.CUSTOMER, width: 150},
-      {label: COLUMNS.NOTE, width: 150},
+      {label: COLUMNS.TIME.TITLE, width: COLUMNS.TIME.WIDTH},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
+      {label: COLUMNS.SALE_PRICE.TITLE, width: COLUMNS.SALE_PRICE.WIDTH},
+      {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
+      {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
+      {label: COLUMNS.SALESPERSON.TITLE, width: COLUMNS.SALESPERSON.WIDTH},
+      {label: COLUMNS.CUSTOMER.TITLE, width: COLUMNS.CUSTOMER.WIDTH},
+      {label: COLUMNS.NOTE.TITLE, width: COLUMNS.NOTE.WIDTH, canGrow: true},
       {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])

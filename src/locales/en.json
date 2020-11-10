@@ -235,18 +235,42 @@
       "TITLE": "Sales",
       "TABLE": {
         "COLUMNS": {
-          "TIME": "Time",
-          "NAME": "Name",
-          "MODEL": "Model",
-          "SALE_PRICE": "Sale Price",
-          "COUNT": "Count",
-          "SUM": "Sum",
-          "SALESPERSON": "Salesperson",
-          "CUSTOMER": "Customer",
-          "NOTE": "Note"
-        },
-        "OPTIONS": {
-          "RETURN": "Return"
+          "TIME": {
+            "TITLE": "Date",
+            "WIDTH": 160
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "SALE_PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SALESPERSON": {
+            "TITLE": "Salesperson",
+            "WIDTH": 150
+          },
+          "CUSTOMER": {
+            "TITLE": "Customer",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
         }
       },
       "CONTROLS": {
