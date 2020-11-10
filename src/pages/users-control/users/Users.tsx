@@ -190,10 +190,10 @@ function Users() {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
       {label: '', width: 70},
-      {label: COLUMNS.NAME, width: 200, canGrow: true},
-      {label: COLUMNS.GROUP, width: 150},
-      {label: COLUMNS.PHONE_NUMBER, width: 200},
-      {label: COLUMNS.NOTE, width: 350, canGrow: true},
+      {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
+      {label: COLUMNS.GROUP.TITLE, width: COLUMNS.GROUP.WIDTH},
+      {label: COLUMNS.PHONE_NUMBER.TITLE, width: COLUMNS.PHONE_NUMBER.WIDTH},
+      {label: COLUMNS.NOTE.TITLE, width: COLUMNS.NOTE.WIDTH, canGrow: true},
       {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])

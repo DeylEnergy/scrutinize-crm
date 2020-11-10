@@ -313,10 +313,22 @@
       "TITLE": "Users",
       "TABLE": {
         "COLUMNS": {
-          "NAME": "Name",
-          "GROUP": "Group",
-          "PHONE_NUMBER": "Phone Number",
-          "NOTE": "Note"
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "GROUP": {
+            "TITLE": "Group",
+            "WIDTH": 150
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
         }
       },
       "CONTROLS": {

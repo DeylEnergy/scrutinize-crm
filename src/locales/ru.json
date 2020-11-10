@@ -316,10 +316,22 @@
       "TITLE": "Пользователи",
       "TABLE": {
         "COLUMNS": {
-          "NAME": "Имя",
-          "GROUP": "Группа",
-          "PHONE_NUMBER": "Номер телефона",
-          "NOTE": "Заметка"
+          "NAME": {
+            "TITLE": "Имя",
+            "WIDTH": 200
+          },
+          "GROUP": {
+            "TITLE": "Группа",
+            "WIDTH": 150
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Номер телефона",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Заметка",
+            "WIDTH": 170
+          }
         }
       },
       "CONTROLS": {
