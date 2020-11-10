@@ -290,10 +290,22 @@
       "TITLE": "Статистика",
       "TABLE": {
         "COLUMNS": {
-          "PERIOD": "Период",
-          "SOLD_SUM": "Продано",
-          "INCOME_SUM": "Доход",
-          "SPENT_SUM": "Потрачено"
+          "PERIOD": {
+            "TITLE": "Период",
+            "WIDTH": 80
+          },
+          "SOLD_SUM": {
+            "TITLE": "Продано",
+            "WIDTH": 100
+          },
+          "INCOME_SUM": {
+            "TITLE": "Прибыль",
+            "WIDTH": 100
+          },
+          "SPENT_SUM": {
+            "TITLE": "Потрачено",
+            "WIDTH": 100
+          }
         }
       }
     },

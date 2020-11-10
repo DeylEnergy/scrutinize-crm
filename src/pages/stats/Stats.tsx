@@ -79,10 +79,22 @@ function Stats() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.PERIOD, width: 150},
-      {label: COLUMNS.SOLD_SUM, width: 150, canGrow: true},
-      {label: COLUMNS.INCOME_SUM, width: 150, canGrow: true},
-      {label: COLUMNS.SPENT_SUM, width: 150, canGrow: true},
+      {label: COLUMNS.PERIOD.TITLE, width: COLUMNS.PERIOD.WIDTH},
+      {
+        label: COLUMNS.SOLD_SUM.TITLE,
+        width: COLUMNS.SOLD_SUM.WIDTH,
+        canGrow: true,
+      },
+      {
+        label: COLUMNS.INCOME_SUM.TITLE,
+        width: COLUMNS.INCOME_SUM.WIDTH,
+        canGrow: true,
+      },
+      {
+        label: COLUMNS.SPENT_SUM.TITLE,
+        width: COLUMNS.SPENT_SUM.WIDTH,
+        canGrow: true,
+      },
     ]
   }, [PAGE_CONST])
 
