@@ -531,9 +531,12 @@
       "TITLE": "Касса",
       "TABLE": {
         "COLUMNS": {
-          "TIME": "Время",
-          "AMOUNT": "Кол-во",
-          "PERFORMER": "Выполнил"
+          "TIME": {
+            "TITLE": "Время",
+            "WIDTH": 150
+          },
+          "AMOUNT": {"TITLE": "Сумма", "WIDTH": 120},
+          "PERFORMER": {"TITLE": "Выполнил", "WIDTH": 165}
         },
         "TOOLTIP": {
           "AMOUNT_BEFORE": "До",

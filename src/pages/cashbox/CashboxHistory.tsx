@@ -158,9 +158,9 @@ function CashboxHistory({}: any) {
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
     return [
-      {label: COLUMNS.TIME, width: 150},
-      {label: COLUMNS.AMOUNT, width: 120},
-      {label: COLUMNS.PERFORMER, width: 165},
+      {label: COLUMNS.TIME.TITLE, width: COLUMNS.TIME.WIDTH},
+      {label: COLUMNS.AMOUNT.TITLE, width: COLUMNS.AMOUNT.WIDTH},
+      {label: COLUMNS.PERFORMER.TITLE, width: COLUMNS.PERFORMER.WIDTH},
     ]
   }, [TABLE])
 

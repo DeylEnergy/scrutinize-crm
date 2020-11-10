@@ -528,9 +528,12 @@
       "TITLE": "Cashbox",
       "TABLE": {
         "COLUMNS": {
-          "TIME": "Time",
-          "AMOUNT": "Amount",
-          "PERFORMER": "Performer"
+          "TIME": {
+            "TITLE": "Time",
+            "WIDTH": 170
+          },
+          "AMOUNT": {"TITLE": "Amount", "WIDTH": 120},
+          "PERFORMER": {"TITLE": "Performer", "WIDTH": 145}
         },
         "TOOLTIP": {
           "AMOUNT_BEFORE": "Before",
