@@ -386,7 +386,7 @@
         "TITLE_NEW_GROUP": "Добавить группу",
         "TITLE_EDIT_GROUP": "Редактировать группу",
         "INPUTS": {
-          "GROUP_NAME": "Группа Название"
+          "GROUP_NAME": "Название группы"
         },
         "PERMISSIONS": {
           "PRODUCTS": {
