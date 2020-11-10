@@ -156,12 +156,12 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         value={input.name}
         // @ts-ignore
         onChange={handleInput}
-        label={COLUMNS.NAME}
-        placeholder={`${COLUMNS.NAME}...`}
+        label={COLUMNS.NAME.TITLE}
+        placeholder={`${COLUMNS.NAME.TITLE}...`}
         required
       />
       <SelectField
-        label={COLUMNS.GROUP}
+        label={COLUMNS.GROUP.TITLE}
         marginBottom={SPACING * 1.5}
         inputHeight={SPACING * 5}
         value={groupId}
@@ -178,11 +178,11 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
         value={input.phone ?? ''}
         // @ts-ignore
         onChange={handleInput}
-        label={COLUMNS.PHONE_NUMBER}
-        placeholder={`${COLUMNS.PHONE_NUMBER}...`}
+        label={COLUMNS.PHONE_NUMBER.TITLE}
+        placeholder={`${COLUMNS.PHONE_NUMBER.TITLE}...`}
       />
       <TextareaField
-        label={COLUMNS.NOTE}
+        label={COLUMNS.NOTE.TITLE}
         value={input.note ?? ''}
         onChange={handleNoteInput}
         style={NOTE_INPUT_STYLE}

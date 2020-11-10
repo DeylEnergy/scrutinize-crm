@@ -224,8 +224,8 @@ function UpdateProduct({
         value={input.name}
         // @ts-ignore
         onChange={handleInput}
-        label={COLUMNS.NAME}
-        placeholder={`${COLUMNS.NAME}...`}
+        label={COLUMNS.NAME.TITLE}
+        placeholder={`${COLUMNS.NAME.TITLE}...`}
         required
       />
       <TextInputField
@@ -233,8 +233,8 @@ function UpdateProduct({
         value={input.model}
         // @ts-ignore
         onChange={handleInput}
-        label={COLUMNS.MODEL}
-        placeholder={`${COLUMNS.MODEL}...`}
+        label={COLUMNS.MODEL.TITLE}
+        placeholder={`${COLUMNS.MODEL.TITLE}...`}
         required
       />
       <TextInputField
@@ -243,7 +243,9 @@ function UpdateProduct({
         value={productExists ? input.realPrice : input.price}
         // @ts-ignore
         onChange={handleInput}
-        label={productExists ? COLUMNS.REAL_PRICE : DRAWER.INPUTS.EXPECTED_COST}
+        label={
+          productExists ? COLUMNS.REAL_PRICE.TITLE : DRAWER.INPUTS.EXPECTED_COST
+        }
         placeholder="1000"
         required
       />
@@ -254,7 +256,7 @@ function UpdateProduct({
           value={input.salePrice}
           // @ts-ignore
           onChange={handleInput}
-          label={COLUMNS.SALE_PRICE}
+          label={COLUMNS.SALE_PRICE.TITLE}
           placeholder="1000"
           required
         />
@@ -265,7 +267,7 @@ function UpdateProduct({
         value={productExists ? input.inStockCount : input.count}
         // @ts-ignore
         onChange={handleInput}
-        label={productExists ? COLUMNS.IN_STOCK : DRAWER.INPUTS.COUNT}
+        label={productExists ? COLUMNS.IN_STOCK.TITLE : DRAWER.INPUTS.COUNT}
         placeholder="99"
         required
       />
@@ -276,7 +278,7 @@ function UpdateProduct({
           value={input.soldCount}
           // @ts-ignore
           onChange={handleInput}
-          label={COLUMNS.SOLD}
+          label={COLUMNS.SOLD.TITLE}
           placeholder="99"
           required
         />
@@ -288,7 +290,7 @@ function UpdateProduct({
           value={input.lowestBoundCount}
           // @ts-ignore
           onChange={handleInput}
-          label={COLUMNS.LOWEST_BOUND}
+          label={COLUMNS.LOWEST_BOUND.TITLE}
           placeholder="10"
           required
         />
