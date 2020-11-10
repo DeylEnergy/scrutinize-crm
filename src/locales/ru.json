@@ -368,7 +368,10 @@
       "TITLE": "Группы",
       "TABLE": {
         "COLUMNS": {
-          "GROUP_NAME": "Название"
+          "GROUP_NAME": {
+            "TITLE": "Название",
+            "WIDTH": 200
+          }
         },
         "OPTIONS": {
           "EDIT": "Редактировать"

@@ -166,7 +166,11 @@ function Groups() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.GROUP_NAME, width: 200, canGrow: true},
+      {
+        label: COLUMNS.GROUP_NAME.TITLE,
+        width: COLUMNS.GROUP_NAME.WIDTH,
+        canGrow: true,
+      },
       {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])

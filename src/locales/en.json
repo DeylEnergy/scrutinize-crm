@@ -365,7 +365,10 @@
       "TITLE": "Groups",
       "TABLE": {
         "COLUMNS": {
-          "GROUP_NAME": "Group Name"
+          "GROUP_NAME": {
+            "TITLE": "Group Name",
+            "WIDTH": 200
+          }
         },
         "OPTIONS": {
           "EDIT": "Edit"
