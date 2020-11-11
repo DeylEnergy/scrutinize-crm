@@ -3,6 +3,8 @@ import * as queries from './queries'
 import _putRow from './putRow'
 import _pushEvents from './pushEvents'
 import _sendEvent from './events'
+import _exportObjectStoresData from './exportObjectStoresData'
+import _importObjectStoresData from './importObjectStoresData'
 
 export function getRows(params: any) {
   let fetcher = queries.getFullIndexStore
@@ -55,3 +57,7 @@ export const putRow = _putRow
 export const pushEvents = _pushEvents
 
 export const sendEvent = _sendEvent
+
+export const exportObjectStoresData = _exportObjectStoresData
+
+export const importObjectStoresData = _importObjectStoresData
