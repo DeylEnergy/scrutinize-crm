@@ -8,7 +8,7 @@ const PAGE_WRAPPER_STYLE = {padding: `0 ${SPACING}px`}
 function Settings() {
   const [locale, setLocale] = useLocale()
   const systemLanguage = locale.language
-  const PAGE_CONST = locale.vars.PAGES.SETTINGS
+  const PAGE_CONST = locale.vars.PAGES.GENERAL_SETTINGS
 
   const [language, setLanguage] = React.useState(locale.language)
 

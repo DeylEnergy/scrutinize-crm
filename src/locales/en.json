@@ -567,7 +567,10 @@
       }
     },
     "SETTINGS": {
-      "TITLE": "Settings",
+      "TITLE": "Settings"
+    },
+    "GENERAL_SETTINGS": {
+      "TITLE": "General",
       "INPUTS": {
         "LANGUAGE": "Language"
       },

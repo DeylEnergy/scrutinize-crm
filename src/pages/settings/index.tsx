@@ -8,14 +8,14 @@ import {
 } from 'react-router-dom'
 import {Pane, Tablist, Tab} from 'evergreen-ui'
 import Block from '../../components/Block'
-import Settings from './Settings'
+import GeneralSettings from './GeneralSettings'
 import Backup from './Backup'
 import {useLocale, useAccount} from '../../utilities'
 import {SETTINGS_ROUTE} from '../../constants/routes'
 import RIGHTS from '../../constants/rights'
 // TODO: rights for settings
 
-const SETTINGS_PATH = `/${SETTINGS_ROUTE}/general`
+const GENERAL_SETTINGS_PATH = `/${SETTINGS_ROUTE}/general`
 const BACKUP_PATH = `/${SETTINGS_ROUTE}/backup`
 
 export default function Merchandise() {
@@ -31,10 +31,10 @@ export default function Merchandise() {
     let redirectPath
     if (true) {
       allowedTabs.push({
-        label: PAGES.SETTINGS.TITLE,
-        path: SETTINGS_PATH,
+        label: PAGES.GENERAL_SETTINGS.TITLE,
+        path: GENERAL_SETTINGS_PATH,
       })
-      redirectPath = SETTINGS_PATH
+      redirectPath = GENERAL_SETTINGS_PATH
     }
 
     if (true) {
@@ -74,8 +74,8 @@ export default function Merchandise() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={SETTINGS_PATH}>
-              <Settings />
+            <Route path={GENERAL_SETTINGS_PATH}>
+              <GeneralSettings />
             </Route>
             (
             <Route path={BACKUP_PATH}>

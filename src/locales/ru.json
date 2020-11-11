@@ -570,7 +570,10 @@
       }
     },
     "SETTINGS": {
-      "TITLE": "Настройки",
+      "TITLE": "Настройки"
+    },
+    "GENERAL_SETTINGS": {
+      "TITLE": "Общие",
       "INPUTS": {
         "LANGUAGE": "Язык"
       },
