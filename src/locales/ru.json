@@ -580,6 +580,21 @@
       "TOASTER": {
         "CHANGES_SAVED": "Изменения сохранены."
       }
+    },
+    "BACKUP": {
+      "TITLE": "Бэкап",
+      "INPUTS": {
+        "ACTION": "Выберите действие",
+        "OPTION_IMPORT_DATA": "Импорт",
+        "OPTION_EXPORT_DATA": "Экспорт"
+      },
+      "CONTROLS": {
+        "APPLY_BUTTON_TITLE": "Применить"
+      },
+      "TOASTER": {
+        "IMPORT_SUCCESS": "Данные импортированы. Изменения сохранены.",
+        "EXPORT_SUCCESS": "Файл экспорта был сформирован. Дождитесь загрузки."
+      }
     }
   }
 }

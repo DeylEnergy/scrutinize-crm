@@ -577,6 +577,21 @@
       "TOASTER": {
         "CHANGES_SAVED": "Changes saved."
       }
+    },
+    "BACKUP": {
+      "TITLE": "Backup",
+      "INPUTS": {
+        "ACTION": "Select Action",
+        "OPTION_IMPORT_DATA": "Import",
+        "OPTION_EXPORT_DATA": "Export"
+      },
+      "CONTROLS": {
+        "APPLY_BUTTON_TITLE": "Apply"
+      },
+      "TOASTER": {
+        "IMPORT_SUCCESS": "Data imported. Changes reflected.",
+        "EXPORT_SUCCESS": "Successfully created export file. Download should start soon."
+      }
     }
   }
 }
