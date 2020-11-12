@@ -18,4 +18,6 @@ export default {
   CAN_SEE_STATS: 'canSeeStats',
   CAN_SEE_CASHBOX: 'canSeeCashbox',
   CAN_PERFORM_CASHBOX_OPERATIONS: 'canPerformCashboxOperations',
+  CAN_EXPORT_DATA: 'canExportData',
+  CAN_IMPORT_DATA: 'canImportData',
 }

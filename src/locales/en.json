@@ -421,6 +421,10 @@
           "CASHBOX": {
             "CAN_SEE_CASHBOX": "Can see cashbox",
             "CAN_PERFORM_CASHBOX_OPERATIONS": "Can perform cashbox operations"
+          },
+          "BACKUP": {
+            "CAN_EXPORT_DATA": "Can export data",
+            "CAN_IMPORT_DATA": "Can import data"
           }
         }
       }

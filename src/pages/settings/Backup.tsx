@@ -2,12 +2,14 @@ import React from 'react'
 import {Pane, SelectField, Button, toaster} from 'evergreen-ui'
 import {
   useLocale,
+  useAccount,
   useDatabase,
   downloadObjectAsJSON,
   readJSONData,
   withErrorBoundary,
 } from '../../utilities'
 import {SPACING} from '../../constants'
+import RIGHTS from '../../constants/rights'
 
 const PAGE_WRAPPER_STYLE = {padding: `0 ${SPACING}px`}
 
@@ -21,9 +23,23 @@ function Export() {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {TOASTER, CONTROLS, INPUTS} = locale.vars.PAGES.BACKUP
 
+  const [{permissions}] = useAccount()
+
   const db = useDatabase()
 
-  const [actionType, setActionType] = React.useState(OPTION_EXPORT_DATA)
+  const [actionType, setActionType] = React.useState(() => {
+    let defaultActionType = ''
+    if (permissions.includes(RIGHTS.CAN_EXPORT_DATA)) {
+      defaultActionType = OPTION_EXPORT_DATA
+    } else if (
+      !permissions.includes(RIGHTS.CAN_EXPORT_DATA) &&
+      permissions.includes(RIGHTS.CAN_IMPORT_DATA)
+    ) {
+      defaultActionType = OPTION_IMPORT_DATA
+    }
+
+    return defaultActionType
+  })
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -93,8 +109,16 @@ function Export() {
         value={actionType}
         onChange={handleLanguageChange}
       >
-        <option value={OPTION_IMPORT_DATA}>{INPUTS.OPTION_IMPORT_DATA}</option>
-        <option value={OPTION_EXPORT_DATA}>{INPUTS.OPTION_EXPORT_DATA}</option>
+        {permissions.includes(RIGHTS.CAN_IMPORT_DATA) && (
+          <option value={OPTION_IMPORT_DATA}>
+            {INPUTS.OPTION_IMPORT_DATA}
+          </option>
+        )}
+        {permissions.includes(RIGHTS.CAN_EXPORT_DATA) && (
+          <option value={OPTION_EXPORT_DATA}>
+            {INPUTS.OPTION_EXPORT_DATA}
+          </option>
+        )}
       </SelectField>
 
       <Button

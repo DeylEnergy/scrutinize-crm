@@ -424,6 +424,10 @@
           "CASHBOX": {
             "CAN_SEE_CASHBOX": "Может видеть кассу",
             "CAN_PERFORM_CASHBOX_OPERATIONS": "Может управлять кассой"
+          },
+          "BACKUP": {
+            "CAN_EXPORT_DATA": "Может экспортировать данные",
+            "CAN_IMPORT_DATA": "Может импортировать данные"
           }
         }
       }

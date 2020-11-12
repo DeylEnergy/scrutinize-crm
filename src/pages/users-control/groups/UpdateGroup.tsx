@@ -99,6 +99,11 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       ],
     ]
 
+    const BACKUP_PERMISSIONS = [
+      [RIGHTS.CAN_EXPORT_DATA, PERMISSIONS.BACKUP.CAN_EXPORT_DATA],
+      [RIGHTS.CAN_IMPORT_DATA, PERMISSIONS.BACKUP.CAN_IMPORT_DATA],
+    ]
+
     return [
       ...PRODUCT_PERMISSIONS,
       ...TO_BUY_LIST_PERMISSIONS,
@@ -109,6 +114,7 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       ...STATS_PERMISSIONS,
       ...CARTS_PERMISSIONS,
       ...CASHBOX_PERMISSIONS,
+      ...BACKUP_PERMISSIONS,
     ]
   }, [DRAWER])
 

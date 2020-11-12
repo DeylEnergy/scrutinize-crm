@@ -133,6 +133,8 @@ const ACCOUNT_MOCK = {
     'canSeeStats',
     'canSeeCashbox',
     'canPerformCashboxOperations',
+    'canExportData',
+    'canImportData',
   ],
   groupName: 'Administrator',
 }
