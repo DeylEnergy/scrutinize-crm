@@ -7,6 +7,7 @@ import StatsPage from './pages/stats'
 import UsersControlPage from './pages/users-control'
 import SignInPage from './pages/sign-in'
 import Settings from './pages/settings'
+import Setup from './pages/setup'
 import {
   Switch,
   Route,
@@ -95,6 +96,9 @@ const App = () => {
           </Route>
           <Route path="/settings">
             <Settings />
+          </Route>
+          <Route path="/setup">
+            <Setup />
           </Route>
           <Route path="/">
             <Redirect to="/" />

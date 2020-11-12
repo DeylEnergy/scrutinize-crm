@@ -595,6 +595,26 @@
         "IMPORT_SUCCESS": "Data imported. Changes reflected.",
         "EXPORT_SUCCESS": "Successfully created export file. Download should start soon."
       }
+    },
+    "SETUP": {
+      "TITLE": "Setup",
+      "INPUTS": {
+        "LANGUAGE": "Language",
+        "GENERATE_DUMMY_DATA": "Generate dummy data"
+      },
+      "CONTROLS": {
+        "FINISH_BUTTON_TITLE": "Finish installation"
+      },
+      "TOASTER": {
+        "CHANGES_SAVED": "Changes saved."
+      },
+      "ALERTS": {
+        "WELCOME": {
+          "TITLE": "Welcome to ScrutinizeCRM",
+          "FIRST_ITEM": "In order to start working with the app please fill out forms below.",
+          "SECOND_ITEM": "If you want to just try the app better check \"Generate dummy data\""
+        }
+      }
     }
   }
 }
