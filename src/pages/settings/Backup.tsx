@@ -18,7 +18,7 @@ const OPTION_EXPORT_DATA = 'exportData'
 
 const EXPORT_FILE_NAME_PREFIX = 'backup'
 
-function Export() {
+function Backup() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {TOASTER, CONTROLS, INPUTS} = locale.vars.PAGES.BACKUP
@@ -142,4 +142,4 @@ function Export() {
   )
 }
 
-export default withErrorBoundary(Export)
+export default withErrorBoundary(Backup)
