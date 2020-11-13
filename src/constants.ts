@@ -23,6 +23,7 @@ export const INDEX_NAME = {
   NEEDED_SINCE_DATETIME: 'neededSinceDatetime',
   __CART_ID__: '__cartId__',
   CART_PARTICIPANTS: 'cartParticipants',
+  ACTIVE_CART_ID: 'activeCartId',
   EVENT_DATETIME: 'eventDatetime',
   ERROR_DATETIME: 'errorDatetime',
   NAME: 'name',

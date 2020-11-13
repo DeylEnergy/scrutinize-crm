@@ -20,6 +20,7 @@ dbReq.onupgradeneeded = () => {
     sales.createIndex(IN.DATETIME, IN.DATETIME)
     sales.createIndex(IN.__CART_ID__, IN.__CART_ID__)
     sales.createIndex(IN.CART_PARTICIPANTS, IN.CART_PARTICIPANTS)
+    sales.createIndex(IN.ACTIVE_CART_ID, IN.ACTIVE_CART_ID)
   }
 
   if (!objectStores.contains(SN.ACQUISITIONS)) {
