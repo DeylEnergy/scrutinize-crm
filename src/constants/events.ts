@@ -36,4 +36,5 @@ export const PUT_GROUP = 'putGroup'
 // carts
 export const PUT_CART = 'putCart'
 export const ADD_CART = 'addCart'
+export const REMOVE_CART = 'removeCart'
 export const PUT_CART_PARTICIPANTS = 'putCartParticipants'
