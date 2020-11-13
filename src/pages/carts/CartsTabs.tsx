@@ -20,7 +20,7 @@ export default function CartsTabs({
 
   const db = useDatabase()
 
-  const {tabs} = state
+  const {tabs, selectedCartId} = state
 
   const excludeCart = React.useCallback((tabs: any, selectedCartId: string) => {
     const updatedTabs = tabs.filter((x: any) => x.cartId !== selectedCartId)
@@ -70,6 +70,11 @@ export default function CartsTabs({
     })
   }, [tabs, excludeCart, setState])
 
+  const completeCartDelete = React.useCallback(() => {
+    const stateUpdate = excludeCart(tabs, selectedCartId)
+    setState(stateUpdate)
+  }, [tabs, selectedCartId])
+
   React.useEffect(() => {
     db.getRows({
       storeName: SN.SALES,
@@ -118,6 +123,7 @@ export default function CartsTabs({
               key={state.selectedCartId}
               cartId={state.selectedCartId}
               fetchComputedCartSum={fetchComputedCartSum}
+              completeCartDelete={completeCartDelete}
             />
           )}
         </Pane>

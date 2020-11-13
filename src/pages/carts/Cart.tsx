@@ -23,6 +23,7 @@ import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../layouts'
+import DeleteCart from './DeleteCart'
 import AddProduct from './AddProduct'
 
 const LOADED_ITEMS_DEFAULT = {
@@ -34,9 +35,10 @@ const LOADED_ITEMS_DEFAULT = {
 interface CartProps {
   cartId: string
   fetchComputedCartSum: () => void
+  completeCartDelete: () => void
 }
 
-function Cart({cartId, fetchComputedCartSum}: CartProps) {
+function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS
@@ -272,7 +274,6 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
     db.getRows({
       storeName: SN.SALES,
       indexName: IN.__CART_ID__,
-      direction: 'prev',
       matchProperties: {__cartId__: cartId},
       sort: 'asc',
     }).then((newItems: any) => {
@@ -346,6 +347,7 @@ function Cart({cartId, fetchComputedCartSum}: CartProps) {
   return (
     <PageWrapper>
       <ControlWrapper>
+        <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
         <AddProduct handleSelectedProduct={handleSelectedProduct} />
       </ControlWrapper>
       <Table

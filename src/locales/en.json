@@ -501,6 +501,15 @@
         "CARTS_LIST": {
           "CART_TITLE": "Cart"
         },
+        "DELETE_CART": {
+          "BUTTON_TITLE": "Cart",
+          "DIALOG": {
+            "TITLE": "Delete Cart",
+            "CANCEL_LABEL": "Cancel",
+            "CONFIRM_LABEL": "Delete Cart",
+            "WARNING_TEXT": "Are you sure you want to delete the cart?"
+          }
+        },
         "ADD_PRODUCT": {
           "POPOVER_TITLE": "Add product",
           "BUTTON_TITLE": "Product",

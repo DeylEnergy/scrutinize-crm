@@ -504,6 +504,15 @@
         "CARTS_LIST": {
           "CART_TITLE": "Корзина"
         },
+        "DELETE_CART": {
+          "BUTTON_TITLE": "Корзина",
+          "DIALOG": {
+            "TITLE": "Удалить корзину",
+            "CANCEL_LABEL": "Отмена",
+            "CONFIRM_LABEL": "Удалить",
+            "WARNING_TEXT": "Вы уверены что хотите удалить корзину?"
+          }
+        },
         "ADD_PRODUCT": {
           "POPOVER_TITLE": "Добавить товар",
           "BUTTON_TITLE": "Товар",
