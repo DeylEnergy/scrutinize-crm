@@ -3,8 +3,9 @@ import {Pane, Tablist, Tab, AddIcon} from 'evergreen-ui'
 import {v4 as uuidv4} from 'uuid'
 import Block from '../../components/Block'
 import Cart from './Cart'
-import {useLocale, useDatabase} from '../../utilities'
+import {useLocale, useDatabase, useAccount} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
+import {ADD_CART} from '../../constants/events'
 
 export default function CartsTabs({
   state,
@@ -15,40 +16,67 @@ export default function CartsTabs({
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {CARTS_LIST} = PAGE_CONST.CONTROLS
 
+  const [{user}] = useAccount()
+
   const db = useDatabase()
 
   const {tabs} = state
 
-  const handleNewCart = () => {
+  const excludeCart = React.useCallback((tabs: any, selectedCartId: string) => {
+    const updatedTabs = tabs.filter((x: any) => x.cartId !== selectedCartId)
+
+    let updatedSelectedCartId = null
+    if (updatedTabs.length) {
+      updatedSelectedCartId = updatedTabs[updatedTabs.length - 1].cartId
+    }
+
+    return {selectedCartId: updatedSelectedCartId, tabs: updatedTabs}
+  }, [])
+
+  const handleNewCart = React.useCallback(() => {
     const lastTabId = tabs.length
 
     const datetime = Date.now()
     const uId = uuidv4()
     const cartId = `${datetime}_${uId}`
-
-    return setState({
+    const updatedTabs = [
+      ...tabs,
+      {
+        cartId,
+        label: `${CARTS_LIST.CART_TITLE} #${lastTabId + 1}`,
+      },
+    ]
+    setState({
       selectedCartId: cartId,
-      tabs: [
-        ...tabs,
-        {
-          cartId,
-          label: `${CARTS_LIST.CART_TITLE} #${lastTabId + 1}`,
-        },
-      ],
+      tabs: updatedTabs,
     })
-  }
+
+    db.sendEvent({
+      type: ADD_CART,
+      payload: {
+        activeCartId: cartId,
+        userId: user.id,
+      },
+    }).then((result: any) => {
+      if (result) {
+        return
+      }
+
+      // highly unlikely, though in case db rejected new cart
+      setTimeout(() => {
+        const stateUpdate = excludeCart(updatedTabs, cartId)
+        setState(stateUpdate)
+      }, 1000)
+    })
+  }, [tabs, excludeCart, setState])
 
   React.useEffect(() => {
     db.getRows({
       storeName: SN.SALES,
-      indexName: IN.__CART_ID__,
+      indexName: IN.ACTIVE_CART_ID,
       format: 'cartIds',
       dataCollecting: false,
     }).then((rows: any) => {
-      if (!rows.length) {
-        return handleNewCart()
-      }
-
       setState({
         selectedCartId: rows[0],
         tabs: rows.map((cartId: string, index: number) => ({

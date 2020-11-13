@@ -1,5 +1,5 @@
 export function cartIds(rows: any[]) {
-  const cartIds = rows.map((x: any) => x.__cartId__)
+  const cartIds = rows.map((x: any) => x.activeCartId)
   // @ts-ignore
-  return [...new Set(cartIds)]
+  return cartIds
 }
