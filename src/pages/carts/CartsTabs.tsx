@@ -27,7 +27,17 @@ export default function CartsTabs({
 
     let updatedSelectedCartId = null
     if (updatedTabs.length) {
-      updatedSelectedCartId = updatedTabs[updatedTabs.length - 1].cartId
+      const currentFocusIndex = tabs.findIndex(
+        (x: any) => x.cartId === selectedCartId,
+      )
+
+      let nextFocusIndex = currentFocusIndex - 1
+
+      if (currentFocusIndex === 0) {
+        nextFocusIndex = 0
+      }
+
+      updatedSelectedCartId = updatedTabs[nextFocusIndex].cartId
     }
 
     return {selectedCartId: updatedSelectedCartId, tabs: updatedTabs}
