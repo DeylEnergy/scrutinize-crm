@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Small} from '../elements/typography/Small'
+import CellTextWrapper from './CellTextWrapper'
+import {CELL_TEXT_VERTICAL_POSITION} from '../constants'
 
 const TooltipText = styled.div`
   visibility: hidden;
@@ -31,6 +33,7 @@ const TooltipText = styled.div`
 `
 
 const TooltipBody = styled.div`
+  ${CELL_TEXT_VERTICAL_POSITION}
   position: relative;
   display: inline-block;
   max-width: 100%;
@@ -41,26 +44,17 @@ const TooltipBody = styled.div`
   }
 `
 
-const TextWrapper = styled.span`
-  width: 100%;
-  max-width: 100%;
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
 interface Props {
   children: React.ReactElement
   content: React.ReactElement
 }
 
 function Tooltip({children, content}: Props) {
-  if (!content) return <TextWrapper>{children}</TextWrapper>
+  if (!content) return <CellTextWrapper>{children}</CellTextWrapper>
 
   return (
     <TooltipBody>
-      <TextWrapper>{children}</TextWrapper>
+      <CellTextWrapper hasTooltip>{children}</CellTextWrapper>
       <TooltipText>
         <Small variant="TERTIARY" color="#fff">
           {content}
