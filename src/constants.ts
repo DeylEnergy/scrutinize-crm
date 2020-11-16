@@ -46,3 +46,10 @@ export const CASHBOX_OPERATION = {
   ADD: 'ADD',
   SUBTRACT: 'SUBTRACT',
 }
+
+export const CELL_TEXT_VERTICAL_POSITION = `
+  align-self: center;
+  line-height: 0;
+  position: relative;
+  top: -1px;
+`
