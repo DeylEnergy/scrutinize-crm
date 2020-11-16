@@ -79,6 +79,8 @@ function ToBuy() {
     SIDE_SHEET_DEFAULT,
   )
 
+  const gridOuterRef = React.useRef<any>()
+
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   const fetchComputedOfToBuyList = React.useCallback(() => {
@@ -522,8 +524,12 @@ function ToBuy() {
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
         loadMoreItems={fetchAcquisitions}
+        gridOuterRef={gridOuterRef}
       />
-      <EditableCellInput anchor={editCell} />
+      <EditableCellInput
+        anchor={editCell}
+        gridOuterRef={gridOuterRef.current}
+      />
       {sideSheet.value && (
         <UpdateProduct
           items={loadedItems.items}
