@@ -373,6 +373,7 @@ const innerElementTypeRender = (
   columns: HeaderColumns,
   rows: any,
   rowHeight: number,
+  isHeaderShown: boolean,
   isRowNumberShown: boolean,
 ) => ({
   children,
@@ -383,23 +384,30 @@ const innerElementTypeRender = (
 }) => {
   const [minColumn, maxColumn, minRow, maxRow] = getVisibleArea(children)
 
-  const headers = createHeaders(columns, minColumn, maxColumn)
+  let headers: HeaderCells = []
+  if (isHeaderShown) {
+    headers = createHeaders(columns, minColumn, maxColumn)
+  }
 
   const stickyColumnRows = createStickyColumns(minRow, maxRow, rowHeight)
 
   const extraColumnWidth = isRowNumberShown ? STICKY_COLUMN_WIDTH : 0
 
+  const extraGridHeight = isHeaderShown ? rowHeight : 0
+
   return (
     <GridContainer
-      height={style.height + rowHeight}
+      height={style.height + extraGridHeight}
       width={style.width + extraColumnWidth}
     >
-      <StickyHeader
-        columns={columns}
-        stickyColumnWidth={extraColumnWidth}
-        headers={headers}
-        rowHeight={rowHeight}
-      />
+      {isHeaderShown && (
+        <StickyHeader
+          columns={columns}
+          stickyColumnWidth={extraColumnWidth}
+          headers={headers}
+          rowHeight={rowHeight}
+        />
+      )}
       {isRowNumberShown && (
         <StickyColumn
           stickyColumnRows={stickyColumnRows}
@@ -410,7 +418,7 @@ const innerElementTypeRender = (
       <GridData
         style={{
           ...style,
-          top: rowHeight,
+          top: extraGridHeight,
           left: extraColumnWidth,
         }}
       >
@@ -440,6 +448,8 @@ interface TableProps {
 
   rowHeight?: number
 
+  isHeaderShown?: boolean
+
   isRowNumberShown?: boolean
 
   hasNextPage: any
@@ -457,6 +467,7 @@ function Table({
   rows,
   columns,
   rowHeight = ROW_HEIGHT,
+  isHeaderShown = true,
   isRowNumberShown = true,
   hasNextPage,
   isItemLoaded,
@@ -561,6 +572,7 @@ function Table({
     adjustedColumns,
     rows,
     rowHeight,
+    isHeaderShown,
     isRowNumberShown,
   )
 
