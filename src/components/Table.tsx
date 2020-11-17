@@ -143,20 +143,25 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
   const isCellContentObject =
     cellContent !== null && typeof cellContent === 'object'
 
-  const cellOnDoubleClick = isItemAvailable
-    ? isCellContentObject
-      ? cellContent.onDoubleClick
-      : cellData.onDoubleClick
+  const cellOnClick = isItemAvailable
+    ? (isCellContentObject && cellContent.onClick) || cellData.onClick
     : null
+
+  const cellOnDoubleClick = isItemAvailable
+    ? (isCellContentObject && cellContent.onDoubleClick) ||
+      cellData.onDoubleClick
+    : null
+
   const columnLabel = columns[columnIndex].label
 
-  const customCellContentStyle =
-    (isCellContentObject && cellContent.style) || {}
+  const customCellContentStyle = isItemAvailable
+    ? (isCellContentObject && cellContent.style) || cellData.style
+    : {}
 
   return (
     <TableCell
       // @ts-ignore
-      // onClick={() => tableContext.setSelectedRow(style.top)}
+      onClick={cellOnClick}
       onDoubleClick={cellOnDoubleClick}
       // @ts-ignore
       selected={tableContext.selectedRow === style.top}
