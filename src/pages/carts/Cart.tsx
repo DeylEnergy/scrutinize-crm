@@ -25,6 +25,7 @@ import Popover from '../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 import DeleteCart from './DeleteCart'
 import AddProduct from './AddProduct'
+import SelectCount from './SelectCount'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -58,6 +59,8 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
   const [editCell, setEditCell] = React.useState<any>(null)
 
+  const gridOuterRef = React.useRef<any>()
+
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   React.useEffect(() => {
@@ -87,13 +90,20 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
         const key = Object.keys(cellUpdate)[0]
 
-        if (key === 'price' || key === 'count') {
+        if (key === 'price') {
           updatedItem[key] = Number(updatedItem[key])
         }
 
         // in case nothing changed
         if (item[key] === cellUpdate[key]) {
           return setEditCell(null)
+        }
+
+        if (
+          key === 'selectedAcquisitions' &&
+          JSON.stringify(item[key]) === JSON.stringify(cellUpdate[key])
+        ) {
+          return
         }
 
         db.sendEvent({
@@ -115,7 +125,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
           const updatedItems = {items: [...items]}
           addTask(() => setEditCell(null))
           // schedule update for footer computed values
-          if (key === 'salePrice' || key === 'count') {
+          if (key === 'salePrice' || key === 'selectedAcquisitions') {
             addTask(fetchComputedCartSum)
           }
 
@@ -196,12 +206,6 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         ),
       }
 
-      const count = item.count
-      const countCell = {
-        value: count,
-        onDoubleClick: handleCellDblClick.bind(null, 'count', count, 'number'),
-      }
-
       const sumCell = {
         value: Number(item.sum).toLocaleString(STRING_FORMAT),
         tooltipContent: (
@@ -252,7 +256,17 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
           nameCell,
           modelCell,
           salePriceCell,
-          countCell,
+          {
+            value: (
+              <SelectCount
+                selectedAcquisitions={item.selectedAcquisitions}
+                updateSelectedAcquisitions={updateItem}
+                gridOuterRef={gridOuterRef}
+              >
+                {item.count}
+              </SelectCount>
+            ),
+          },
           sumCell,
           item._productId,
           noteCell,
@@ -295,11 +309,12 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
   }, [fetchAcquisitions, fetchComputedCartSum])
 
   const handleSelectedProduct = React.useCallback(
-    (item: any) => {
+    ({productId, acquisitionId}: any) => {
       const productToAdd = {
         __cartId__: cartId,
         count: 1,
-        _productId: item.value,
+        _productId: productId,
+        _acquisitionId: acquisitionId,
       }
 
       db.sendEvent({
@@ -316,7 +331,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
       const [prefix, data] = recognizeQRCode(scanResult?.value)
       if (prefix === codePrefixes.acquisitions) {
         db.getRow({storeName: SN.ACQUISITIONS, key: data}).then((aq: any) => {
-          handleSelectedProduct({value: aq._productId})
+          handleSelectedProduct({productId: aq._productId, acquisitionId: data})
         })
       } else {
         toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE)
@@ -336,7 +351,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
       {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
       {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
       {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
-      {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
+      {label: COLUMNS.COUNT.TITLE, width: 80},
       {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
       {label: COLUMNS.NOTE.TITLE, width: COLUMNS.NOTE.WIDTH, canGrow: true},
@@ -356,8 +371,12 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
         loadMoreItems={fetchAcquisitions}
+        gridOuterRef={gridOuterRef}
       />
-      <EditableCellInput anchor={editCell} />
+      <EditableCellInput
+        anchor={editCell}
+        gridOuterRef={gridOuterRef.current}
+      />
     </PageWrapper>
   )
 }
