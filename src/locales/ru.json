@@ -487,6 +487,28 @@
         },
         "OPTIONS": {
           "REMOVE": "Удалить"
+        },
+        "CELLS": {
+          "SELECT_COUNT": {
+            "MODAL_TITLE": "Изменить кол-во",
+            "TABLE": {
+              "COLUMNS": {
+                "ACQUISITION_ID": {
+                  "WIDTH": 100
+                },
+                "COUNT": {
+                  "WIDTH": 60
+                },
+                "DELETE": {
+                  "WIDTH": 40
+                }
+              },
+              "TOOLTIP": {
+                "COUNT_CANNOT_BE_ZERO": "Количество не может быть 0.",
+                "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в корзине."
+              }
+            }
+          }
         }
       },
       "DIALOG": {

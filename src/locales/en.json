@@ -484,6 +484,28 @@
         },
         "OPTIONS": {
           "REMOVE": "Remove"
+        },
+        "CELLS": {
+          "SELECT_COUNT": {
+            "MODAL_TITLE": "Edit Count",
+            "TABLE": {
+              "COLUMNS": {
+                "ACQUISITION_ID": {
+                  "WIDTH": 100
+                },
+                "COUNT": {
+                  "WIDTH": 60
+                },
+                "DELETE": {
+                  "WIDTH": 40
+                }
+              },
+              "TOOLTIP": {
+                "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
+                "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the cart."
+              }
+            }
+          }
         }
       },
       "DIALOG": {
