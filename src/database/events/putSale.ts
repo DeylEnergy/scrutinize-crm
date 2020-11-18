@@ -5,6 +5,12 @@ import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 
+async function getAcquisitionData(id: string) {
+  const aq: any = await getRowFromStore(SN.ACQUISITIONS, id)
+
+  return aq
+}
+
 export default async function putSale({
   store = null,
   type,
@@ -32,8 +38,8 @@ export default async function putSale({
     }
   }
 
-  // in case sale item is in the cart just increase its count
-  if (payload.__cartId__ && payload._productId && !payload.sum) {
+  // if _acquisitionId is provided it will manipulate count
+  if (payload.__cartId__ && payload._productId && payload._acquisitionId) {
     const [saleItems] = await handleAsync(
       getFullIndexStore({
         storeName: SN.SALES,
@@ -43,15 +49,59 @@ export default async function putSale({
       }),
     )
 
-    const saleItem = saleItems.find(
+    let saleItem = saleItems.find(
       (x: any) => x._productId === payload._productId,
     )
 
     if (saleItem) {
-      payload = saleItem
-      payload.count += 1
+      if (!saleItem.selectedAcquisitions) {
+        saleItem.selectedAcquisitions = []
+      }
+
+      const acquisition = saleItem.selectedAcquisitions.find(
+        (x: any) => x._acquisitionId === payload._acquisitionId,
+      )
+
+      if (acquisition) {
+        acquisition.count += 1
+      } else {
+        const [aq, aqError] = await handleAsync(
+          getAcquisitionData(payload._acquisitionId),
+        )
+
+        if (aqError) {
+          return Promise.reject('Cannot find acquisitionId.')
+        }
+
+        saleItem.selectedAcquisitions.push({
+          _acquisitionId: payload._acquisitionId,
+          count: 1,
+          realPrice: aq.price,
+        })
+      }
+    } else {
+      saleItem = {}
+      const [aq, aqError] = await handleAsync(
+        getAcquisitionData(payload._acquisitionId),
+      )
+
+      if (aqError) {
+        return Promise.reject('Cannot find acquisitionId.')
+      }
+
+      saleItem.selectedAcquisitions = [
+        {
+          _acquisitionId: payload._acquisitionId,
+          count: 1,
+          realPrice: aq.price,
+        },
+      ]
     }
+
+    payload = {...payload, ...saleItem}
   }
+
+  delete payload._acquisitionId
 
   if (!payload.id) {
     payload.id = uuidv4()
@@ -61,7 +111,6 @@ export default async function putSale({
         payload._productId,
       )
 
-      payload.realPrice = _product.realPrice
       payload.salePrice = _product.salePrice
 
       payload.note = ''
@@ -71,19 +120,21 @@ export default async function putSale({
   }
 
   // eslint-disable-next-line prefer-const
-  let {salePrice, realPrice, count} = payload
+  let {salePrice} = payload
 
   salePrice = Number(salePrice)
-  count = Number(count)
+  const count = payload.selectedAcquisitions.reduce(
+    (total: number, {count}: any) => total + count,
+    0,
+  )
   const sum = salePrice * count
-  const realSum = realPrice * count
+  const realSum = payload.selectedAcquisitions.reduce(
+    (total: number, {realPrice, count}: any) => total + realPrice * count,
+    0,
+  )
   const income = sum - realSum
 
   const computed = {salePrice, count, sum, income}
-
-  if (typeof payload.salePrice === 'string') {
-    payload.salePrice = Number(payload.salePrice)
-  }
 
   const eventDatetime = Date.now()
 
@@ -92,30 +143,11 @@ export default async function putSale({
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {_product, _supplier, _user, ...serverSide} = payload
-
-  let _supplierUpdated
-
-  if (consumer === 'client' && payload._supplierId) {
-    _supplierUpdated = await getRowFromStore(SN.SUPPLIERS, payload._supplierId)
-  }
-
-  let _userUpdated
-
-  if (consumer === 'client' && payload._userId) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {secretKey, ...userData}: any = await getRowFromStore(
-      SN.USERS,
-      payload._userId,
-    )
-    _userUpdated = userData
-  }
+  const {_product, ...serverSide} = payload
 
   const server = {...serverSide, ...computed}
   const client = {
     ...payload,
-    _supplier: _supplierUpdated,
-    _user: _userUpdated,
     ...computed,
   }
 
