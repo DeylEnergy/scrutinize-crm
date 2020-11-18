@@ -18,14 +18,14 @@ const HEADER_CELL_WRAPPER_STYLE = {top: 0, lineHeight: 'normal'}
 function noop() {}
 
 type Column = {
-  label: string
+  label?: string
   width: number
 }
 
 type HeaderColumns = Array<Column>
 
 type HeaderCell = {
-  label: string
+  label?: string
   width: number
   left: number
 }
@@ -446,7 +446,7 @@ const GRID_PARENT_STYLE = {
 
 interface TableProps {
   columns: {
-    label: string
+    label?: string
     width: number
     canGrow?: boolean
   }[]
