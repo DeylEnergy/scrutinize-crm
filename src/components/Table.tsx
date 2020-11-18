@@ -158,6 +158,10 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
     ? (isCellContentObject && cellContent.style) || cellData.style
     : {}
 
+  const isTextCell = isItemAvailable
+    ? cellContent?.isTextCell ?? cellData?.isTextCell ?? true
+    : true
+
   return (
     <TableCell
       // @ts-ignore
@@ -175,7 +179,10 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
           ...customCellContentStyle,
         }}
       >
-        <Tooltip content={isCellContentObject && cellContent.tooltipContent}>
+        <Tooltip
+          content={isCellContentObject && cellContent.tooltipContent}
+          isTextCell={isTextCell}
+        >
           <Small variant="SECONDARY">
             {isItemAvailable &&
             columnLabel === 'OPTIONS' &&

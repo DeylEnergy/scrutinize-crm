@@ -47,14 +47,19 @@ const TooltipBody = styled.div`
 interface Props {
   children: React.ReactElement
   content: React.ReactElement
+  isTextCell?: boolean
 }
 
-function Tooltip({children, content}: Props) {
-  if (!content) return <CellTextWrapper>{children}</CellTextWrapper>
+function Tooltip({children, content, isTextCell}: Props) {
+  if (!content) {
+    return <CellTextWrapper isTextCell={isTextCell}>{children}</CellTextWrapper>
+  }
 
   return (
     <TooltipBody>
-      <CellTextWrapper hasTooltip>{children}</CellTextWrapper>
+      <CellTextWrapper isTextCell={isTextCell} hasTooltip>
+        {children}
+      </CellTextWrapper>
       <TooltipText>
         <Small variant="TERTIARY" color="#fff">
           {content}
