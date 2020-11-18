@@ -1,37 +1,69 @@
-import React from 'react'
-import {Button, Pane, AddIcon} from 'evergreen-ui'
-import AsyncSelectMenu from '../../components/AsyncSelectMenu'
-import {useLocale, useDatabase} from '../../utilities'
+import React, {Suspense} from 'react'
+import {Button, AddIcon} from 'evergreen-ui'
+import {useLocale, withErrorBoundary} from '../../utilities'
+import ModalPopover from '../../components/ModalPopover'
 
-function EmptyView({}: any) {
-  const [locale] = useLocale()
-  const {ADD_PRODUCT} = locale.vars.PAGES.CARTS.CONTROLS
-
-  return (
-    <Pane
-      height="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      {ADD_PRODUCT.NO_RESULTS}
-    </Pane>
-  )
+const MODAL_POPOVER_SIZE = {
+  width: 290,
+  height: 300,
 }
 
 function AddProduct({handleSelectedProduct}: any) {
   const [locale] = useLocale()
-  const {ADD_PRODUCT} = locale.vars.PAGES.CARTS.CONTROLS
+  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.ADD_PRODUCT
 
-  const db = useDatabase()
+  const [currentScreen, setCurrentScreen] = React.useState({})
+
+  const [resetScreen, setResetScreen] = React.useState<number>(0)
+
+  const handleResetScreen = React.useCallback(() => {
+    setResetScreen(Date.now())
+  }, [setResetScreen])
+
+  const handleAcquisitionSelect = React.useCallback(
+    (payload: any) => {
+      handleSelectedProduct(payload)
+    },
+    [handleSelectedProduct],
+  )
+
+  const handleProductSelect = React.useCallback(
+    (productId: string) => {
+      const SelectAcquisition = React.lazy(() => import('./SelectAcquisition'))
+      setCurrentScreen({
+        component: (
+          <Suspense fallback={<div />}>
+            <SelectAcquisition
+              productId={productId}
+              handleAcquisitionSelect={handleAcquisitionSelect}
+              handleReturnBack={handleResetScreen}
+            />
+          </Suspense>
+        ),
+      })
+    },
+    [handleResetScreen, handleAcquisitionSelect],
+  )
+
+  React.useEffect(() => {
+    const SelectProduct = React.lazy(() => import('./SelectProduct'))
+    setCurrentScreen({
+      component: (
+        <Suspense fallback={<div />}>
+          <SelectProduct handleProductSelect={handleProductSelect} />
+        </Suspense>
+      ),
+    })
+  }, [resetScreen])
 
   return (
-    <AsyncSelectMenu
-      title={ADD_PRODUCT.POPOVER_TITLE}
-      onSelect={handleSelectedProduct}
-      searchFn={db.search}
-      storeName={'products'}
-      emptyView={(searchValue: any) => <EmptyView />}
+    <ModalPopover
+      title={PAGE_CONST.MODAL_TITLE}
+      popoverProps={{
+        onCloseComplete: handleResetScreen,
+      }}
+      {...MODAL_POPOVER_SIZE}
+      {...currentScreen}
     >
       <Button
         height={20}
@@ -39,10 +71,10 @@ function AddProduct({handleSelectedProduct}: any) {
         intent="success"
         iconBefore={AddIcon}
       >
-        {ADD_PRODUCT.BUTTON_TITLE}
+        {PAGE_CONST.ADD_BUTTON.TITLE}
       </Button>
-    </AsyncSelectMenu>
+    </ModalPopover>
   )
 }
 
-export default React.memo(AddProduct)
+export default withErrorBoundary(AddProduct)

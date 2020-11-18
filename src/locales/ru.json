@@ -514,9 +514,41 @@
           }
         },
         "ADD_PRODUCT": {
-          "POPOVER_TITLE": "Добавить товар",
-          "BUTTON_TITLE": "Товар",
-          "NO_RESULTS": "Не найдено товаров."
+          "MODAL_TITLE": "Выбрать товар",
+          "ADD_BUTTON": {
+            "TITLE": "Товар"
+          }
+        },
+        "SELECT_PRODUCT": {
+          "SEARCH_PLACEHOLDER": "Название товара или модель...",
+          "TABLE": {
+            "COLUMNS": {
+              "NAME_MODEL": {
+                "WIDTH": 200
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              }
+            }
+          }
+        },
+        "SELECT_ACQUISITION": {
+          "RETURN_BACK_BUTTON": {
+            "TITLE": "Вернуться"
+          },
+          "TABLE": {
+            "COLUMNS": {
+              "ACQUISITION_ID": {
+                "WIDTH": 100
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              },
+              "DATE": {
+                "WIDTH": 100
+              }
+            }
+          }
         },
         "SALESPERSON": {
           "POPOVER_TITLE": "Выбор продавца",

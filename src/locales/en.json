@@ -511,9 +511,41 @@
           }
         },
         "ADD_PRODUCT": {
-          "POPOVER_TITLE": "Add product",
-          "BUTTON_TITLE": "Product",
-          "NO_RESULTS": "No item found."
+          "MODAL_TITLE": "Select Product",
+          "ADD_BUTTON": {
+            "TITLE": "Product"
+          }
+        },
+        "SELECT_PRODUCT": {
+          "SEARCH_PLACEHOLDER": "Product name or model...",
+          "TABLE": {
+            "COLUMNS": {
+              "NAME_MODEL": {
+                "WIDTH": 200
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              }
+            }
+          }
+        },
+        "SELECT_ACQUISITION": {
+          "RETURN_BACK_BUTTON": {
+            "TITLE": "Return back"
+          },
+          "TABLE": {
+            "COLUMNS": {
+              "ACQUISITION_ID": {
+                "WIDTH": 100
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              },
+              "DATE": {
+                "WIDTH": 100
+              }
+            }
+          }
         },
         "SALESPERSON": {
           "POPOVER_TITLE": "Select Salesperson",
