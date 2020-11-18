@@ -59,6 +59,7 @@ export default function CartsDialog({isShown, setIsShown}: any) {
   return (
     <>
       <Dialog
+        shouldCloseOnOverlayClick={false}
         isShown={isShown}
         title={DIALOG.TITLE}
         onCloseComplete={() => setIsShown(false)}
