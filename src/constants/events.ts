@@ -6,6 +6,7 @@ export const PROCESS_ACQUISITIONS = 'processAcquisitions'
 export const COMPLETE_ACQUISITION = 'completeAcquisition'
 export const PUT_ACQUISITION = 'putAcquisition'
 export const DELETE_TO_BUY_ITEM = 'deleteToBuyItem'
+export const SELL_ACQUISITIONS = 'sellAcquisitions'
 
 // budget
 export const RECOMPUTE_BUDGET = 'recomputeBudget'
