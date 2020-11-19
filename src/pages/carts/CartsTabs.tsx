@@ -11,6 +11,7 @@ export default function CartsTabs({
   state,
   setState,
   fetchComputedCartSum,
+  isDialogOpenCompleted,
 }: any) {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.CARTS
@@ -128,7 +129,7 @@ export default function CartsTabs({
           </>
         </Tablist>
         <Pane role="tabpanel" height="calc(100vh - 54vh)">
-          {state.selectedCartId && (
+          {isDialogOpenCompleted && state.selectedCartId && (
             <Cart
               key={state.selectedCartId}
               cartId={state.selectedCartId}

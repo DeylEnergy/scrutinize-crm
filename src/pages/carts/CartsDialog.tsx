@@ -26,6 +26,19 @@ export default function CartsDialog({isShown, setIsShown}: any) {
     false,
   )
 
+  const [isDialogOpenCompleted, setIsDialogOpenCompleted] = React.useState(
+    false,
+  )
+
+  const handleOpenCompleted = React.useCallback(() => {
+    setIsDialogOpenCompleted(true)
+  }, [setIsDialogOpenCompleted])
+
+  const handleCloseComplete = React.useCallback(() => {
+    setIsShown(false)
+    setIsDialogOpenCompleted(false)
+  }, [setIsShown, setIsDialogOpenCompleted])
+
   const handleCheckoutOpen = React.useCallback(() => {
     setIsCheckoutDialogShown(true)
   }, [])
@@ -58,7 +71,8 @@ export default function CartsDialog({isShown, setIsShown}: any) {
         shouldCloseOnOverlayClick={false}
         isShown={isShown}
         title={DIALOG.TITLE}
-        onCloseComplete={() => setIsShown(false)}
+        onOpenComplete={handleOpenCompleted}
+        onCloseComplete={handleCloseComplete}
         width="100%"
         footer={
           <CartsFooter
@@ -73,6 +87,7 @@ export default function CartsDialog({isShown, setIsShown}: any) {
           state={state}
           setState={setState}
           fetchComputedCartSum={fetchComputedCartSum}
+          isDialogOpenCompleted={isDialogOpenCompleted}
         />
       </Dialog>
       <CheckoutDialog
