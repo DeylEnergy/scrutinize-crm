@@ -26,26 +26,22 @@ export default function CartsDialog({isShown, setIsShown}: any) {
     false,
   )
 
-  const openCheckoutDialog = React.useCallback(() => {
+  const handleCheckoutOpen = React.useCallback(() => {
     setIsCheckoutDialogShown(true)
   }, [])
 
-  const closeCheckoutDialog = React.useCallback(() => {
-    setIsCheckoutDialogShown(false)
-  }, [])
+  const handleCheckoutCompleteClose = React.useCallback(() => {
+    setState({
+      selectedCartId: tabs?.[0]?.cartId,
+    })
+  }, [tabs, setState])
 
   const handleCheckoutSuccess = React.useCallback(() => {
     const updatedCarts = tabs.filter((x: any) => x.cartId !== selectedCartId)
-    let updatedSelectedCartId = null
-    if (updatedCarts.length) {
-      updatedSelectedCartId = updatedCarts[0].cartId
-    }
-
     setState({
-      selectedCartId: updatedSelectedCartId,
       tabs: updatedCarts,
     })
-    setTimeout(closeCheckoutDialog, 500)
+    setIsCheckoutDialogShown(false)
   }, [selectedCartId, tabs])
 
   const fetchComputedCartSum = React.useCallback(() => {
@@ -69,7 +65,7 @@ export default function CartsDialog({isShown, setIsShown}: any) {
             selectedCartId={selectedCartId}
             tabs={tabs}
             currentCartSum={currentCartSum}
-            openCheckoutDialog={openCheckoutDialog}
+            handleCheckoutOpen={handleCheckoutOpen}
           />
         }
       >
@@ -80,8 +76,9 @@ export default function CartsDialog({isShown, setIsShown}: any) {
         />
       </Dialog>
       <CheckoutDialog
+        key={selectedCartId}
         isShown={isCheckoutDialogShown}
-        handleClose={closeCheckoutDialog}
+        handleCheckoutCompleteClose={handleCheckoutCompleteClose}
         handleCheckoutSuccess={handleCheckoutSuccess}
         totalSum={currentCartSum}
         cartId={selectedCartId}

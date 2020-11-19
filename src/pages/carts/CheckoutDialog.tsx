@@ -72,7 +72,7 @@ const CONTENT_CONTAINER_STYLE = {
 
 export default function CheckoutDialog({
   isShown,
-  handleClose,
+  handleCheckoutCompleteClose,
   handleCheckoutSuccess,
   cartId,
   totalSum,
@@ -126,7 +126,7 @@ export default function CheckoutDialog({
       shouldCloseOnOverlayClick={false}
       isShown={isShown}
       title={CHECKOUT.TITLE}
-      onCloseComplete={handleClose}
+      onCloseComplete={handleCheckoutCompleteClose}
       width={300}
       topOffset="auto"
       isConfirmDisabled={

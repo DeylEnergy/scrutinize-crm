@@ -13,7 +13,7 @@ function CartsFooter({
   selectedCartId,
   tabs,
   currentCartSum,
-  openCheckoutDialog,
+  handleCheckoutOpen,
 }: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -59,11 +59,11 @@ function CartsFooter({
             buttonTitle={CONTROLS.SCANNER.BUTTON_TITLE}
           />
           <Button
-            disabled={!selectedCartId || currentCartSum === 0}
+            disabled={!currentCartSum}
             tabIndex={0}
             marginLeft={8}
             appearance="primary"
-            onClick={openCheckoutDialog}
+            onClick={handleCheckoutOpen}
           >
             {CONTROLS.CONFIRM.BUTTON_TITLE}
           </Button>
