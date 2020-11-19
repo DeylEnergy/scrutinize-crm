@@ -3,6 +3,11 @@ import {Button, Pane} from 'evergreen-ui'
 import CartParticipants from './CartParticipants'
 import QrScannerPopover from '../../components/QrScannerPopover'
 import {useLocale, useGlobalScanner, useScannerListener} from '../../utilities'
+import {SPACING} from '../../constants'
+
+const FOOTER_SUM_STYLE = {
+  marginRight: SPACING,
+}
 
 function CartsFooter({
   selectedCartId,
@@ -43,7 +48,7 @@ function CartsFooter({
 
         <Pane>
           {Boolean(tabs.length) && currentCartSum > 0 && (
-            <span>
+            <span style={FOOTER_SUM_STYLE}>
               <b>{CONTROLS.TOTAL_SUM.TITLE}:</b>{' '}
               {Number(currentCartSum).toLocaleString(STRING_FORMAT)}
             </span>
