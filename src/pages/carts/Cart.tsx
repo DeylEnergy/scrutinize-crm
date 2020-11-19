@@ -77,10 +77,11 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         if (foundIndex > -1) {
           itemsRef.current.splice(foundIndex, 1)
           setLoadedItems({items: [...itemsRef.current]})
+          fetchComputedCartSum()
         }
       })
     },
-    [db, itemsRef.current],
+    [db, itemsRef.current, setLoadedItems, fetchComputedCartSum],
   )
 
   const serializeItem = React.useCallback(
