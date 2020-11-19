@@ -8,6 +8,8 @@ import {
   PUT_USER_STATS,
   PROCESS_SALE,
   PUT_ACQUISITION,
+  SELL_ACQUISITIONS,
+  DELETE_SALE_ITEM,
 } from '../../constants/events'
 import send from './index'
 
@@ -43,10 +45,13 @@ export default async function processSale({payload}: any) {
     storeName: SN.SALES,
     indexName: IN.__CART_ID__,
     direction: 'prev',
+    sort: 'asc',
     matchProperties: {__cartId__: payload.cartId},
   })
 
-  let successCount = 0
+  let orderCounter = 0
+
+  const events = []
 
   const currentDate = new Date()
   const saleDatetime = currentDate.getTime()
@@ -57,43 +62,55 @@ export default async function processSale({payload}: any) {
       saleDatetime,
     )
 
-    const events = [
-      {
-        storeName: SN.PRODUCTS,
-        cb: ({store}: any) =>
-          send({
-            type: PUT_PRODUCT,
-            payload: productShapeAfterSale,
-            store,
-            emitEvent: false,
-          }),
-      },
-      {
-        storeName: SN.SALES,
-        cb: ({store}: any) =>
-          send({
-            type: PUT_SALE,
-            payload: getSaleShapeAfterSale(
-              cartItem,
-              saleDatetime,
-              successCount + 1,
-            ),
-            store,
-            emitEvent: false,
-          }),
-      },
-      {
-        storeName: SN.STATS,
-        cb: ({store}: any) =>
-          send({
-            type: PUT_STAT,
-            payload: {...cartItem, currentDate},
-            parentEvent: PROCESS_SALE,
-            store,
-            emitEvent: false,
-          }),
-      },
-    ]
+    events.push({
+      storeName: SN.PRODUCTS,
+      cb: ({store}: any) =>
+        send({
+          type: PUT_PRODUCT,
+          payload: productShapeAfterSale,
+          store,
+          emitEvent: false,
+        }),
+    })
+
+    events.push({
+      storeName: SN.ACQUISITIONS,
+      cb: ({store, tx}: any) =>
+        send({
+          type: SELL_ACQUISITIONS,
+          payload: {selectedAcquisitions: cartItem.selectedAcquisitions},
+          store,
+          tx,
+          emitEvent: false,
+        }),
+    })
+
+    events.push({
+      storeName: SN.SALES,
+      cb: ({store}: any) =>
+        send({
+          type: PUT_SALE,
+          payload: getSaleShapeAfterSale(
+            cartItem,
+            saleDatetime,
+            (orderCounter += 1),
+          ),
+          store,
+          emitEvent: false,
+        }),
+    })
+
+    events.push({
+      storeName: SN.STATS,
+      cb: ({store}: any) =>
+        send({
+          type: PUT_STAT,
+          payload: {...cartItem, currentDate},
+          parentEvent: PROCESS_SALE,
+          store,
+          emitEvent: false,
+        }),
+    })
 
     const cartParticipants: any = await getRowFromIndexStore({
       storeName: SN.SALES,
@@ -152,12 +169,26 @@ export default async function processSale({payload}: any) {
         })
       }
     }
-
-    const [wasProcessed] = await handleAsync(pushEvents(events))
-
-    if (wasProcessed) {
-      successCount += 1
-    }
   }
-  return {successCount}
+
+  const selectedActiveCart: any = await getRowFromIndexStore({
+    storeName: SN.SALES,
+    indexName: IN.ACTIVE_CART_ID,
+    key: payload.cartId,
+  })
+
+  events.push({
+    storeName: SN.SALES,
+    cb: ({store}: any) =>
+      send({
+        type: DELETE_SALE_ITEM,
+        payload: {id: selectedActiveCart.id},
+        store,
+        emitEvent: false,
+      }),
+  })
+
+  const [success] = await handleAsync(pushEvents(events))
+
+  return success
 }
