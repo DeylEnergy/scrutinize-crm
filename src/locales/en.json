@@ -513,9 +513,20 @@
         "CHECKOUT": {
           "TITLE": "Checkout",
           "CONFIRM_BUTTON_TITLE": "Finish",
-          "INPUTS": {
-            "CHANGE": "Change",
-            "NEED": "Need"
+          "SALE": {
+            "TITLE": "Sale",
+            "INPUTS": {
+              "PAID": "Paid",
+              "CHANGE": "Change",
+              "NEED": "Need"
+            }
+          },
+          "RETURN": {
+            "TITLE": "Return",
+            "SUM_TO_RETURN": "Sum to return",
+            "ALERT": {
+              "TITLE": "All selected items will be returned."
+            }
           }
         }
       },
