@@ -7,6 +7,7 @@ export const COMPLETE_ACQUISITION = 'completeAcquisition'
 export const PUT_ACQUISITION = 'putAcquisition'
 export const DELETE_TO_BUY_ITEM = 'deleteToBuyItem'
 export const SELL_ACQUISITIONS = 'sellAcquisitions'
+export const RETURN_ACQUISITIONS = 'returnAcquisitions'
 
 // budget
 export const RECOMPUTE_BUDGET = 'recomputeBudget'
@@ -21,6 +22,7 @@ export const PUT_SALE = 'putSale'
 export const DELETE_SALE_ITEM = 'deleteSaleItem'
 export const PROCESS_SALE = 'processSale'
 export const RETURN_SOLD_ITEM = 'returnSoldItem'
+export const PROCESS_RETURN_ITEMS = 'processReturnItems'
 
 // stats
 export const PUT_STAT = 'putStat'

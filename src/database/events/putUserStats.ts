@@ -6,6 +6,7 @@ import {
   PUT_USER_STATS,
   PROCESS_SALE,
   PROCESS_ACQUISITIONS,
+  PROCESS_RETURN_ITEMS,
 } from '../../constants/events'
 import {getRowFromStore} from '../queries'
 
@@ -17,7 +18,11 @@ export default async function putUserStat({
   parentEvent = null,
 }: any) {
   let updatedPeriod = payload
-  if (parentEvent === PROCESS_SALE || parentEvent === PROCESS_ACQUISITIONS) {
+  if (
+    parentEvent === PROCESS_SALE ||
+    parentEvent === PROCESS_RETURN_ITEMS ||
+    parentEvent === PROCESS_ACQUISITIONS
+  ) {
     const {currentDate, sum} = payload
 
     const currentPeriod = getPeriodOfDate(currentDate)
@@ -36,6 +41,9 @@ export default async function putUserStat({
     if (parentEvent === PROCESS_SALE) {
       foundPeriod.soldSum += sum
       foundPeriod.incomeSum += payload.income
+    } else if (parentEvent === PROCESS_SALE) {
+      foundPeriod.soldSum -= sum
+      foundPeriod.incomeSum -= payload.income
     } else if (parentEvent === PROCESS_ACQUISITIONS) {
       foundPeriod.spentSum += sum
     }
