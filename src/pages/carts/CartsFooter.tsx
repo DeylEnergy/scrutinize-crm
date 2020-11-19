@@ -54,6 +54,7 @@ function CartsFooter({
             buttonTitle={CONTROLS.SCANNER.BUTTON_TITLE}
           />
           <Button
+            disabled={!selectedCartId || currentCartSum === 0}
             tabIndex={0}
             marginLeft={8}
             appearance="primary"
