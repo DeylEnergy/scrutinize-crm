@@ -1,26 +1,10 @@
 import React from 'react'
-import {
-  Pane,
-  Dialog,
-  Popover,
-  Menu,
-  IconButton,
-  Position,
-  MoreIcon,
-  EditIcon,
-} from 'evergreen-ui'
+import {Pane} from 'evergreen-ui'
 import SearchInput from '../../components/SearchInput'
 import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import RIGHTS from '../../constants/rights'
-import {
-  useLocale,
-  useAccount,
-  useDatabase,
-  withErrorBoundary,
-} from '../../utilities'
-import {RETURN_SOLD_ITEM} from '../../constants/events'
+import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
 const FETCH_ITEM_LIMIT = 20
@@ -34,28 +18,11 @@ const LOADED_ITEMS_DEFAULT = {
 const PERIOD_START_DEFAULT = [-Infinity]
 const PERIOD_STOP_DEFAULT = [Infinity]
 
-const RETURN_ITEM_DIALOG_PARAMS_DEFAULT = {isShown: false, onConfirm: null}
-
-function ReturnSoldItemDialog({isShown, onClose, onConfirm}: any) {
-  return (
-    <Dialog
-      isShown={isShown}
-      title="Return Item"
-      intent="danger"
-      onCloseComplete={onClose}
-      onConfirm={onConfirm}
-      confirmLabel="Return"
-    >
-      You are about to return item. Are you sure?
-    </Dialog>
-  )
-}
-
 function Sales() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.SALES
-  const [{permissions}] = useAccount()
+
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
 
@@ -77,35 +44,8 @@ function Sales() {
     FILTER_PARAMS_DEFAULT,
   )
 
-  const [returnItemDialogParams, setReturnItemDialogParams] = React.useReducer(
-    // @ts-ignore
-    (s, v) => ({...s, ...v}),
-    RETURN_ITEM_DIALOG_PARAMS_DEFAULT,
-  )
-
   const serializeItem = React.useCallback(
     item => {
-      const confirmReturnSoldItem = (close: any) => {
-        db.sendEvent({
-          type: RETURN_SOLD_ITEM,
-          payload: {id: item.id},
-        }).then(() => {
-          const items = itemsRef.current
-          const foundIndex = items.findIndex((x: any) => x.id === item.id)
-          const updatedRow = {...item, returned: true}
-          items[foundIndex] = serializeItem(updatedRow)
-          setLoadedItems({items: [...items]})
-          setTimeout(close)
-        })
-      }
-
-      const returnSoldItem = () => {
-        setReturnItemDialogParams({
-          isShown: true,
-          onConfirm: confirmReturnSoldItem,
-        })
-      }
-
       const saleTime = new Date(item.datetime[0])
       const saleTimeCell = {
         value: `${saleTime.toLocaleDateString(
@@ -131,22 +71,6 @@ function Sales() {
           item?._customer?.name,
           item.note,
         ],
-        optionsMenu: permissions.includes(RIGHTS.CAN_RETURN_SALES_ITEMS) && (
-          <Popover
-            content={
-              <Menu>
-                <Menu.Group>
-                  <Menu.Item onSelect={returnSoldItem} icon={EditIcon}>
-                    {PAGE_CONST.OPTIONS.RETURN}
-                  </Menu.Item>
-                </Menu.Group>
-              </Menu>
-            }
-            position={Position.BOTTOM_RIGHT}
-          >
-            <IconButton icon={MoreIcon} height={24} appearance="minimal" />
-          </Popover>
-        ),
       }
     },
     [STRING_FORMAT],
@@ -205,10 +129,6 @@ function Sales() {
     fetchItems({from, to, searchQuery})
   }, [from, to, searchQuery])
 
-  const handleReturnItemClose = React.useCallback(() => {
-    setReturnItemDialogParams(RETURN_ITEM_DIALOG_PARAMS_DEFAULT)
-  }, [setReturnItemDialogParams])
-
   const handleSearchQuery = React.useCallback(
     (value: string) => {
       setSearchQuery(value)
@@ -235,7 +155,6 @@ function Sales() {
       {label: COLUMNS.SALESPERSON.TITLE, width: COLUMNS.SALESPERSON.WIDTH},
       {label: COLUMNS.CUSTOMER.TITLE, width: COLUMNS.CUSTOMER.WIDTH},
       {label: COLUMNS.NOTE.TITLE, width: COLUMNS.NOTE.WIDTH, canGrow: true},
-      {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])
 
@@ -262,10 +181,6 @@ function Sales() {
           loadMoreItems={loadMoreItems}
         />
       </Pane>
-      <ReturnSoldItemDialog
-        {...returnItemDialogParams}
-        onClose={handleReturnItemClose}
-      />
     </PageWrapper>
   )
 }
