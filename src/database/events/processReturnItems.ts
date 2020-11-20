@@ -6,6 +6,7 @@ import {
   PUT_SALE,
   PUT_STAT,
   PUT_USER_STATS,
+  PUT_SUPPLIER_STATS,
   PROCESS_RETURN_ITEMS,
   DELETE_TO_BUY_ITEM,
   DELETE_SALE_ITEM,
@@ -126,6 +127,32 @@ export default async function processReturnItems({payload}: any) {
               payload: {
                 ...cartItem,
                 _userId: cartParticipants._userId,
+                currentDate,
+              },
+              parentEvent: PROCESS_RETURN_ITEMS,
+              store,
+              emitEvent: false,
+            }),
+        })
+      }
+    }
+
+    for (const selectedAcquisition of cartItem.selectedAcquisitions) {
+      if (selectedAcquisition._supplierId) {
+        const sum = cartItem.salePrice * selectedAcquisition.count
+
+        const income =
+          sum - selectedAcquisition.realPrice * selectedAcquisition.count
+
+        events.push({
+          storeName: SN.SUPPLIERS_STATS,
+          cb: ({store}: any) =>
+            send({
+              type: PUT_SUPPLIER_STATS,
+              payload: {
+                sum,
+                income,
+                _supplierId: selectedAcquisition._supplierId,
                 currentDate,
               },
               parentEvent: PROCESS_RETURN_ITEMS,

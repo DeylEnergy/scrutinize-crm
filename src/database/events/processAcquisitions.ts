@@ -7,6 +7,7 @@ import {
   RECOMPUTE_BUDGET,
   PUT_STAT,
   PUT_USER_STATS,
+  PUT_SUPPLIER_STATS,
   PROCESS_ACQUISITIONS,
 } from '../../constants/events'
 import codePrefixes from '../../constants/codePrefixes'
@@ -92,6 +93,24 @@ export default async function process() {
             payload: {
               ...bought,
               _userId: bought._userId,
+              currentDate,
+            },
+            parentEvent: PROCESS_ACQUISITIONS,
+            store,
+            emitEvent: false,
+          }),
+      })
+    }
+
+    if (bought._supplierId) {
+      events.push({
+        storeName: SN.SUPPLIERS_STATS,
+        cb: ({store}: any) =>
+          send({
+            type: PUT_SUPPLIER_STATS,
+            payload: {
+              ...bought,
+              _supplierId: bought._supplierId,
               currentDate,
             },
             parentEvent: PROCESS_ACQUISITIONS,
