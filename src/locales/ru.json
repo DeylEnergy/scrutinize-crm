@@ -309,8 +309,8 @@
         }
       }
     },
-    "USERS_CONTROL": {
-      "TITLE": "Управление пользователями"
+    "PERSONS_CONTROL": {
+      "TITLE": "Управление персонами"
     },
     "USERS": {
       "TITLE": "Пользователи",
@@ -428,6 +428,62 @@
           "BACKUP": {
             "CAN_EXPORT_DATA": "Может экспортировать данные",
             "CAN_IMPORT_DATA": "Может импортировать данные"
+          }
+        }
+      }
+    },
+    "SUPPLIERS": {
+      "TITLE": "Поставщики",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Имя",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Номер телефона",
+            "WIDTH": 150
+          },
+          "ADDRESS": {
+            "TITLE": "Адрес",
+            "WIDTH": 200
+          },
+          "NOTE": {
+            "TITLE": "Заметка",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Имя, номер телефона, заметка...",
+        "ADD_SUPPLIER": {
+          "BUTTON_TITLE": "Поставщик"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_SUPPLIER": "Добавить поставщика",
+        "TITLE_EDIT_SUPPLIER": "Редактировать поставщика",
+        "LABELS": {
+          "SUPPLIER_STATS": "Статистика поставщика"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Период",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Продано",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Прибыль",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Потрачено",
+              "WIDTH": 100
+            }
           }
         }
       }

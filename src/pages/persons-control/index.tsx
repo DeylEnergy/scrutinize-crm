@@ -10,15 +10,21 @@ import {Pane, Tablist, Tab} from 'evergreen-ui'
 import Block from '../../components/Block'
 import Users from './users/Users'
 import Groups from './groups/Groups'
-import {USERS_CONTROL_ROUTE} from '../../constants/routes'
+import Suppliers from './suppliers/Suppliers'
+import {PERSONS_CONTROL_ROUTE} from '../../constants/routes'
 import {useLocale} from '../../utilities'
 
-const USERS_PATH = `/${USERS_CONTROL_ROUTE}/users`
-const GROUPS_PATH = `/${USERS_CONTROL_ROUTE}/group`
+const USERS_PATH = `/${PERSONS_CONTROL_ROUTE}/users`
+const GROUPS_PATH = `/${PERSONS_CONTROL_ROUTE}/group`
+const SUPPLIERS_PATH = `/${PERSONS_CONTROL_ROUTE}/suppliers`
 
-export default function UsersControls() {
+export default function PersonsControl() {
   const [locale] = useLocale()
-  const {USERS: USERS_CONST, USER_GROUPS: USER_GROUPS_CONST} = locale.vars.PAGES
+  const {
+    USERS: USERS_CONST,
+    USER_GROUPS: USER_GROUPS_CONST,
+    SUPPLIERS: SUPPLIERS_CONST,
+  } = locale.vars.PAGES
 
   const history = useHistory()
   const location = useLocation()
@@ -32,6 +38,10 @@ export default function UsersControls() {
       {
         label: USER_GROUPS_CONST.TITLE,
         path: GROUPS_PATH,
+      },
+      {
+        label: SUPPLIERS_CONST.TITLE,
+        path: SUPPLIERS_PATH,
       },
     ]
   }, [USERS_CONST, USER_GROUPS_CONST])
@@ -61,6 +71,9 @@ export default function UsersControls() {
             </Route>
             <Route path={GROUPS_PATH}>
               <Groups />
+            </Route>
+            <Route path={SUPPLIERS_PATH}>
+              <Suppliers />
             </Route>
             <Redirect to={USERS_PATH} />
           </Switch>

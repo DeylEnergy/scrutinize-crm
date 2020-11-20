@@ -86,8 +86,8 @@ export default function Header() {
           </Link>
         )}
         {canSeeUsersControl && (
-          <Link to="/users-control">
-            <Tooltip content={PAGES.USERS_CONTROL.TITLE}>
+          <Link to="/persons-control">
+            <Tooltip content={PAGES.PERSONS_CONTROL.TITLE}>
               <IconButton icon={<FaUserCog />} />
             </Tooltip>
           </Link>

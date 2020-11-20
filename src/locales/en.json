@@ -306,8 +306,8 @@
         }
       }
     },
-    "USERS_CONTROL": {
-      "TITLE": "Users Control"
+    "PERSONS_CONTROL": {
+      "TITLE": "Persons Control"
     },
     "USERS": {
       "TITLE": "Users",
@@ -425,6 +425,62 @@
           "BACKUP": {
             "CAN_EXPORT_DATA": "Can export data",
             "CAN_IMPORT_DATA": "Can import data"
+          }
+        }
+      }
+    },
+    "SUPPLIERS": {
+      "TITLE": "Suppliers",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "ADDRESS": {
+            "TITLE": "Address",
+            "WIDTH": 200
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_SUPPLIER": {
+          "BUTTON_TITLE": "Supplier"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_SUPPLIER": "Add supplier",
+        "TITLE_EDIT_SUPPLIER": "Edit supplier",
+        "LABELS": {
+          "SUPPLIER_STATS": "Supplier stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Spent Sum",
+              "WIDTH": 100
+            }
           }
         }
       }

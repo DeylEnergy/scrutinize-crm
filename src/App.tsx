@@ -4,7 +4,7 @@ import Header from './layouts/Header'
 import MerchandisePage from './pages/merchandise'
 import SalesPage from './pages/sales'
 import StatsPage from './pages/stats'
-import UsersControlPage from './pages/users-control'
+import PersonsControlPage from './pages/persons-control'
 import SignInPage from './pages/sign-in'
 import Settings from './pages/settings'
 import Setup from './pages/setup'
@@ -87,8 +87,8 @@ const App = () => {
             <StatsPage />
           </Route>
           {canSeeUsersControl && (
-            <Route path="/users-control">
-              <UsersControlPage />
+            <Route path="/persons-control">
+              <PersonsControlPage />
             </Route>
           )}
           <Route path="/sign-in">
