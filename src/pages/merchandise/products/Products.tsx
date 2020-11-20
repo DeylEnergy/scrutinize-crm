@@ -158,6 +158,7 @@ function Products() {
         lastSoldTimeCell,
         new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
         item.lowestBoundCount,
+        item.id.split('-')[0],
       ],
       onDoubleClick: (canEditProducts && editSideSheet) || null,
       optionsMenu: canEditProducts && (
@@ -251,6 +252,7 @@ function Products() {
       {label: COLUMNS.LAST_SOLD.TITLE, width: COLUMNS.LAST_SOLD.WIDTH},
       {label: COLUMNS.LAST_ACQUIRED.TITLE, width: COLUMNS.LAST_ACQUIRED.WIDTH},
       {label: COLUMNS.LOWEST_BOUND.TITLE, width: COLUMNS.LOWEST_BOUND.WIDTH},
+      {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
       {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])

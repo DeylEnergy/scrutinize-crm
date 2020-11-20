@@ -269,7 +269,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
             ),
           },
           sumCell,
-          item._productId,
+          item._productId.split('-')[0],
           noteCell,
         ],
         optionsMenu,

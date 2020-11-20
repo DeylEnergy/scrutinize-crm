@@ -38,7 +38,8 @@ function Acquisitions() {
           sumCell,
           item._supplier?.name,
           item._user?.name,
-          item._productId,
+          item._productId.split('-')[0],
+          item.id.split('-')[0],
         ],
       }
     },
@@ -72,15 +73,19 @@ function Acquisitions() {
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
     return [
-      {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH, canGrow: true},
+      {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
       {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
-      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH},
+      {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
       {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
       {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
       {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
       {label: COLUMNS.SUPPLIER.TITLE, width: COLUMNS.SUPPLIER.WIDTH},
       {label: COLUMNS.EXECUTOR.TITLE, width: COLUMNS.EXECUTOR.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
+      {
+        label: COLUMNS.ACQUISITION_ID.TITLE,
+        width: COLUMNS.ACQUISITION_ID.WIDTH,
+      },
     ]
   }, [PAGE_CONST])
 

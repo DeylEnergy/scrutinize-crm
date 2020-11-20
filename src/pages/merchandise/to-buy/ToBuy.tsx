@@ -366,7 +366,7 @@ function ToBuy() {
           executorCell,
           frozenCell,
           new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
-          item._productId,
+          item._productId?.split('-')[0] || '-',
         ],
       }
     },

@@ -50,6 +50,10 @@
           "LOWEST_BOUND": {
             "TITLE": "Мин. кол-во",
             "WIDTH": 110
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
           }
         }
       },
@@ -130,8 +134,8 @@
             "WIDTH": 100
           },
           "PRODUCT_ID": {
-            "TITLE": "Id товара",
-            "WIDTH": 270
+            "TITLE": "PRID",
+            "WIDTH": 95
           }
         },
         "CELLS": {
@@ -225,8 +229,12 @@
             "WIDTH": 150
           },
           "PRODUCT_ID": {
-            "TITLE": "Id товара",
-            "WIDTH": 270
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITION_ID": {
+            "TITLE": "AQID",
+            "WIDTH": 95
           }
         }
       }
@@ -528,8 +536,8 @@
             "WIDTH": 90
           },
           "PRODUCT_ID": {
-            "TITLE": "Id товара",
-            "WIDTH": 270
+            "TITLE": "PRID",
+            "WIDTH": 95
           },
           "NOTE": {
             "TITLE": "Заметка",
