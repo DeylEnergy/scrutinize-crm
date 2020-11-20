@@ -11,6 +11,7 @@ export const STORE_NAME = {
   USERS_STATS: 'usersStats',
   GROUPS: 'groups',
   SUPPLIERS: 'suppliers',
+  SUPPLIERS_STATS: 'suppliersStats',
   STATS: 'stats',
   LOGS: 'logs',
   EVENTS: 'events',

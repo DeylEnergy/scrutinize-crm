@@ -54,7 +54,15 @@ dbReq.onupgradeneeded = () => {
   }
 
   if (!objectStores.contains(SN.SUPPLIERS)) {
-    db.current.createObjectStore(SN.SUPPLIERS, keyPath)
+    db.current
+      .createObjectStore(SN.SUPPLIERS, keyPath)
+      .createIndex(IN.NAME, IN.NAME)
+  }
+
+  if (!objectStores.contains(SN.SUPPLIERS_STATS)) {
+    db.current.createObjectStore(SN.SUPPLIERS_STATS, {
+      keyPath: 'supplierIdPeriod',
+    })
   }
 
   if (!objectStores.contains(SN.STATS)) {
