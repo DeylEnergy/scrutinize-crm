@@ -75,6 +75,7 @@ export default async function putSale({
 
         saleItem.selectedAcquisitions.push({
           _acquisitionId: payload._acquisitionId,
+          _supplierId: aq._supplierId,
           count: 1,
           realPrice: aq.price,
         })
@@ -92,6 +93,7 @@ export default async function putSale({
       saleItem.selectedAcquisitions = [
         {
           _acquisitionId: payload._acquisitionId,
+          _supplierId: aq._supplierId,
           count: 1,
           realPrice: aq.price,
         },
