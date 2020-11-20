@@ -31,14 +31,14 @@ export default async function collectData(
   }
   user && (value._user = user)
 
-  let customer = suppliersCache[value._customerId]
-  if (value._customerId && !customer) {
-    customer = await handleIdbRequest(
-      suppliersObjectStore.get(value._customerId),
+  let supplier = suppliersCache[value._supplierId]
+  if (value._supplierId && !supplier) {
+    supplier = await handleIdbRequest(
+      suppliersObjectStore.get(value._supplierId),
     )
-    suppliersCache[value._customerId] = cache
+    suppliersCache[value._supplierId] = cache
   }
-  customer && (value._customer = customer)
+  supplier && (value._supplier = supplier)
 
   return value
 }
