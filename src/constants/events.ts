@@ -36,6 +36,12 @@ export const PUT_USER_STATS = 'putUserStats'
 // groups
 export const PUT_GROUP = 'putGroup'
 
+// suppliers
+export const PUT_SUPPLIER = 'putSupplier'
+
+// suppliersStats
+export const PUT_SUPPLIER_STATS = 'putSupplierStats'
+
 // carts
 export const PUT_CART = 'putCart'
 export const ADD_CART = 'addCart'
