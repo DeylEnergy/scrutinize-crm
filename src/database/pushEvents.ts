@@ -35,7 +35,6 @@ export default function pushEvents(requests: any) {
       )
 
       if (requestFailed) {
-        console.log('ABORT!', requestFailed)
         tx.abort()
         break
       }

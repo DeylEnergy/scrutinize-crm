@@ -20,7 +20,6 @@ function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
       function(error: any, key: any) {
         if (error) console.error(error)
         setAuthKey(key)
-        console.log('success!')
       },
     )
   }, [disabled, userName, secretKey])

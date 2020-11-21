@@ -19,4 +19,4 @@ export default async function saveEvent(eventData: any, emitEvent = true) {
   return Promise.reject(`Cannot save event ${eventData.type}`)
 }
 
-console.log(saveEvent)
+// console.log(saveEvent)
