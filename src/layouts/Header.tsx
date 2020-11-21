@@ -2,15 +2,20 @@ import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import {
-  FaExchangeAlt,
   FaDatabase,
   FaList,
   FaQrcode,
-  FaShoppingCart,
   FaChartBar,
+  FaUserCog,
+  FaCog,
 } from 'react-icons/fa'
-import {Pane, Tooltip, IconButton} from 'evergreen-ui'
-import Carts from '../routes/carts'
+import {Tooltip} from 'evergreen-ui'
+import IconButton from '../components/IconButton'
+import Carts from '../pages/carts'
+import {useLocale, useAccount} from '../utilities'
+import RIGHTS from '../constants/rights'
+import Cashbox from '../pages/cashbox'
+import UserProfile from '../pages/user-profile'
 
 const Stripe = styled.div`
   color: #fff;
@@ -42,70 +47,70 @@ const Logo = styled.div`
   width: 5%;
 `
 
-const ICON_COLOR = '#ffffff7d'
-
-const ICON_SIZE = 24
-
-const MenuIcon = React.forwardRef(function MenuIcon(
-  {
-    icon,
-    ...props
-  }: {
-    icon: JSX.Element
-    innerRef?: any
-  },
-  ref: any,
-) {
-  icon = React.cloneElement(icon, {
-    size: ICON_SIZE,
-    color: ICON_COLOR,
-  })
-
-  return (
-    <span ref={ref} {...props}>
-      {icon}
-    </span>
-  )
-})
-
 export default function Header() {
+  const [locale] = useLocale()
+  const {PAGES} = locale.vars
+  const [{permissions}] = useAccount()
+
+  const canSeeMerchandise =
+    permissions?.includes(RIGHTS.CAN_SEE_PRODUCTS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_TO_BUY_LIST) ||
+    permissions?.includes(RIGHTS.CAN_SEE_ACQUISITIONS)
+
+  const canSeeUsersControl =
+    permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
+    permissions?.includes(RIGHTS.CAN_SEE_USER_GROUPS)
+
   return (
     <Stripe>
       <ActionsContainer>
-        <Link to="/merchandise">
-          <Tooltip content="Merchandise">
-            <MenuIcon icon={<FaDatabase />} />
+        {canSeeMerchandise && (
+          <Link to="/merchandise">
+            <Tooltip content={PAGES.MERCHANDISE.TITLE}>
+              <IconButton icon={<FaDatabase />} />
+            </Tooltip>
+          </Link>
+        )}
+        {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
+          <Link to="/sales">
+            <Tooltip content={PAGES.SALES.TITLE}>
+              <IconButton icon={<FaList />} />
+            </Tooltip>
+          </Link>
+        )}
+        {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
+          <Link to="/stats">
+            <Tooltip content={PAGES.STATS.TITLE}>
+              <IconButton icon={<FaChartBar />} />
+            </Tooltip>
+          </Link>
+        )}
+        {canSeeUsersControl && (
+          <Link to="/persons-control">
+            <Tooltip content={PAGES.PERSONS_CONTROL.TITLE}>
+              <IconButton icon={<FaUserCog />} />
+            </Tooltip>
+          </Link>
+        )}
+        <Link to="/settings">
+          <Tooltip content={PAGES.SETTINGS.TITLE}>
+            <IconButton icon={<FaCog />} />
           </Tooltip>
         </Link>
-        <Link to="/">
-          <Tooltip content="Transactions">
-            <MenuIcon icon={<FaExchangeAlt />} />
-          </Tooltip>
-        </Link>
-        <Link to="/">
-          <Tooltip content="Logs">
-            <MenuIcon icon={<FaList />} />
-          </Tooltip>
-        </Link>
-        <Link to="/">
-          <Tooltip content="Statistics">
-            <MenuIcon icon={<FaChartBar />} />
-          </Tooltip>
-        </Link>
-        <Link to="/">
-          <Tooltip content="Stickers manager">
-            <MenuIcon icon={<FaQrcode />} />
-          </Tooltip>
-        </Link>
+        {/* No manual stickers for the first version. */}
+        {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
+          <Link to="/">
+            <Tooltip content="Stickers manager">
+              <IconButton icon={<FaQrcode />} />
+            </Tooltip>
+          </Link>
+        )} */}
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
       <ActionsContainer last>
-        <Carts />
-        <Link to="/">
-          <Tooltip content="Scanner">
-            <MenuIcon icon={<FaQrcode />} />
-          </Tooltip>
-        </Link>
+        {permissions?.includes(RIGHTS.CAN_SEE_CASHBOX) && <Cashbox />}
+        {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
+        {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && <UserProfile />}
       </ActionsContainer>
     </Stripe>
   )

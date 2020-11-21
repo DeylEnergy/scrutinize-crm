@@ -7,21 +7,25 @@ import {Divider, DIVIDER_VARIANT, Small, Subtitle} from '../elements'
 import InfiniteLoader from 'react-window-infinite-loader'
 import {Spinner} from 'evergreen-ui'
 import Tooltip from './Tooltip'
-import {useUpdate} from '../utilities'
+import CellTextWrapper from './CellTextWrapper'
+import {useUpdate, useOneTime} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
-const HEADER_SUBTITLE_PADDING = 11
+const CELL_CONTENT_SIDES_STYLE = {padding: '0px 12px'}
+const HEADER_CELL_WRAPPER_STYLE = {top: 0, lineHeight: 'normal'}
+
+function noop() {}
 
 type Column = {
-  label: string
+  label?: string
   width: number
 }
 
 type HeaderColumns = Array<Column>
 
 type HeaderCell = {
-  label: string
+  label?: string
   width: number
   left: number
 }
@@ -42,7 +46,8 @@ const TableCellContent = styled.div`
   width: 100%;
   height: 100%;
   /* spacing is 8 * 1.5 */
-  padding: 10px 12px;
+  padding: ${CELL_CONTENT_SIDES_STYLE.padding};
+  display: flex;
 `
 
 const Header = styled.div`
@@ -72,17 +77,21 @@ const StyledHeaderCell = styled.div<{sticky?: boolean}>`
 `
 const HeaderCell = ({
   children,
+  isLastColumn,
   ...props
 }: {
   style?: React.CSSProperties
   sticky?: boolean
   children: React.ReactNode
+  isLastColumn?: boolean
 }) => (
   <StyledHeaderCell {...props}>
-    <Subtitle variant="SECONDARY" padding={HEADER_SUBTITLE_PADDING}>
-      {children}
-    </Subtitle>
-    <CellDividers />
+    <CellTextWrapper style={HEADER_CELL_WRAPPER_STYLE}>
+      <Subtitle variant="SECONDARY" style={CELL_CONTENT_SIDES_STYLE}>
+        {children}
+      </Subtitle>
+    </CellTextWrapper>
+    <CellDividers isLastColumn={isLastColumn} />
   </StyledHeaderCell>
 )
 
@@ -112,10 +121,10 @@ const GridData = styled.div`
   top: 50px;
 `
 
-function CellDividers() {
+function CellDividers({isLastColumn = false}: any) {
   return (
     <>
-      <Divider absolute variant={DIVIDER_VARIANT.VERTICAL} />
+      {!isLastColumn && <Divider absolute variant={DIVIDER_VARIANT.VERTICAL} />}
       <Divider absolute variant={DIVIDER_VARIANT.HORIZONTAL} />
     </>
   )
@@ -134,20 +143,29 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
   const isCellContentObject =
     cellContent !== null && typeof cellContent === 'object'
 
-  const cellOnDoubleClick = isItemAvailable
-    ? isCellContentObject
-      ? cellContent.onDoubleClick
-      : cellData.onDoubleClick
+  const cellOnClick = isItemAvailable
+    ? (isCellContentObject && cellContent.onClick) || cellData.onClick
     : null
+
+  const cellOnDoubleClick = isItemAvailable
+    ? (isCellContentObject && cellContent.onDoubleClick) ||
+      cellData.onDoubleClick
+    : null
+
   const columnLabel = columns[columnIndex].label
 
-  const customCellContentStyle =
-    (isCellContentObject && cellContent.style) || {}
+  const customCellContentStyle = isItemAvailable
+    ? (isCellContentObject && cellContent.style) || cellData.style
+    : {}
+
+  const isTextCell = isItemAvailable
+    ? cellContent?.isTextCell ?? cellData?.isTextCell ?? true
+    : true
 
   return (
     <TableCell
       // @ts-ignore
-      // onClick={() => tableContext.setSelectedRow(style.top)}
+      onClick={cellOnClick}
       onDoubleClick={cellOnDoubleClick}
       // @ts-ignore
       selected={tableContext.selectedRow === style.top}
@@ -155,8 +173,16 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         ...style,
       }}
     >
-      <TableCellContent style={customCellContentStyle}>
-        <Tooltip content={isCellContentObject && cellContent.tooltipContent}>
+      <TableCellContent
+        style={{
+          ...(cellData?.isDisabled ? {opacity: 0.5} : {}),
+          ...customCellContentStyle,
+        }}
+      >
+        <Tooltip
+          content={isCellContentObject && cellContent.tooltipContent}
+          isTextCell={isTextCell}
+        >
           <Small variant="SECONDARY">
             {isItemAvailable &&
             columnLabel === 'OPTIONS' &&
@@ -169,7 +195,7 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
         </Tooltip>
       </TableCellContent>
 
-      <CellDividers />
+      <CellDividers isLastColumn={columnIndex === columns.length - 1} />
     </TableCell>
   )
 }
@@ -178,10 +204,12 @@ function StickyHeader({
   columns,
   stickyColumnWidth,
   headers,
+  rowHeight,
 }: {
   columns: HeaderColumns
   stickyColumnWidth: number
   headers: HeaderCells
+  rowHeight: number
 }) {
   const headerColumnsSum: number = columns.reduce(
     (acc: number, cur: Column): number => acc + cur.width,
@@ -189,7 +217,7 @@ function StickyHeader({
   )
 
   const headerContainerStyle = {
-    height: ROW_HEIGHT,
+    height: rowHeight,
     width: headerColumnsSum + stickyColumnWidth,
   }
 
@@ -199,9 +227,11 @@ function StickyHeader({
 
   return (
     <Header style={headerContainerStyle}>
-      <HeaderCell sticky style={stickyHeaderColumnStyle}>
-        #
-      </HeaderCell>
+      {Boolean(stickyColumnWidth) && (
+        <HeaderCell sticky style={stickyHeaderColumnStyle}>
+          #
+        </HeaderCell>
+      )}
       <ScrollableHeader>
         {headers.map(({label, left, width}, i) => (
           <HeaderCell
@@ -211,6 +241,7 @@ function StickyHeader({
               width,
             }}
             key={i}
+            isLastColumn={i === columns.length - 1}
           >
             {label === 'OPTIONS' ? '' : label}
           </HeaderCell>
@@ -223,9 +254,11 @@ function StickyHeader({
 function StickyColumn({
   stickyColumnRows,
   gridHeight,
+  rowHeight,
 }: {
   stickyColumnRows: Array<{label: number; top: number}>
   gridHeight: any
+  rowHeight: number
 }) {
   const tableContext = React.useContext(TableContext)
 
@@ -248,13 +281,15 @@ function StickyColumn({
           selected={tableContext.selectedRow === top}
           style={{
             position: 'absolute',
-            height: ROW_HEIGHT,
+            height: rowHeight,
             top,
           }}
           key={i}
         >
           <TableCellContent>
-            <Small variant="SECONDARY">{label}</Small>
+            <CellTextWrapper>
+              <Small variant="SECONDARY">{label}</Small>
+            </CellTextWrapper>
           </TableCellContent>
 
           <CellDividers />
@@ -332,17 +367,27 @@ function createHeaders(
   return headers
 }
 
-function createStickyColumns(minRow: number, maxRow: number) {
+function createStickyColumns(
+  minRow: number,
+  maxRow: number,
+  rowHeight: number,
+) {
   const rows = []
 
   for (let i = minRow; i <= maxRow; i++) {
-    rows.push({label: i + 1, top: i * ROW_HEIGHT})
+    rows.push({label: i + 1, top: i * rowHeight})
   }
 
   return rows
 }
 
-const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
+const innerElementTypeRender = (
+  columns: HeaderColumns,
+  rows: any,
+  rowHeight: number,
+  isHeaderShown: boolean,
+  isRowNumberShown: boolean,
+) => ({
   children,
   //@ts-ignore
   style,
@@ -351,29 +396,42 @@ const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
 }) => {
   const [minColumn, maxColumn, minRow, maxRow] = getVisibleArea(children)
 
-  const headers = createHeaders(columns, minColumn, maxColumn)
+  let headers: HeaderCells = []
+  if (isHeaderShown) {
+    headers = createHeaders(columns, minColumn, maxColumn)
+  }
 
-  const stickyColumnRows = createStickyColumns(minRow, maxRow)
+  const stickyColumnRows = createStickyColumns(minRow, maxRow, rowHeight)
+
+  const extraColumnWidth = isRowNumberShown ? STICKY_COLUMN_WIDTH : 0
+
+  const extraGridHeight = isHeaderShown ? rowHeight : 0
 
   return (
     <GridContainer
-      height={style.height + ROW_HEIGHT}
-      width={style.width + STICKY_COLUMN_WIDTH}
+      height={style.height + extraGridHeight}
+      width={style.width + extraColumnWidth}
     >
-      <StickyHeader
-        columns={columns}
-        stickyColumnWidth={STICKY_COLUMN_WIDTH}
-        headers={headers}
-      />
-      <StickyColumn
-        stickyColumnRows={stickyColumnRows}
-        gridHeight={style.height}
-      />
+      {isHeaderShown && (
+        <StickyHeader
+          columns={columns}
+          stickyColumnWidth={extraColumnWidth}
+          headers={headers}
+          rowHeight={rowHeight}
+        />
+      )}
+      {isRowNumberShown && (
+        <StickyColumn
+          stickyColumnRows={stickyColumnRows}
+          gridHeight={style.height}
+          rowHeight={rowHeight}
+        />
+      )}
       <GridData
         style={{
           ...style,
-          top: ROW_HEIGHT,
-          left: STICKY_COLUMN_WIDTH,
+          top: extraGridHeight,
+          left: extraColumnWidth,
         }}
       >
         {children}
@@ -383,39 +441,112 @@ const innerElementTypeRender = (columns: HeaderColumns, rows: any) => ({
 }
 
 const GRID_PARENT_STYLE = {
-  // Black / 20
-  border: '1px solid #dbdde0',
+  outline: '1px solid #dbdde0',
 }
 
 interface TableProps {
   columns: {
-    label: string
+    label?: string
     width: number
+    canGrow?: boolean
   }[]
 
   rows: {
     cells: any[]
     onDoubleClick: () => void
     optionsMenu?: React.ReactNode
+    isDisabled?: boolean
   }[]
+
+  rowHeight?: number
+
+  isHeaderShown?: boolean
+
+  isRowNumberShown?: boolean
 
   hasNextPage: any
 
   isItemLoaded: any
 
   loadMoreItems: any
+
+  onFirstFetchComplete?: (rows: any) => void
+
+  gridOuterRef?: any
 }
 
 function Table({
   rows,
   columns,
+  rowHeight = ROW_HEIGHT,
+  isHeaderShown = true,
+  isRowNumberShown = true,
   hasNextPage,
   isItemLoaded,
   loadMoreItems,
+  onFirstFetchComplete = noop,
+  gridOuterRef,
 }: TableProps) {
-  const [selectedRow, setSelectedRow] = React.useState(null)
+  const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
+  const [selectedRow, setSelectedRow] = React.useState<any>({
+    rows,
+    columns: adjustedColumns,
+    isItemLoaded,
+  })
   const [isFirstFetched, setIsFirstFetched] = React.useState(false)
   const firstMountDatetime = React.useRef(Date.now())
+
+  const gridComponentRef = React.useRef<any>()
+
+  const outerRef = React.useRef<any>()
+
+  const stretchColumns = React.useCallback(() => {
+    if (isFirstFetched) {
+      return
+    }
+
+    const gridEl = outerRef.current
+    if (gridEl) {
+      const gridDimensions = gridEl.getBoundingClientRect()
+      const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
+      const gridWidth = gridDimensions.width - gridScrollWidth
+
+      const columnsTotalWidth = columns.reduce(
+        (a, b) => a + b.width,
+        isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
+      )
+
+      if (gridWidth > columnsTotalWidth) {
+        let totalExtraWidth = gridWidth - columnsTotalWidth
+
+        const growableColumnsCount = columns.reduce(
+          (a, b) => (b.canGrow ? a + 1 : a),
+          0,
+        )
+
+        const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+
+        const columnsUpdate = JSON.parse(JSON.stringify(columns))
+        for (const column of columnsUpdate) {
+          if (column.canGrow) {
+            let extraWidthForThisColumn = extraWidthForEachColumn
+            if (totalExtraWidth < extraWidthForEachColumn) {
+              extraWidthForThisColumn = totalExtraWidth
+            }
+            column.width += extraWidthForThisColumn
+            totalExtraWidth -= extraWidthForThisColumn
+          }
+        }
+
+        setAdjustedColumns(columnsUpdate)
+        setTimeout(() => {
+          if (gridComponentRef.current) {
+            gridComponentRef.current.resetAfterColumnIndex(0)
+          }
+        })
+      }
+    }
+  }, [isFirstFetched, columns, setAdjustedColumns, outerRef, gridComponentRef])
 
   useUpdate(() => {
     let deferred: any
@@ -434,7 +565,28 @@ function Table({
     }
   }, [rows])
 
-  const innerElementType = innerElementTypeRender(columns, rows)
+  useOneTime(
+    isFirstFetched,
+    () => {
+      onFirstFetchComplete(rows)
+    },
+    [isFirstFetched, setIsFirstFetched, onFirstFetchComplete, rows],
+  )
+
+  if (
+    gridOuterRef?.hasOwnProperty('current') &&
+    gridOuterRef.current !== outerRef.current
+  ) {
+    gridOuterRef.current = outerRef.current
+  }
+
+  const innerElementType = innerElementTypeRender(
+    adjustedColumns,
+    rows,
+    rowHeight,
+    isHeaderShown,
+    isRowNumberShown,
+  )
 
   const itemCount = hasNextPage ? rows.length + 1 : rows.length
 
@@ -453,25 +605,34 @@ function Table({
               {({onItemsRendered, ref}: any) => {
                 return (
                   <Grid
+                    // @ts-ignore
                     rowCount={itemCount}
-                    columnCount={columns.length}
-                    columnWidth={columnIndex => columns[columnIndex].width}
-                    rowHeight={() => ROW_HEIGHT}
+                    columnCount={adjustedColumns.length}
+                    columnWidth={columnIndex =>
+                      adjustedColumns[columnIndex].width
+                    }
+                    rowHeight={() => rowHeight}
                     height={height}
                     width={width}
                     innerElementType={innerElementType}
                     style={
                       isFirstFetched && rows.length
                         ? GRID_PARENT_STYLE
-                        : {display: 'none'}
+                        : {visibility: 'hidden'}
                     }
-                    itemData={{rows, columns, isItemLoaded}}
+                    itemData={{
+                      rows,
+                      columns: adjustedColumns,
+                      rowHeight,
+                      isItemLoaded,
+                    }}
                     onItemsRendered={({
                       visibleRowStartIndex,
                       visibleRowStopIndex,
                       overscanRowStartIndex,
                       overscanRowStopIndex,
                     }) => {
+                      stretchColumns()
                       onItemsRendered({
                         overscanStartIndex: overscanRowStartIndex,
                         overscanStopIndex: overscanRowStopIndex,
@@ -479,7 +640,11 @@ function Table({
                         visibleStopIndex: visibleRowStopIndex,
                       })
                     }}
-                    ref={ref}
+                    ref={(componentRef: any) => {
+                      ref(componentRef)
+                      gridComponentRef.current = componentRef
+                    }}
+                    outerRef={outerRef}
                   >
                     {Cell}
                   </Grid>

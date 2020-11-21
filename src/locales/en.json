@@ -1,0 +1,762 @@
+{
+  "GENERAL": {
+    "STRING_FORMAT": "en-US",
+    "COMPONENTS": {
+      "FILTERS_POPOVER": {
+        "BUTTON_TITLE": "Filters"
+      }
+    }
+  },
+  "PAGES": {
+    "MERCHANDISE": {
+      "TITLE": "Merchandise"
+    },
+    "PRODUCTS": {
+      "TITLE": "Products",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "REAL_PRICE": {
+            "TITLE": "Real Price",
+            "WIDTH": 90
+          },
+          "SALE_PRICE": {
+            "TITLE": "Sale Price",
+            "WIDTH": 90
+          },
+          "IN_STOCK": {
+            "TITLE": "In Stock",
+            "WIDTH": 90
+          },
+          "SOLD": {
+            "TITLE": "Sold",
+            "WIDTH": 90
+          },
+          "LAST_SOLD": {
+            "TITLE": "Last Sold",
+            "WIDTH": 130
+          },
+          "LAST_ACQUIRED": {
+            "TITLE": "Last Acquired",
+            "WIDTH": 110
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Lowest Bound",
+            "WIDTH": 110
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "Product type",
+            "OPTION_ALL": "All",
+            "OPTION_IN_STOCK": "In stock",
+            "OPTION_SOLD_OUT": "Sold out"
+          }
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_PRODUCT": "Add product",
+        "TITLE_EDIT_PRODUCT": "Edit product",
+        "INPUTS": {
+          "EXPECTED_COST": "Expected cost",
+          "COUNT": "Count"
+        }
+      }
+    },
+    "TO_BUY_LIST": {
+      "TITLE": "To Buy List",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SALE_PRICE": {
+            "TITLE": "Sale Price",
+            "WIDTH": 90
+          },
+          "LOWEST_BOUND": {
+            "TITLE": "Lowest Bound",
+            "WIDTH": 110
+          },
+          "STICKERS": {
+            "TITLE": "Stickers",
+            "WIDTH": 80
+          },
+          "SUPPLIER": {
+            "TITLE": "Supplier",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Executor",
+            "WIDTH": 150
+          },
+          "FROZEN": {
+            "TITLE": "Frozen",
+            "WIDTH": 65
+          },
+          "DATE": {
+            "TITLE": "Date",
+            "WIDTH": 100
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          }
+        },
+        "CELLS": {
+          "SUPPLIER": {
+            "BUTTON_TITLE": "Select supplier...",
+            "POPOVER_TITLE": "Select supplier"
+          },
+          "EXECUTOR": {
+            "BUTTON_TITLE": "Select executor...",
+            "POPOVER_TITLE": "Select executor"
+          }
+        },
+        "TOOLTIP": {
+          "NAME_BEFORE": "Before",
+          "MODEL_BEFORE": "After",
+          "PREVIOUS_PRICE": "Previous",
+          "IN_STOCK": "In stock"
+        }
+      },
+      "CONTROLS": {
+        "FUND_PANEL": {
+          "NEEDED": "Needed",
+          "BUDGET": "Budget",
+          "SPENT": "Spent",
+          "REMAINS": "Remains"
+        },
+        "ADD_PRODUCT": {
+          "POPOVER_TITLE": "Add product",
+          "BUTTON_TITLE": "Product",
+          "NO_RESULTS_BUTTON_TITLE": "Add new item"
+        },
+        "FILTERS": {
+          "LIST_TYPE": {
+            "TITLE": "List type",
+            "OPTION_ACTIVE": "Active",
+            "OPTION_HAVE_TO_BUY": "Have to buy",
+            "OPTION_BOUGHT": "Bought",
+            "OPTION_FROZEN": "Frozen"
+          }
+        },
+        "OPTIONS": {
+          "BUTTON_TITLE": "Options",
+          "PROCESS_BOUGHT_ITEMS": {
+            "TITLE": "Process bought items",
+            "MODAL_BUTTON_CONTINUE": "Continue",
+            "MODAL_BUTTON_CLOSE": "Close",
+            "MODAL_BUTTON_PRINT": "Print stickers",
+            "MODAL_WARNING": "Products are going to be added to the database. Operation cannot be interrupted.",
+            "MODAL_PRODUCTS": "Products",
+            "MODAL_STICKERS": "Stickers"
+          },
+
+          "PRINT_DOCUMENT": "Print document"
+        }
+      }
+    },
+    "ACQUISITIONS": {
+      "TITLE": "Acquisitions",
+      "TABLE": {
+        "COLUMNS": {
+          "DATE": {
+            "TITLE": "Date",
+            "WIDTH": 100
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SUPPLIER": {
+            "TITLE": "Supplier",
+            "WIDTH": 150
+          },
+          "EXECUTOR": {
+            "TITLE": "Executor",
+            "WIDTH": 150
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITION_ID": {
+            "TITLE": "AQID",
+            "WIDTH": 95
+          }
+        }
+      }
+    },
+    "SALES": {
+      "TITLE": "Sales",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": {
+            "TITLE": "Date",
+            "WIDTH": 160
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "SALE_PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "SALESPERSON": {
+            "TITLE": "Salesperson",
+            "WIDTH": 150
+          },
+          "CUSTOMER": {
+            "TITLE": "Customer",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
+        "FILTERS": {
+          "PERIOD": {
+            "TITLE": "Period",
+            "OPTION_ALL_TIME": "All time"
+          }
+        }
+      }
+    },
+    "STATS": {
+      "TITLE": "Stats",
+      "TABLE": {
+        "COLUMNS": {
+          "PERIOD": {
+            "TITLE": "Period",
+            "WIDTH": 80
+          },
+          "SOLD_SUM": {
+            "TITLE": "Sold Sum",
+            "WIDTH": 100
+          },
+          "INCOME_SUM": {
+            "TITLE": "Income Sum",
+            "WIDTH": 100
+          },
+          "SPENT_SUM": {
+            "TITLE": "Spent Sum",
+            "WIDTH": 100
+          }
+        }
+      }
+    },
+    "PERSONS_CONTROL": {
+      "TITLE": "Persons Control"
+    },
+    "USERS": {
+      "TITLE": "Users",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "GROUP": {
+            "TITLE": "Group",
+            "WIDTH": 150
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_USER": {
+          "BUTTON_TITLE": "User"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_USER": "Add user",
+        "TITLE_EDIT_USER": "Edit user",
+        "BUTTONS": {
+          "SEE_AUTHORIZATION_KEY": "See authorization key",
+          "GENERATE_NEW_KEY": "Generate new key"
+        },
+        "LABELS": {
+          "CREDENTIALS": "Credentials",
+          "USER_STATS": "User stats"
+        },
+        "TOASTER": {
+          "NEW_SECRET_KEY_GENERATION_SUCCESS": "New secret key was created. Don't forget to click 'Save' button"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": "Period",
+            "SOLD_SUM": "Sold Sum",
+            "INCOME_SUM": "Income Sum",
+            "SPENT_SUM": "Spent Sum"
+          }
+        }
+      }
+    },
+    "USER_GROUPS": {
+      "TITLE": "Groups",
+      "TABLE": {
+        "COLUMNS": {
+          "GROUP_NAME": {
+            "TITLE": "Group Name",
+            "WIDTH": 200
+          }
+        },
+        "OPTIONS": {
+          "EDIT": "Edit"
+        }
+      },
+      "CONTROLS": {
+        "ADD_GROUP": {
+          "BUTTON_TITLE": "Group"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_GROUP": "Add group",
+        "TITLE_EDIT_GROUP": "Edit group",
+        "INPUTS": {
+          "GROUP_NAME": "Group Name"
+        },
+        "PERMISSIONS": {
+          "PRODUCTS": {
+            "CAN_SEE_PRODUCTS": "Can see products",
+            "CAN_EDIT_PRODUCTS": "Can edit products"
+          },
+          "TO_BUY_LIST": {
+            "CAN_SEE_TO_BUY_LIST": "Can see to buy list",
+            "CAN_EDIT_ITEMS_IN_TO_BUY_LIST": "Can edit items in to buy list",
+            "CAN_ADD_ITEM_TO_BUY_LIST": "Can add items to buy list",
+            "CAN_PRINT_TO_BUY_LIST": "Can print to buy list",
+            "CAN_COMPLETE_TO_BUY_LIST": "Can process to buy list"
+          },
+          "ACQUISITIONS": {
+            "CAN_SEE_ACQUISITIONS": "Can see acquisitions"
+          },
+          "SALES": {
+            "CAN_SEE_SALES": "Can see sales",
+            "CAN_RETURN_SALES_ITEMS": "Can return sales items"
+          },
+          "USERS": {
+            "CAN_SEE_USERS": "Can see users",
+            "CAN_SEE_USER_PROFILE": "Can see user profile",
+            "CAN_SEE_OTHER_USER_SECRET_KEYS": "Can see other users secret keys"
+          },
+          "USER_GROUPS": {
+            "CAN_SEE_USER_GROUPS": "Can see user groups"
+          },
+          "STATS": {
+            "CAN_SEE_STATS": "Can see stats"
+          },
+          "CARTS": {
+            "CAN_SEE_CARTS": "Can see carts"
+          },
+          "CASHBOX": {
+            "CAN_SEE_CASHBOX": "Can see cashbox",
+            "CAN_PERFORM_CASHBOX_OPERATIONS": "Can perform cashbox operations"
+          },
+          "BACKUP": {
+            "CAN_EXPORT_DATA": "Can export data",
+            "CAN_IMPORT_DATA": "Can import data"
+          }
+        }
+      }
+    },
+    "SUPPLIERS": {
+      "TITLE": "Suppliers",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "ADDRESS": {
+            "TITLE": "Address",
+            "WIDTH": 200
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_SUPPLIER": {
+          "BUTTON_TITLE": "Supplier"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_SUPPLIER": "Add supplier",
+        "TITLE_EDIT_SUPPLIER": "Edit supplier",
+        "LABELS": {
+          "SUPPLIER_STATS": "Supplier stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Spent Sum",
+              "WIDTH": 100
+            }
+          }
+        }
+      }
+    },
+    "USER_PROFILE": {
+      "LOGOUT_BUTTON": "Log Out"
+    },
+    "SIGN_IN": {
+      "ALERT": {
+        "TITLE": "You are not authorized.",
+        "PLEASE": "Please",
+        "SCAN": "scan",
+        "YOUR_AUTH_KEY": "your authorization key to work with the app."
+      }
+    },
+    "CARTS": {
+      "TITLE": "Carts",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 150
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 170
+          },
+          "PRICE": {
+            "TITLE": "Price",
+            "WIDTH": 90
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "SUM": {
+            "TITLE": "Sum",
+            "WIDTH": 90
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "In Stock",
+          "REAL_PRICE": "Real Price",
+          "INCOME": "Income"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove"
+        },
+        "CELLS": {
+          "SELECT_COUNT": {
+            "MODAL_TITLE": "Edit Count",
+            "TABLE": {
+              "COLUMNS": {
+                "ACQUISITION_ID": {
+                  "WIDTH": 100
+                },
+                "COUNT": {
+                  "WIDTH": 60
+                },
+                "DELETE": {
+                  "WIDTH": 40
+                }
+              },
+              "TOOLTIP": {
+                "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
+                "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the cart."
+              }
+            }
+          }
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Carts",
+        "CHECKOUT": {
+          "TITLE": "Checkout",
+          "CONFIRM_BUTTON_TITLE": "Finish",
+          "SALE": {
+            "TITLE": "Sale",
+            "INPUTS": {
+              "PAID": "Paid",
+              "CHANGE": "Change",
+              "NEED": "Need"
+            }
+          },
+          "RETURN": {
+            "TITLE": "Return",
+            "SUM_TO_RETURN": "Sum to return",
+            "ALERT": {
+              "TITLE": "All selected items will be returned."
+            }
+          }
+        }
+      },
+      "CONTROLS": {
+        "CARTS_LIST": {
+          "CART_TITLE": "Cart"
+        },
+        "DELETE_CART": {
+          "BUTTON_TITLE": "Cart",
+          "DIALOG": {
+            "TITLE": "Delete Cart",
+            "CANCEL_LABEL": "Cancel",
+            "CONFIRM_LABEL": "Delete Cart",
+            "WARNING_TEXT": "Are you sure you want to delete the cart?"
+          }
+        },
+        "ADD_PRODUCT": {
+          "MODAL_TITLE": "Select Product",
+          "ADD_BUTTON": {
+            "TITLE": "Product"
+          }
+        },
+        "SELECT_PRODUCT": {
+          "SEARCH_PLACEHOLDER": "Product name or model...",
+          "TABLE": {
+            "COLUMNS": {
+              "NAME_MODEL": {
+                "WIDTH": 200
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              }
+            }
+          }
+        },
+        "SELECT_ACQUISITION": {
+          "RETURN_BACK_BUTTON": {
+            "TITLE": "Return back"
+          },
+          "TABLE": {
+            "COLUMNS": {
+              "ACQUISITION_ID": {
+                "WIDTH": 100
+              },
+              "IN_STOCK": {
+                "WIDTH": 70
+              },
+              "DATE": {
+                "WIDTH": 100
+              }
+            }
+          }
+        },
+        "SALESPERSON": {
+          "POPOVER_TITLE": "Select Salesperson",
+          "BUTTON_TITLE": "Salesperson"
+        },
+        "CUSTOMER": {
+          "POPOVER_TITLE": "Select Customer",
+          "BUTTON_TITLE": "Customer"
+        },
+        "TOTAL_SUM": {
+          "TITLE": "Total Sum"
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Confirm"
+        },
+        "SCANNER": {
+          "BUTTON_TITLE": "Scanner"
+        }
+      },
+      "TOASTER": {
+        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+      }
+    },
+    "CASHBOX": {
+      "TITLE": "Cashbox",
+      "TABLE": {
+        "COLUMNS": {
+          "TIME": {
+            "TITLE": "Time",
+            "WIDTH": 170
+          },
+          "AMOUNT": {"TITLE": "Amount", "WIDTH": 120},
+          "PERFORMER": {"TITLE": "Performer", "WIDTH": 145}
+        },
+        "TOOLTIP": {
+          "AMOUNT_BEFORE": "Before",
+          "AMOUNT_AFTER": "After"
+        }
+      },
+      "CONTROLS": {
+        "CURRENT_BALANCE": {
+          "TITLE": "Current Balance"
+        }
+      },
+      "INPUTS": {
+        "ACTION": "Action",
+        "SUM": "Sum",
+        "SUM_PLACEHOLDER": "max",
+        "OPTION_WITHDRAW": "Withdraw",
+        "OPTION_ADD": "Add",
+        "APPLY_BUTTON_TITLE": "Apply",
+        "CHANGE_BALANCE_BUTTON_TITLE": "Change Balance"
+      },
+      "TOASTER": {
+        "NOT_AUTHORIZED_TO_PERFORM": "You are not authorized to perform operations."
+      }
+    },
+    "GLOBAL_SCANNER": {
+      "BUTTON_TITLE": "Scanner",
+      "TOASTER": {
+        "PRODUCT_ADDED_TO_CART": "was added.",
+        "SUCCESSFULLY AUTHORIZED": "successfully authorized.",
+        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+      }
+    },
+    "SETTINGS": {
+      "TITLE": "Settings"
+    },
+    "GENERAL_SETTINGS": {
+      "TITLE": "General",
+      "INPUTS": {
+        "LANGUAGE": "Language"
+      },
+      "CONTROLS": {
+        "SAVE_BUTTON_TITLE": "Save"
+      },
+      "TOASTER": {
+        "CHANGES_SAVED": "Changes saved."
+      }
+    },
+    "BACKUP": {
+      "TITLE": "Backup",
+      "INPUTS": {
+        "ACTION": "Select Action",
+        "OPTION_IMPORT_DATA": "Import",
+        "OPTION_EXPORT_DATA": "Export"
+      },
+      "CONTROLS": {
+        "APPLY_BUTTON_TITLE": "Apply"
+      },
+      "TOASTER": {
+        "IMPORT_SUCCESS": "Data imported. Changes reflected.",
+        "EXPORT_SUCCESS": "Successfully created export file. Download should start soon."
+      }
+    },
+    "SETUP": {
+      "TITLE": "Setup",
+      "INPUTS": {
+        "LANGUAGE": "Language",
+        "GENERATE_DUMMY_DATA": "Generate dummy data"
+      },
+      "CONTROLS": {
+        "FINISH_BUTTON_TITLE": "Finish installation"
+      },
+      "TOASTER": {
+        "CHANGES_SAVED": "Changes saved."
+      },
+      "ALERTS": {
+        "WELCOME": {
+          "TITLE": "Welcome to ScrutinizeCRM",
+          "FIRST_ITEM": "In order to start working with the app please fill out forms below.",
+          "SECOND_ITEM": "If you want to just try the app better check \"Generate dummy data\""
+        }
+      }
+    }
+  }
+}

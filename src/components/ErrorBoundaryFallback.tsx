@@ -1,16 +1,16 @@
 import React from 'react'
 import {Alert} from 'evergreen-ui'
-import GlobalContext from '../contexts/globalContext'
+import {useDatabase} from '../utilities'
 
 export default function ErrorBoundaryFallback({
   error,
   resetErrorBoundary,
 }: any) {
-  const {worker} = React.useContext(GlobalContext)
+  const db = useDatabase()
 
   React.useEffect(() => {
-    if (worker) {
-      worker.sendEvent({type: 'saveError', payload: error})
+    if (db) {
+      db.sendEvent({type: 'saveError', payload: error})
     }
   }, [])
 

@@ -6,6 +6,7 @@ interface SideSheetComponentProps {
   isShown: boolean
   children: React.ReactNode
   onSaveButtonClick: () => void
+  onOpenComplete?: () => void
   onCloseComplete: () => void
   canSave?: boolean
 }
@@ -15,12 +16,14 @@ export default function SideSheetComponent({
   isShown,
   children,
   onSaveButtonClick,
+  onOpenComplete,
   onCloseComplete,
   canSave = true,
 }: SideSheetComponentProps) {
   return (
     <SideSheet
       isShown={isShown}
+      onOpenComplete={onOpenComplete}
       onCloseComplete={onCloseComplete}
       containerProps={{
         display: 'flex',

@@ -6,7 +6,20 @@ const CELL_WRAPPER_STYLE = {
   pointerEvents: 'all',
   position: 'absolute',
   zIndex: 21,
-  padding: '3px 4px 0 4px',
+  padding: 0,
+}
+
+const CELL_INPUT_STYLE = {
+  margin: 0,
+  height: '100%',
+  width: '100%',
+  padding: '0px 12px',
+  fontFamily: 'Roboto',
+  fontSize: '12px',
+  letterSpacing: '0.2px',
+  lineHeight: 0,
+  position: 'relative',
+  top: -1,
 }
 
 function CellInput({anchor}: any) {
@@ -35,12 +48,13 @@ function CellInput({anchor}: any) {
           }
         }}
         onBlur={handleSave}
+        style={CELL_INPUT_STYLE}
       />
     </div>
   )
 }
 
-function EditableCellInput({anchor}: any) {
+function EditableCellInput({anchor, gridOuterRef}: any) {
   const portalRef = React.useRef<HTMLDivElement | null | any>(null)
 
   React.useEffect(() => {
@@ -66,11 +80,11 @@ function EditableCellInput({anchor}: any) {
       return
     }
 
-    if (anchor && portalRef.current) {
-      body.style.pointerEvents = 'none'
+    if (anchor && portalRef.current && gridOuterRef) {
+      gridOuterRef.style.pointerEvents = 'none'
       portalRef.current.querySelector('input').focus()
-    } else {
-      body.style.pointerEvents = 'auto'
+    } else if (gridOuterRef) {
+      gridOuterRef.style.pointerEvents = 'auto'
     }
   }, [anchor])
 
