@@ -44,7 +44,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       {
         icon: <PieChartIcon color="grey" marginRight={4} />,
         label: FUND_PANEL.NEEDED,
-        value: Number(needed).toLocaleString(STRING_FORMAT),
+        value: needed && Number(needed).toLocaleString(STRING_FORMAT),
       },
       {
         icon: <BankAccountIcon color="orange" marginRight={4} />,
@@ -62,12 +62,12 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       {
         icon: <ArrowDownIcon color="red" marginRight={2} />,
         label: FUND_PANEL.SPENT,
-        value: Number(spent).toLocaleString(STRING_FORMAT),
+        value: spent && Number(spent).toLocaleString(STRING_FORMAT),
       },
       {
         icon: <TintIcon color="blue" marginRight={2} />,
         label: FUND_PANEL.REMAINS,
-        value: Number(remains).toLocaleString(STRING_FORMAT),
+        value: remains && Number(remains).toLocaleString(STRING_FORMAT),
       },
     ]
   }, [FUND_PANEL, computedBuyList])
