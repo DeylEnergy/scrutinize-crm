@@ -48,6 +48,7 @@ function AddProduct({handleSelectedProduct}: any) {
     setCurrentScreen({
       component: <SelectProduct handleProductSelect={handleProductSelect} />,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetScreen])
 
   return (

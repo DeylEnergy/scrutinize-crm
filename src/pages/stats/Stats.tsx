@@ -74,7 +74,7 @@ function Stats() {
         lastKey: newItems.length && newItems[newItems.length - 1].period,
       })
     })
-  }, [lastKey])
+  }, [db, lastKey, serializeItem])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE

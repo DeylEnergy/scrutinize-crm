@@ -115,7 +115,7 @@ function Sales() {
         })
       })
     },
-    [setLoadedItems],
+    [db, serializeItem],
   )
 
   const {from, to} = filterParams
@@ -123,11 +123,11 @@ function Sales() {
 
   const loadMoreItems = React.useCallback(() => {
     fetchItems({from, to, searchQuery, lastKey})
-  }, [from, to, searchQuery, lastKey])
+  }, [fetchItems, from, to, searchQuery, lastKey])
 
   React.useEffect(() => {
     fetchItems({from, to, searchQuery})
-  }, [from, to, searchQuery])
+  }, [from, to, searchQuery, fetchItems])
 
   const handleSearchQuery = React.useCallback(
     (value: string) => {

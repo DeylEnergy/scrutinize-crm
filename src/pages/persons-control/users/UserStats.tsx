@@ -85,7 +85,7 @@ function UserStats({userId}: any) {
           newItems.length && newItems[newItems.length - 1].userIdDatetime,
       })
     })
-  }, [lastKey])
+  }, [db, lastKey, serializeItem, userId])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = DRAWER.TABLE

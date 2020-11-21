@@ -1,5 +1,3 @@
-import {sep} from 'path'
-
 export default function recognizeQRCode(code: string) {
   if (typeof code !== 'string') {
     return []

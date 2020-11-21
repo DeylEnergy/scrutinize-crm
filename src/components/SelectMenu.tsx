@@ -58,7 +58,7 @@ function Header({
 
   const debouncedAsyncSearch = React.useMemo(() => {
     return debounce(asyncSearch, asyncSearchDebounceTimeMs)
-  }, [asyncSearch])
+  }, [asyncSearch, asyncSearchDebounceTimeMs])
 
   const handleChange = React.useCallback(
     (value: any) => {
@@ -111,11 +111,9 @@ function SelectMenu({
   options,
   selected,
   position = Position.BOTTOM_LEFT,
-  hasTitle,
   hasFilter = false,
   filterPlaceholder = 'Filter...',
   filterIcon = SearchIcon,
-  detailView,
   emptyView,
   titleView,
   isMultiSelect = false,
@@ -138,7 +136,7 @@ function SelectMenu({
       onFilterChange: onFilterChangeHandler,
       selected: arrify(selected),
     }),
-    [onSelectHandler, onDeselectHandler, onFilterChangeHandler],
+    [onFilterChangeHandler, selected, onSelectHandler, onDeselectHandler],
   )
 
   return (
@@ -170,7 +168,6 @@ function SelectMenu({
             titleView={titleView}
             listProps={listProps}
             close={close}
-            // {...getDetailView(close, detailView)}
             {...getEmptyView(close, emptyView)}
             // @ts-ignore
             closeOnSelect={closeOnSelect}

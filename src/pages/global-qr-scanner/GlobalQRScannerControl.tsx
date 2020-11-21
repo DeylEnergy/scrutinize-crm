@@ -65,7 +65,7 @@ function GlobalQRScannerControl(props: any) {
         toaster.warning(TOASTER.UNKNOWN_QR_CODE)
       }
     },
-    [db],
+    [TOASTER, db, setAccount, setGlobalScanner],
   )
 
   useScannerListener({

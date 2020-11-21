@@ -7,5 +7,6 @@ export default function useOneTime(cond: boolean, fn: () => void, deps: any[]) {
       fn()
       wasCalled.current = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }

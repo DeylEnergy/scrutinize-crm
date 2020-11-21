@@ -1,14 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
-import {
-  FaDatabase,
-  FaList,
-  FaQrcode,
-  FaChartBar,
-  FaUserCog,
-  FaCog,
-} from 'react-icons/fa'
+import {FaDatabase, FaList, FaChartBar, FaUserCog, FaCog} from 'react-icons/fa'
 import {Tooltip} from 'evergreen-ui'
 import IconButton from '../components/IconButton'
 import Carts from '../pages/carts'

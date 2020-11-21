@@ -1,5 +1,5 @@
 import React from 'react'
-import {SideSheet, Pane, Card, Heading, Button} from 'evergreen-ui'
+import {SideSheet, Pane, Heading, Button} from 'evergreen-ui'
 
 interface SideSheetComponentProps {
   title: string

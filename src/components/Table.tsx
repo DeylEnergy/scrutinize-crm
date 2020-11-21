@@ -546,7 +546,7 @@ function Table({
         })
       }
     }
-  }, [isFirstFetched, columns, setAdjustedColumns, outerRef, gridComponentRef])
+  }, [isFirstFetched, columns, isRowNumberShown])
 
   useUpdate(() => {
     let deferred: any

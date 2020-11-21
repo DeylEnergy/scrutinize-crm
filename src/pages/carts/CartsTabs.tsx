@@ -79,12 +79,12 @@ export default function CartsTabs({
         setState(stateUpdate)
       }, 1000)
     })
-  }, [tabs, excludeCart, setState])
+  }, [tabs, CARTS_LIST, setState, db, user.id, excludeCart])
 
   const completeCartDelete = React.useCallback(() => {
     const stateUpdate = excludeCart(tabs, selectedCartId)
     setState(stateUpdate)
-  }, [tabs, selectedCartId])
+  }, [excludeCart, tabs, selectedCartId, setState])
 
   React.useEffect(() => {
     db.getRows({
@@ -101,6 +101,7 @@ export default function CartsTabs({
         })),
       })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -27,7 +27,7 @@ const OPERATION_ICON_STYLE = {
   top: 3,
 }
 
-function CashboxHistory({}: any) {
+function CashboxHistory() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CASHBOX
@@ -95,7 +95,7 @@ function CashboxHistory({}: any) {
         cells: [operationTimeCell, amountCell, item?._user?.name],
       }
     },
-    [STRING_FORMAT],
+    [STRING_FORMAT, TABLE],
   )
 
   const isItemLoaded = React.useCallback(
@@ -124,7 +124,7 @@ function CashboxHistory({}: any) {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [loadedItems.items])
+  }, [db, loadedItems, serializeItem])
 
   const handleCashboxOperation = React.useCallback(
     ({actionType, sumValue}: any) => {
@@ -153,7 +153,7 @@ function CashboxHistory({}: any) {
           setCurrentBalance(updatedCashboxValue)
         })
     },
-    [loadedItems.items, setLoadedItems, serializeItem, user],
+    [user, db, PAGE_CONST, serializeItem, loadedItems.items],
   )
 
   const columns = React.useMemo(() => {

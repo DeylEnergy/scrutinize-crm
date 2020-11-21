@@ -75,6 +75,7 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
       postponeInactive.clear()
       clearSt()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const {camera, scanArea} = cameraSize
@@ -125,6 +126,7 @@ function QRScannerWrapper({
 
       setCameraSize({camera, scanArea})
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleInactive = React.useCallback(() => {

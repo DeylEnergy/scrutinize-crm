@@ -44,7 +44,7 @@ export default function PersonsControl() {
         path: SUPPLIERS_PATH,
       },
     ]
-  }, [USERS_CONST, USER_GROUPS_CONST])
+  }, [SUPPLIERS_CONST, USERS_CONST, USER_GROUPS_CONST])
 
   return (
     <Block ratio={1}>

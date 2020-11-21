@@ -55,7 +55,7 @@ export default function Merchandise() {
     }
 
     return allowedTabs
-  }, [PAGES, permissions, setRedirectToLink])
+  }, [PAGES, canSeeBackup])
 
   return (
     <Block ratio={1}>

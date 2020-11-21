@@ -64,36 +64,39 @@ function Groups() {
     SIDE_SHEET_DEFAULT,
   )
 
-  const serializeItem = React.useCallback(item => {
-    const editSideSheet = () => {
-      setSideSheet({
-        value: JSON.parse(JSON.stringify(item)),
-        isShown: true,
-      })
-    }
+  const serializeItem = React.useCallback(
+    item => {
+      const editSideSheet = () => {
+        setSideSheet({
+          value: JSON.parse(JSON.stringify(item)),
+          isShown: true,
+        })
+      }
 
-    return {
-      id: item.id,
-      cells: [item.name],
-      onDoubleClick: editSideSheet,
-      optionsMenu: (
-        <Popover
-          content={
-            <Menu>
-              <Menu.Group>
-                <Menu.Item onSelect={() => {}} icon={EditIcon}>
-                  {PAGE_CONST.TABLE.OPTIONS.EDIT}
-                </Menu.Item>
-              </Menu.Group>
-            </Menu>
-          }
-          position={Position.BOTTOM_RIGHT}
-        >
-          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
-        </Popover>
-      ),
-    }
-  }, [])
+      return {
+        id: item.id,
+        cells: [item.name],
+        onDoubleClick: editSideSheet,
+        optionsMenu: (
+          <Popover
+            content={
+              <Menu>
+                <Menu.Group>
+                  <Menu.Item onSelect={() => {}} icon={EditIcon}>
+                    {PAGE_CONST.TABLE.OPTIONS.EDIT}
+                  </Menu.Item>
+                </Menu.Group>
+              </Menu>
+            }
+            position={Position.BOTTOM_RIGHT}
+          >
+            <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+          </Popover>
+        ),
+      }
+    },
+    [PAGE_CONST],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {
@@ -160,7 +163,7 @@ function Groups() {
         setTimeout(() => setSideSheet({isShown: false}))
       })
     },
-    [db, serializeItem],
+    [account.groupId, db, serializeItem, setAccount],
   )
 
   const columns = React.useMemo(() => {

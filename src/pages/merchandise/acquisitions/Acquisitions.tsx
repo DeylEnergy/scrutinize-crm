@@ -68,7 +68,7 @@ function Acquisitions() {
         lastKey: newItems.length && newItems[newItems.length - 1].datetime,
       })
     })
-  }, [loadedItems.items])
+  }, [db, loadedItems.items, loadedItems.lastKey, serializeItem])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE

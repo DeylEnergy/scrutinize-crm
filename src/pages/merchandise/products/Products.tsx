@@ -124,61 +124,64 @@ function Products() {
     SIDE_SHEET_DEFAULT,
   )
 
-  const serializeItem = React.useCallback(item => {
-    const editSideSheet = () => {
-      setSideSheet({
-        value: JSON.parse(JSON.stringify(item)),
-        isShown: true,
-      })
-    }
+  const serializeItem = React.useCallback(
+    item => {
+      const editSideSheet = () => {
+        setSideSheet({
+          value: JSON.parse(JSON.stringify(item)),
+          isShown: true,
+        })
+      }
 
-    const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
+      const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
 
-    const realPriceCell = Number(item.realPrice).toLocaleString(STRING_FORMAT)
+      const realPriceCell = Number(item.realPrice).toLocaleString(STRING_FORMAT)
 
-    const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+      const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
 
-    const localeSoldDate = getLocaleTimeString(
-      item.lastSoldDatetime,
-      STRING_FORMAT,
-    )
-    const lastSoldTimeCell =
-      localeSoldDate && `${localeSoldDate.date} ${localeSoldDate.time}`
+      const localeSoldDate = getLocaleTimeString(
+        item.lastSoldDatetime,
+        STRING_FORMAT,
+      )
+      const lastSoldTimeCell =
+        localeSoldDate && `${localeSoldDate.date} ${localeSoldDate.time}`
 
-    return {
-      id: item.id,
-      isDisabled: item.inStockCount <= 0,
-      cells: [
-        item.nameModel[0],
-        item.nameModel[1],
-        realPriceCell,
-        salePriceCell,
-        item.inStockCount,
-        item.soldCount,
-        lastSoldTimeCell,
-        new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
-        item.lowestBoundCount,
-        item.id.split('-')[0],
-      ],
-      onDoubleClick: (canEditProducts && editSideSheet) || null,
-      optionsMenu: canEditProducts && (
-        <Popover
-          content={
-            <Menu>
-              <Menu.Group>
-                <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
-                  Edit
-                </Menu.Item>
-              </Menu.Group>
-            </Menu>
-          }
-          position={Position.BOTTOM_RIGHT}
-        >
-          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
-        </Popover>
-      ),
-    }
-  }, [])
+      return {
+        id: item.id,
+        isDisabled: item.inStockCount <= 0,
+        cells: [
+          item.nameModel[0],
+          item.nameModel[1],
+          realPriceCell,
+          salePriceCell,
+          item.inStockCount,
+          item.soldCount,
+          lastSoldTimeCell,
+          new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
+          item.lowestBoundCount,
+          item.id.split('-')[0],
+        ],
+        onDoubleClick: (canEditProducts && editSideSheet) || null,
+        optionsMenu: canEditProducts && (
+          <Popover
+            content={
+              <Menu>
+                <Menu.Group>
+                  <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
+                    Edit
+                  </Menu.Item>
+                </Menu.Group>
+              </Menu>
+            }
+            position={Position.BOTTOM_RIGHT}
+          >
+            <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+          </Popover>
+        ),
+      }
+    },
+    [STRING_FORMAT, permissions],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {
@@ -209,7 +212,7 @@ function Products() {
         })
       })
     },
-    [setLoadedItems, filterBy, STRING_FORMAT],
+    [db, filterBy, serializeItem, loadedItems],
   )
 
   const {lastKey} = loadedItems

@@ -67,7 +67,7 @@ function SelectAcquisition({
         style: CELL_STYLE,
       }
     },
-    [STRING_FORMAT],
+    [STRING_FORMAT, handleAcquisitionSelect],
   )
 
   const isItemLoaded = React.useCallback(
@@ -98,7 +98,7 @@ function SelectAcquisition({
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [productId, loadedItems.items])
+  }, [db, loadedItems, productId, serializeItem])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
