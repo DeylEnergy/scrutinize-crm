@@ -46,7 +46,15 @@ const dbWorker = (() => {
   }, {})
 })()
 
-console.log(dbWorker)
+// console.log(dbWorker)
+
+const APP_WRAPPER_STYLE: any = {
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100vh',
+  width: '100%',
+  boxSizing: 'border-box',
+}
 
 const App = () => {
   const [{permissions}] = useAccount()
@@ -61,15 +69,7 @@ const App = () => {
     permissions?.includes(RIGHTS.CAN_SEE_USER_GROUPS)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-    >
+    <div style={APP_WRAPPER_STYLE}>
       <Router>
         <Header />
         <Switch>
