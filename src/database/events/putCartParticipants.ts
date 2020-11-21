@@ -5,7 +5,7 @@ import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 
-export default async function putAcquisition({
+export default async function putCartParticipants({
   type,
   payload,
   emitEvent = true,

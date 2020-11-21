@@ -4,7 +4,7 @@ import {STORE_NAME as SN} from '../../constants'
 import sendEvent from './index'
 import {PUT_BUDGET} from '../../constants/events'
 
-export default async function completeAcquisition({
+export default async function recomputeBudget({
   store = null,
   payload,
 }: any) {

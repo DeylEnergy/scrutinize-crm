@@ -15,7 +15,7 @@ import send from './index'
 
 import pushEvents from '../pushEvents'
 
-export default async function process() {
+export default async function processAcquisitions() {
   const boughtProducts = await getFullIndexStore({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,

@@ -6,7 +6,7 @@ import {getRowFromStore} from '../queries'
 import saveEvent from './saveEvent'
 import {PUT_USER} from '../../constants/events'
 
-export default async function putGroup({
+export default async function putUser({
   store = null,
   type,
   payload,

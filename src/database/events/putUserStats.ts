@@ -10,7 +10,7 @@ import {
 } from '../../constants/events'
 import {getRowFromStore} from '../queries'
 
-export default async function putUserStat({
+export default async function putUserStats({
   store = null,
   type,
   payload,
