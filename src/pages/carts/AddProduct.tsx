@@ -1,7 +1,9 @@
-import React, {Suspense} from 'react'
+import React from 'react'
 import {Button, AddIcon} from 'evergreen-ui'
 import {useLocale, withErrorBoundary} from '../../utilities'
 import ModalPopover from '../../components/ModalPopover'
+import SelectProduct from './SelectProduct'
+import SelectAcquisition from './SelectAcquisition'
 
 const MODAL_POPOVER_SIZE = {
   width: 290,
@@ -29,16 +31,13 @@ function AddProduct({handleSelectedProduct}: any) {
 
   const handleProductSelect = React.useCallback(
     (productId: string) => {
-      const SelectAcquisition = React.lazy(() => import('./SelectAcquisition'))
       setCurrentScreen({
         component: (
-          <Suspense fallback={<div />}>
-            <SelectAcquisition
-              productId={productId}
-              handleAcquisitionSelect={handleAcquisitionSelect}
-              handleReturnBack={handleResetScreen}
-            />
-          </Suspense>
+          <SelectAcquisition
+            productId={productId}
+            handleAcquisitionSelect={handleAcquisitionSelect}
+            handleReturnBack={handleResetScreen}
+          />
         ),
       })
     },
@@ -46,13 +45,8 @@ function AddProduct({handleSelectedProduct}: any) {
   )
 
   React.useEffect(() => {
-    const SelectProduct = React.lazy(() => import('./SelectProduct'))
     setCurrentScreen({
-      component: (
-        <Suspense fallback={<div />}>
-          <SelectProduct handleProductSelect={handleProductSelect} />
-        </Suspense>
-      ),
+      component: <SelectProduct handleProductSelect={handleProductSelect} />,
     })
   }, [resetScreen])
 
