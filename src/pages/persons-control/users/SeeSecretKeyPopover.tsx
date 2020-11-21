@@ -35,7 +35,7 @@ function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
           height={200}
           width={200}
         >
-          <img src={authKey} height="100%" width="100%" />
+          <img src={authKey} height="100%" width="100%" alt="Auth key" />
         </Pane>
       }
       position={Position.TOP}

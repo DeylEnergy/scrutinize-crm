@@ -5,7 +5,6 @@ import {
   TrashIcon,
   toaster,
   Button,
-  Pane,
 } from 'evergreen-ui'
 import {useLocale, useTasksAfterUpdate} from '../../utilities'
 import Table from '../../components/Table'
@@ -22,7 +21,6 @@ const CELL_STYLE = {justifyContent: 'center'}
 
 function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
   const [locale] = useLocale()
-  const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS.TABLE.CELLS.SELECT_COUNT
   const {TABLE} = PAGE_CONST
 
@@ -149,7 +147,7 @@ function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
         cells: [item._acquisitionId.split('-')[0], countCell, deleteCell],
       }
     },
-    [STRING_FORMAT, TABLE],
+    [TABLE, addTask, latestData],
   )
 
   const isItemLoaded = React.useCallback(
@@ -169,7 +167,7 @@ function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
     }
 
     setLoadedItems(updatedLoadedItems)
-  }, [loadedItems.items])
+  }, [loadedItems, selectedAcquisitions, serializeItem])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
@@ -218,13 +216,13 @@ function SelectCount({
     if (gridOuterRef.current) {
       gridOuterRef.current.style.pointerEvents = 'auto'
     }
-  }, [updateSelectedAcquisitions])
+  }, [gridOuterRef, updateSelectedAcquisitions])
 
   const handleOpen = React.useCallback(() => {
     if (gridOuterRef.current) {
       gridOuterRef.current.style.pointerEvents = 'none'
     }
-  }, [])
+  }, [gridOuterRef])
 
   return (
     <ModalPopover

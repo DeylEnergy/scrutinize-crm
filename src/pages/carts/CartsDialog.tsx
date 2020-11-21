@@ -2,7 +2,7 @@ import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
 import {useLocale, useDatabase} from '../../utilities'
-import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
+import {STORE_NAME as SN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
 

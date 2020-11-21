@@ -92,7 +92,7 @@ function ToBuy() {
   React.useEffect(() => {
     // fetch computation of buy list
     fetchComputedOfToBuyList()
-  }, [db])
+  }, [db, fetchComputedOfToBuyList])
 
   const serializeItem = React.useCallback(
     (item: any) => {
@@ -370,7 +370,15 @@ function ToBuy() {
         ],
       }
     },
-    [filterBy, TABLE, STRING_FORMAT],
+    [
+      permissions,
+      TABLE,
+      STRING_FORMAT,
+      db,
+      filterBy,
+      addTask,
+      fetchComputedOfToBuyList,
+    ],
   )
 
   const isItemLoaded = React.useCallback(
@@ -398,7 +406,7 @@ function ToBuy() {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [loadedItems.items, filterBy])
+  }, [db, filterBy, serializeItem, loadedItems])
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
     setSideSheet(SIDE_SHEET_DEFAULT)
@@ -428,7 +436,7 @@ function ToBuy() {
         fetchComputedOfToBuyList()
       })
     },
-    [itemsRef],
+    [db, fetchComputedOfToBuyList, serializeItem],
   )
 
   const handleNewProduct = React.useCallback(
@@ -455,7 +463,7 @@ function ToBuy() {
         })
       })
     },
-    [db],
+    [db, fetchComputedOfToBuyList, serializeItem],
   )
 
   const handleFilterChange = React.useCallback(
@@ -493,7 +501,7 @@ function ToBuy() {
       {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
     ]
-  }, [])
+  }, [PAGE_CONST])
 
   const hasBoughtItems = computedBuyList?.spent > 0
 

@@ -13,7 +13,7 @@ const LIST_STYLE = {
 
 function Settings() {
   const [locale, setLocale] = useLocale()
-  const {INPUTS, CONTROLS, TOASTER, ALERTS} = locale.vars.PAGES.SETUP
+  const {INPUTS, CONTROLS, ALERTS} = locale.vars.PAGES.SETUP
 
   const [isDummyData, setIsDummyData] = React.useState(false)
 

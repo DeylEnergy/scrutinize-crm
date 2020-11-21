@@ -86,7 +86,7 @@ function EditableCellInput({anchor, gridOuterRef}: any) {
     } else if (gridOuterRef) {
       gridOuterRef.style.pointerEvents = 'auto'
     }
-  }, [anchor])
+  }, [anchor, gridOuterRef])
 
   return (
     anchor &&

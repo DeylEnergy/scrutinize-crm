@@ -59,7 +59,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
 
   React.useEffect(() => {
     db.getRows({storeName: SN.GROUPS}).then(setGroups)
-  }, [])
+  }, [db])
 
   const handleAvatarUpload = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +93,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
   const handleGenerateSecretKey = React.useCallback(() => {
     setSecretKey(uuidv4())
     toaster.success(DRAWER.TOASTER.NEW_SECRET_KEY_GENERATION_SUCCESS)
-  }, [setSecretKey])
+  }, [DRAWER])
 
   const handleStatsDisplay = React.useCallback(() => {
     setIsStatsShown(true)

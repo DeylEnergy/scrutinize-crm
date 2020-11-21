@@ -113,13 +113,13 @@ export default function CheckoutDialog({
     }
 
     return allowedTabs
-  }, [CHECKOUT, RIGHTS])
+  }, [CHECKOUT, permissions])
 
   const handleConfirm = React.useCallback(() => {
     db.sendEvent({type: selectedAction, payload: {cartId}}).then(
       handleCheckoutSuccess,
     )
-  }, [cartId, selectedAction])
+  }, [cartId, db, handleCheckoutSuccess, selectedAction])
 
   return (
     <Dialog

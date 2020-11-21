@@ -130,18 +130,18 @@ function Users() {
         })
       })
     },
-    [setLoadedItems],
+    [db, serializeItem],
   )
 
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
     fetchItems({lastKey, searchQuery})
-  }, [lastKey, searchQuery])
+  }, [fetchItems, lastKey, searchQuery])
 
   React.useEffect(() => {
     fetchItems({searchQuery})
-  }, [searchQuery])
+  }, [fetchItems, searchQuery])
 
   const handleSearchQuery = React.useCallback(
     (value: string) => {

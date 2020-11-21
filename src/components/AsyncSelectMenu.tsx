@@ -18,20 +18,23 @@ function AsyncSelectMenu({
   const searchValue = React.useRef<any>('')
   const searchFn = db.search
 
-  const searchQuery = React.useCallback((value: any) => {
-    searchFn({storeName, type: 'search', query: value}).then((res: any) => {
-      setOptions(res ? res : [])
-    })
-  }, [])
+  const searchQuery = React.useCallback(
+    (value: any) => {
+      searchFn({storeName, type: 'search', query: value}).then((res: any) => {
+        setOptions(res ? res : [])
+      })
+    },
+    [searchFn, storeName],
+  )
 
   const handleOpen = React.useCallback(() => {
     searchFn({storeName, type: 'init', filterFor}).then(setOptions)
-  }, [])
+  }, [filterFor, searchFn, storeName])
 
   const handleCloseComplete = React.useCallback(() => {
     setOptions([])
     searchFn({storeName, type: 'discard'})
-  }, [])
+  }, [searchFn, storeName])
 
   return (
     <SelectMenu

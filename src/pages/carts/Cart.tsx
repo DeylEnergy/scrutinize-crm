@@ -65,7 +65,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
   React.useEffect(() => {
     fetchComputedCartSum()
-  }, [db])
+  }, [db, fetchComputedCartSum])
 
   const deleteSaleItem = React.useCallback(
     (id: string) => {
@@ -81,7 +81,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         }
       })
     },
-    [db, itemsRef.current, setLoadedItems, fetchComputedCartSum],
+    [db, setLoadedItems, fetchComputedCartSum],
   )
 
   const serializeItem = React.useCallback(
@@ -275,7 +275,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         optionsMenu,
       }
     },
-    [addTask, STRING_FORMAT],
+    [TABLE, STRING_FORMAT, db, addTask, fetchComputedCartSum, deleteSaleItem],
   )
 
   const isItemLoaded = React.useCallback(
@@ -302,7 +302,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [])
+  }, [cartId, db, loadedItems, serializeItem])
 
   const refetchAll = React.useCallback(() => {
     fetchAcquisitions()
@@ -324,7 +324,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         consumer: 'client',
       }).then(refetchAll)
     },
-    [refetchAll],
+    [cartId, db, refetchAll],
   )
 
   const handleNewScannedProduct = React.useCallback(
@@ -338,7 +338,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE)
       }
     },
-    [db, handleSelectedProduct],
+    [PAGE_CONST, db, handleSelectedProduct],
   )
 
   useScannerListener({

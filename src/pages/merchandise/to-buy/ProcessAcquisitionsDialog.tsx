@@ -91,7 +91,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
     }
 
     return () => setState({data: null})
-  }, [isShown])
+  }, [db, isShown])
 
   const {
     acquisitionsProcessing,

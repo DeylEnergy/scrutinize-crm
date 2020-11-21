@@ -12,7 +12,7 @@ export default function ErrorBoundaryFallback({
     if (db) {
       db.sendEvent({type: 'saveError', payload: error})
     }
-  }, [])
+  }, [db, error])
 
   const handleReset = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault()

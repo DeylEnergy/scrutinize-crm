@@ -23,7 +23,7 @@ function Options({period, handleFilterChange}: any) {
       direction: 'prev',
       format: 'periods',
     }).then(setPeriodOptions)
-  }, [])
+  }, [db])
 
   return (
     <SelectField

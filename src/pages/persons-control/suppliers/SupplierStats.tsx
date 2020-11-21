@@ -85,7 +85,7 @@ function SupplierStats({supplierId}: any) {
           newItems.length && newItems[newItems.length - 1].userIdDatetime,
       })
     })
-  }, [lastKey])
+  }, [db, lastKey, serializeItem, supplierId])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = DRAWER.TABLE

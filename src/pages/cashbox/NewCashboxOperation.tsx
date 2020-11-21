@@ -30,7 +30,7 @@ function Form({currentBalance, handleCashboxOperation, handleSuccess}: any) {
 
   const handleApply = React.useCallback(() => {
     handleCashboxOperation({actionType, sumValue}).then(handleSuccess)
-  }, [actionType, sumValue, handleCashboxOperation])
+  }, [handleCashboxOperation, actionType, sumValue, handleSuccess])
 
   return (
     <>

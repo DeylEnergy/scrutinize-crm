@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Pane, FollowerIcon, FollowingIcon} from 'evergreen-ui'
+import {Button, FollowerIcon, FollowingIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
 import {useLocale, useDatabase, handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
@@ -33,7 +33,8 @@ function CartParticipants({selectedCartId}: any) {
         _customerId,
       })
     })
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [db])
 
   const updateCartParticipants = React.useCallback(
     (updatedParticipant: any) => {
@@ -45,18 +46,21 @@ function CartParticipants({selectedCartId}: any) {
         },
       })
     },
-    [selectedCartId],
+    [db, selectedCartId],
   )
 
-  const handleUserSelect = React.useCallback(async ({value, label}: any) => {
-    const [, error] = await handleAsync(
-      updateCartParticipants({_userId: value}),
-    )
+  const handleUserSelect = React.useCallback(
+    async ({value, label}: any) => {
+      const [, error] = await handleAsync(
+        updateCartParticipants({_userId: value}),
+      )
 
-    if (!error) {
-      setCartParticipants({_userId: value, _userName: label})
-    }
-  }, [])
+      if (!error) {
+        setCartParticipants({_userId: value, _userName: label})
+      }
+    },
+    [updateCartParticipants],
+  )
 
   const handleCustomerSelect = React.useCallback(
     async ({value, label}: any) => {
@@ -71,7 +75,7 @@ function CartParticipants({selectedCartId}: any) {
         })
       }
     },
-    [],
+    [updateCartParticipants],
   )
 
   const salespersonButton = React.useMemo(() => {
@@ -84,7 +88,7 @@ function CartParticipants({selectedCartId}: any) {
         {cartParticipants?._userName || CONTROLS.SALESPERSON.BUTTON_TITLE}
       </Button>
     )
-  }, [cartParticipants?._userName])
+  }, [CONTROLS, cartParticipants])
 
   const customerButton = React.useMemo(() => {
     return (
@@ -92,7 +96,7 @@ function CartParticipants({selectedCartId}: any) {
         {cartParticipants?._customerName || CONTROLS.CUSTOMER.BUTTON_TITLE}
       </Button>
     )
-  }, [cartParticipants?._customerName])
+  }, [CONTROLS, cartParticipants])
 
   if (!hasLoaded) {
     return null

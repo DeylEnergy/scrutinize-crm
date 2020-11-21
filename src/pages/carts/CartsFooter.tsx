@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Pane} from 'evergreen-ui'
 import CartParticipants from './CartParticipants'
 import QrScannerPopover from '../../components/QrScannerPopover'
-import {useLocale, useGlobalScanner, useScannerListener} from '../../utilities'
+import {useLocale, useGlobalScanner} from '../../utilities'
 import {SPACING} from '../../constants'
 
 const FOOTER_SUM_STYLE = {

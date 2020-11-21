@@ -47,16 +47,19 @@ function SelectProduct({handleProductSelect}: any) {
 
   const [searchQuery, setSearchQuery] = React.useState('')
 
-  const serializeItem = React.useCallback(item => {
-    const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+  const serializeItem = React.useCallback(
+    item => {
+      const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
 
-    return {
-      id: item.id,
-      cells: [item.nameModel.join(' '), salePriceCell],
-      onClick: () => handleProductSelect(item.id),
-      style: CELL_STYLE,
-    }
-  }, [])
+      return {
+        id: item.id,
+        cells: [item.nameModel.join(' '), salePriceCell],
+        onClick: () => handleProductSelect(item.id),
+        style: CELL_STYLE,
+      }
+    },
+    [STRING_FORMAT, handleProductSelect],
+  )
 
   const isItemLoaded = React.useCallback(
     index => {
@@ -87,7 +90,7 @@ function SelectProduct({handleProductSelect}: any) {
         })
       })
     },
-    [setLoadedItems, STRING_FORMAT],
+    [db, serializeItem, loadedItems],
   )
 
   const {lastKey} = loadedItems
@@ -98,7 +101,7 @@ function SelectProduct({handleProductSelect}: any) {
 
   const debouncedFetch = React.useMemo(() => {
     return debounce(fetchItems)
-  }, [])
+  }, [fetchItems])
 
   useUpdate(() => {
     debouncedFetch({searchQuery})

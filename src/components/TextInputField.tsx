@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, TextInputField, TextInputFieldProps} from 'evergreen-ui'
+import {TextInput, TextInputField} from 'evergreen-ui'
 
 function filterNumbers(value: string) {
   return value.replace(/\D/g, '')

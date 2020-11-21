@@ -34,12 +34,11 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
           .then(fetchComputedOfToBuyList)
       }
     },
-    [db],
+    [db, fetchComputedOfToBuyList],
   )
 
-  const {budget, needed, spent, remains} = computedBuyList
-
   const fundPanelItems = React.useMemo(() => {
+    const {budget, needed, spent, remains} = computedBuyList
     return [
       {
         icon: <PieChartIcon color="grey" marginRight={4} />,
@@ -70,7 +69,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
         value: remains && Number(remains).toLocaleString(STRING_FORMAT),
       },
     ]
-  }, [FUND_PANEL, computedBuyList])
+  }, [FUND_PANEL, STRING_FORMAT, computedBuyList, onSaveBudget])
 
   return (
     <Pane display="inline-flex" alignItems="flex-end">
