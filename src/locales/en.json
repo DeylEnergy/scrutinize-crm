@@ -82,7 +82,7 @@
       "TABLE": {
         "COLUMNS": {
           "DONE": {
-            "TITLE": "Done",
+            "TITLE": "",
             "WIDTH": 50
           },
           "NAME": {
@@ -509,7 +509,7 @@
       "TABLE": {
         "COLUMNS": {
           "DONE": {
-            "TITLE": "Done",
+            "TITLE": "",
             "WIDTH": 50
           },
           "NAME": {
