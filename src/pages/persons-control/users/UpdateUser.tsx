@@ -126,6 +126,12 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     user?.id === doc.id ||
     permissions.includes(RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS)
 
+  React.useEffect(() => {
+    if (!doc.id) {
+      setInput({futureId: uuidv4()})
+    }
+  }, [doc.id])
+
   return (
     <SideSheet
       title={userExists ? DRAWER.TITLE_EDIT_USER : DRAWER.TITLE_NEW_USER}
@@ -205,7 +211,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             marginBottom={SPACING * 1.5}
           >
             <SeeSecretKeyPopover
-              userName={input.name}
+              userId={doc.id ?? doc.futureId}
               secretKey={secretKey}
               disabled={!canBeSaved}
             />
