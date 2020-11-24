@@ -1,8 +1,8 @@
 import {getRowFromStore} from '../../queries'
-import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
+import {STORE_NAME as SN} from '../../../constants'
 import {handleAsync} from '../../../utilities'
 
-export default async function authorize({userId, secretKey}: any) {
+export default async function authorization({userId, secretKey}: any) {
   const [user] = await handleAsync(getRowFromStore(SN.USERS, userId))
 
   if (user?.secretKey === secretKey) {
