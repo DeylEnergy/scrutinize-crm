@@ -28,6 +28,7 @@ function GlobalQRScannerControl(props: any) {
           const productToAdd = {
             count: 1,
             _productId: aq._productId,
+            _acquisitionId: aq.id,
           }
 
           db.sendEvent({
@@ -40,12 +41,12 @@ function GlobalQRScannerControl(props: any) {
           })
         })
       } else if (prefix === codePrefixes.users) {
-        const [userName, secretKey] = data.split('__')
+        const [userId, secretKey] = data.split('__')
 
         db.perform({
           storeName: SN.USERS,
           action: 'authorization',
-          params: {userName, secretKey},
+          params: {userId, secretKey},
         }).then((result: any) => {
           if (!result) {
             return

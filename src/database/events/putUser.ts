@@ -15,8 +15,9 @@ export default async function putUser({
 }: any) {
   const updatedUser = payload
 
-  if (!updatedUser.id) {
-    updatedUser.id = uuidv4()
+  if (!updatedUser.id && updatedUser.futureId) {
+    updatedUser.id = updatedUser.futureId
+    delete updatedUser.futureId
   }
 
   const [, isUserUpdateError] = await handleAsync(

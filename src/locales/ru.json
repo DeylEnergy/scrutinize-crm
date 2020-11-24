@@ -707,7 +707,7 @@
       "BUTTON_TITLE": "Сканер",
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "был добавлен.",
-        "SUCCESSFULLY AUTHORIZED": "успешно авторизован.",
+        "SUCCESSFULLY_AUTHORIZED": "успешно авторизован.",
         "UNKNOWN_QR_CODE": "Неизвестный QR code."
       }
     },

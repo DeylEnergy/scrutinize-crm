@@ -17,7 +17,7 @@ import RIGHTS from '../../constants/rights'
 const GENERAL_SETTINGS_PATH = `/${SETTINGS_ROUTE}/general`
 const BACKUP_PATH = `/${SETTINGS_ROUTE}/backup`
 
-export default function Merchandise() {
+export default function Settings() {
   const history = useHistory()
   const location = useLocation()
   const [locale] = useLocale()
@@ -26,13 +26,14 @@ export default function Merchandise() {
   const [redirectToLink, setRedirectToLink] = React.useState('/')
 
   const canSeeBackup =
-    permissions.includes(RIGHTS.CAN_EXPORT_DATA) ||
-    permissions.includes(RIGHTS.CAN_IMPORT_DATA)
+    Boolean(permissions) &&
+    (permissions.includes(RIGHTS.CAN_EXPORT_DATA) ||
+      permissions.includes(RIGHTS.CAN_IMPORT_DATA))
 
   const tabs = React.useMemo(() => {
     const allowedTabs = []
     let redirectPath
-    if (true) {
+    if (canSeeBackup) {
       allowedTabs.push({
         label: PAGES.GENERAL_SETTINGS.TITLE,
         path: GENERAL_SETTINGS_PATH,
@@ -77,9 +78,11 @@ export default function Merchandise() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={GENERAL_SETTINGS_PATH}>
-              <GeneralSettings />
-            </Route>
+            {canSeeBackup && (
+              <Route path={GENERAL_SETTINGS_PATH}>
+                <GeneralSettings />
+              </Route>
+            )}
             {canSeeBackup && (
               <Route path={BACKUP_PATH}>
                 <Backup />

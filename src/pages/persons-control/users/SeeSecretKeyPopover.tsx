@@ -5,7 +5,7 @@ import CODE_PREFIXES from '../../../constants/codePrefixes'
 import QRCode from 'qrcode'
 import {useLocale} from '../../../utilities'
 
-function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
+function SeeSecretKeyPopover({userId, secretKey, disabled}: any) {
   const [locale] = useLocale()
   const {DRAWER} = locale.vars.PAGES.USERS
 
@@ -15,14 +15,14 @@ function SeeSecretKeyPopover({userName, secretKey, disabled}: any) {
       return
     }
     QRCode.toDataURL(
-      `${CODE_PREFIXES.users}::${userName}__${secretKey}`,
+      `${CODE_PREFIXES.users}::${userId}__${secretKey}`,
       {width: 200},
       function(error: any, key: any) {
         if (error) console.error(error)
         setAuthKey(key)
       },
     )
-  }, [disabled, userName, secretKey])
+  }, [disabled, userId, secretKey])
 
   return (
     <Popover

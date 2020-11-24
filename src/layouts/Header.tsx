@@ -54,6 +54,10 @@ export default function Header() {
     permissions?.includes(RIGHTS.CAN_SEE_USERS) ||
     permissions?.includes(RIGHTS.CAN_SEE_USER_GROUPS)
 
+  const canSeeSettings =
+    permissions?.includes(RIGHTS.CAN_EXPORT_DATA) ||
+    permissions?.includes(RIGHTS.CAN_IMPORT_DATA)
+
   return (
     <Stripe>
       <ActionsContainer>
@@ -85,11 +89,13 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
-        <Link to="/settings">
-          <Tooltip content={PAGES.SETTINGS.TITLE}>
-            <IconButton icon={<FaCog />} />
-          </Tooltip>
-        </Link>
+        {canSeeSettings && (
+          <Link to="/settings">
+            <Tooltip content={PAGES.SETTINGS.TITLE}>
+              <IconButton icon={<FaCog />} />
+            </Tooltip>
+          </Link>
+        )}
         {/* No manual stickers for the first version. */}
         {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
           <Link to="/">
