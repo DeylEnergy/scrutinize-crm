@@ -28,6 +28,7 @@ function GlobalQRScannerControl(props: any) {
           const productToAdd = {
             count: 1,
             _productId: aq._productId,
+            _acquisitionId: aq.id,
           }
 
           db.sendEvent({
