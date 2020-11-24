@@ -704,7 +704,7 @@
       "BUTTON_TITLE": "Scanner",
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "was added.",
-        "SUCCESSFULLY AUTHORIZED": "successfully authorized.",
+        "SUCCESSFULLY_AUTHORIZED": "successfully authorized.",
         "UNKNOWN_QR_CODE": "Unknown type of QR code."
       }
     },
