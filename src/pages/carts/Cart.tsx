@@ -285,7 +285,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
     [loadedItems.hasNextPage, loadedItems.items],
   )
 
-  const fetchAcquisitions = React.useCallback(() => {
+  const fetchCartItems = React.useCallback(() => {
     db.getRows({
       storeName: SN.SALES,
       indexName: IN.__CART_ID__,
@@ -295,19 +295,18 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
-        ...loadedItems,
         hasNextPage: false,
         items: newItemsSerialized,
       }
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [cartId, db, loadedItems, serializeItem])
+  }, [cartId, db, serializeItem])
 
   const refetchAll = React.useCallback(() => {
-    fetchAcquisitions()
+    fetchCartItems()
     fetchComputedCartSum()
-  }, [fetchAcquisitions, fetchComputedCartSum])
+  }, [fetchCartItems, fetchComputedCartSum])
 
   const handleSelectedProduct = React.useCallback(
     ({productId, acquisitionId}: any) => {
@@ -371,7 +370,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         rows={loadedItems.items}
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
-        loadMoreItems={fetchAcquisitions}
+        loadMoreItems={fetchCartItems}
         gridOuterRef={gridOuterRef}
       />
       <EditableCellInput
