@@ -26,13 +26,14 @@ export default function Settings() {
   const [redirectToLink, setRedirectToLink] = React.useState('/')
 
   const canSeeBackup =
-    permissions.includes(RIGHTS.CAN_EXPORT_DATA) ||
-    permissions.includes(RIGHTS.CAN_IMPORT_DATA)
+    Boolean(permissions) &&
+    (permissions.includes(RIGHTS.CAN_EXPORT_DATA) ||
+      permissions.includes(RIGHTS.CAN_IMPORT_DATA))
 
   const tabs = React.useMemo(() => {
     const allowedTabs = []
     let redirectPath
-    if (true) {
+    if (canSeeBackup) {
       allowedTabs.push({
         label: PAGES.GENERAL_SETTINGS.TITLE,
         path: GENERAL_SETTINGS_PATH,
@@ -77,9 +78,11 @@ export default function Settings() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={GENERAL_SETTINGS_PATH}>
-              <GeneralSettings />
-            </Route>
+            {canSeeBackup && (
+              <Route path={GENERAL_SETTINGS_PATH}>
+                <GeneralSettings />
+              </Route>
+            )}
             {canSeeBackup && (
               <Route path={BACKUP_PATH}>
                 <Backup />
