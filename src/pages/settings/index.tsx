@@ -17,7 +17,7 @@ import RIGHTS from '../../constants/rights'
 const GENERAL_SETTINGS_PATH = `/${SETTINGS_ROUTE}/general`
 const BACKUP_PATH = `/${SETTINGS_ROUTE}/backup`
 
-export default function Merchandise() {
+export default function Settings() {
   const history = useHistory()
   const location = useLocation()
   const [locale] = useLocale()
