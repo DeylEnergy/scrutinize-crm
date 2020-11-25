@@ -36,7 +36,9 @@ dbReq.onupgradeneeded = () => {
   }
 
   if (!objectStores.contains(SN.CUSTOMERS)) {
-    db.current.createObjectStore(SN.CUSTOMERS, keyPath)
+    db.current
+      .createObjectStore(SN.CUSTOMERS, keyPath)
+      .createIndex(IN.NAME, IN.NAME)
   }
 
   if (!objectStores.contains(SN.USERS)) {
