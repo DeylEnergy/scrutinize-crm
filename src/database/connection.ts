@@ -41,6 +41,12 @@ dbReq.onupgradeneeded = () => {
       .createIndex(IN.NAME, IN.NAME)
   }
 
+  if (!objectStores.contains(SN.CUSTOMERS_STATS)) {
+    db.current.createObjectStore(SN.CUSTOMERS_STATS, {
+      keyPath: 'customerIdPeriod',
+    })
+  }
+
   if (!objectStores.contains(SN.USERS)) {
     db.current
       .createObjectStore(SN.USERS, keyPath)
