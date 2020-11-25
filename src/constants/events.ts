@@ -42,6 +42,9 @@ export const PUT_SUPPLIER = 'putSupplier'
 // suppliersStats
 export const PUT_SUPPLIER_STATS = 'putSupplierStats'
 
+// customers
+export const PUT_CUSTOMER = 'putCustomer'
+
 // carts
 export const PUT_CART = 'putCart'
 export const ADD_CART = 'addCart'
