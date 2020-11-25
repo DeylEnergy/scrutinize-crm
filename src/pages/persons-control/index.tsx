@@ -11,12 +11,14 @@ import Block from '../../components/Block'
 import Users from './users/Users'
 import Groups from './groups/Groups'
 import Suppliers from './suppliers/Suppliers'
+import Customers from './customers/Customers'
 import {PERSONS_CONTROL_ROUTE} from '../../constants/routes'
 import {useLocale} from '../../utilities'
 
 const USERS_PATH = `/${PERSONS_CONTROL_ROUTE}/users`
 const GROUPS_PATH = `/${PERSONS_CONTROL_ROUTE}/group`
 const SUPPLIERS_PATH = `/${PERSONS_CONTROL_ROUTE}/suppliers`
+const CUSTOMERS_PATH = `/${PERSONS_CONTROL_ROUTE}/customers`
 
 export default function PersonsControl() {
   const [locale] = useLocale()
@@ -24,6 +26,7 @@ export default function PersonsControl() {
     USERS: USERS_CONST,
     USER_GROUPS: USER_GROUPS_CONST,
     SUPPLIERS: SUPPLIERS_CONST,
+    CUSTOMERS: CUSTOMERS_CONST,
   } = locale.vars.PAGES
 
   const history = useHistory()
@@ -43,8 +46,12 @@ export default function PersonsControl() {
         label: SUPPLIERS_CONST.TITLE,
         path: SUPPLIERS_PATH,
       },
+      {
+        label: CUSTOMERS_CONST.TITLE,
+        path: CUSTOMERS_PATH,
+      },
     ]
-  }, [SUPPLIERS_CONST, USERS_CONST, USER_GROUPS_CONST])
+  }, [USERS_CONST, USER_GROUPS_CONST, SUPPLIERS_CONST, CUSTOMERS_CONST])
 
   return (
     <Block ratio={1}>
@@ -74,6 +81,9 @@ export default function PersonsControl() {
             </Route>
             <Route path={SUPPLIERS_PATH}>
               <Suppliers />
+            </Route>
+            <Route path={CUSTOMERS_PATH}>
+              <Customers />
             </Route>
             <Redirect to={USERS_PATH} />
           </Switch>

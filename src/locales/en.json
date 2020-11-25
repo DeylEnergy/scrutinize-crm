@@ -493,6 +493,58 @@
         }
       }
     },
+    "CUSTOMERS": {
+      "TITLE": "Customers",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_CUSTOMER": {
+          "BUTTON_TITLE": "Customer"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_CUSTOMER": "Add customer",
+        "TITLE_EDIT_CUSTOMER": "Edit customer",
+        "LABELS": {
+          "CUSTOMER_STATS": "Customer stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Returned Sum",
+              "WIDTH": 100
+            }
+          }
+        }
+      }
+    },
     "USER_PROFILE": {
       "LOGOUT_BUTTON": "Log Out"
     },

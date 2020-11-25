@@ -496,6 +496,58 @@
         }
       }
     },
+    "CUSTOMERS": {
+      "TITLE": "Покупатели",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Имя",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Номер телефона",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Заметка",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Имя, номер телефона, заметка...",
+        "ADD_CUSTOMER": {
+          "BUTTON_TITLE": "Покупатель"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_CUSTOMER": "Добавить покупателя",
+        "TITLE_EDIT_CUSTOMER": "Редактировать покупателя",
+        "LABELS": {
+          "CUSTOMER_STATS": "Статистика покупателя"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Период",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Купил",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Прибыль",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Возвратил",
+              "WIDTH": 100
+            }
+          }
+        }
+      }
+    },
     "USER_PROFILE": {
       "LOGOUT_BUTTON": "Выйти"
     },
