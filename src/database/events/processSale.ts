@@ -6,6 +6,7 @@ import {
   PUT_SALE,
   PUT_STAT,
   PUT_USER_STATS,
+  PUT_CUSTOMER_STATS,
   PUT_SUPPLIER_STATS,
   PROCESS_SALE,
   PUT_ACQUISITION,
@@ -129,6 +130,24 @@ export default async function processSale({payload}: any) {
               payload: {
                 ...cartItem,
                 _userId: cartParticipants._userId,
+                currentDate,
+              },
+              parentEvent: PROCESS_SALE,
+              store,
+              emitEvent: false,
+            }),
+        })
+      }
+
+      if (cartParticipants._customerId) {
+        events.push({
+          storeName: SN.CUSTOMERS_STATS,
+          cb: ({store}: any) =>
+            send({
+              type: PUT_CUSTOMER_STATS,
+              payload: {
+                ...cartItem,
+                _customerId: cartParticipants._customerId,
                 currentDate,
               },
               parentEvent: PROCESS_SALE,
