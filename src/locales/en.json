@@ -702,7 +702,20 @@
         },
         "CUSTOMER": {
           "POPOVER_TITLE": "Select Customer",
-          "BUTTON_TITLE": "Customer"
+          "BUTTON_TITLE": "Customer",
+          "NO_CUSTOMERS_VIEW": {
+            "BUTTON_TITLE": "Add new customer"
+          },
+          "NEW_CUSTOMER_VIEW": {
+            "POPOVER_TITLE": "Create new customer",
+            "INPUTS": {
+              "NAME": "Name",
+              "PHONE_NUMBER": "Phone Number",
+              "NOTE": "Note"
+            },
+            "SAVE_BUTTON_TITLE": "Save",
+            "RETURN_BUTTON_TITLE": "Return back"
+          }
         },
         "TOTAL_SUM": {
           "TITLE": "Total Sum"

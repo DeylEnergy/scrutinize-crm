@@ -705,7 +705,20 @@
         },
         "CUSTOMER": {
           "POPOVER_TITLE": "Выбор покупателя",
-          "BUTTON_TITLE": "Покупатель"
+          "BUTTON_TITLE": "Покупатель",
+          "NO_CUSTOMERS_VIEW": {
+            "BUTTON_TITLE": "Добавить покупателя"
+          },
+          "NEW_CUSTOMER_VIEW": {
+            "POPOVER_TITLE": "Новый покупатель",
+            "INPUTS": {
+              "NAME": "Имя",
+              "PHONE_NUMBER": "Номер телефона",
+              "NOTE": "Заметка"
+            },
+            "SAVE_BUTTON_TITLE": "Сохранить",
+            "RETURN_BUTTON_TITLE": "Назад"
+          }
         },
         "TOTAL_SUM": {
           "TITLE": "Сумма"
