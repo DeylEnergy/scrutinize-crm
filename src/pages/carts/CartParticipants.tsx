@@ -3,6 +3,7 @@ import {Button, FollowerIcon, FollowingIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
 import {useLocale, useDatabase, handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
+import SelectCustomer from './SelectCustomer'
 
 function CartParticipants({selectedCartId}: any) {
   const [locale] = useLocale()
@@ -112,14 +113,13 @@ function CartParticipants({selectedCartId}: any) {
       >
         {salespersonButton}
       </AsyncSelectMenu>
-      <AsyncSelectMenu
-        selected={cartParticipants._customerId}
-        title={CONTROLS.CUSTOMER.POPOVER_TITLE}
-        onSelect={handleCustomerSelect}
+      <SelectCustomer
+        customerId={cartParticipants._customerId}
+        handleCustomerSelect={handleCustomerSelect}
         storeName={SN.CUSTOMERS}
       >
         {customerButton}
-      </AsyncSelectMenu>
+      </SelectCustomer>
     </>
   )
 }
