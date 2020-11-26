@@ -3,14 +3,19 @@ import {Position} from 'evergreen-ui'
 import SelectMenu from './SelectMenu'
 import {useDatabase} from '../utilities'
 
+function noop() {}
+
 function AsyncSelectMenu({
   title,
   children,
   selected,
   onSelect,
+  onCloseComplete = noop,
+  hasFilter = true,
   storeName,
   filterFor = null,
-  emptyView = null,
+  emptyView = noop,
+  contentView,
   position = Position.BOTTOM_RIGHT,
 }: any) {
   const db = useDatabase()
@@ -34,7 +39,8 @@ function AsyncSelectMenu({
   const handleCloseComplete = React.useCallback(() => {
     setOptions([])
     searchFn({storeName, type: 'discard'})
-  }, [searchFn, storeName])
+    onCloseComplete()
+  }, [searchFn, storeName, onCloseComplete])
 
   return (
     <SelectMenu
@@ -42,6 +48,7 @@ function AsyncSelectMenu({
       options={options}
       selected={selected}
       onSelect={onSelect}
+      hasFilter={hasFilter}
       asyncSearch={searchQuery}
       asyncSearchDebounceTimeMs={500}
       position={position}
@@ -49,7 +56,9 @@ function AsyncSelectMenu({
       onCloseComplete={handleCloseComplete}
       onFilterChange={(value: any) => (searchValue.current = value)}
       closeOnSelect={true}
-      emptyView={emptyView && emptyView(searchValue.current)}
+      // @ts-ignore
+      emptyView={({close}: any) => emptyView(searchValue.current, close)}
+      contentView={contentView}
     >
       {children}
     </SelectMenu>
