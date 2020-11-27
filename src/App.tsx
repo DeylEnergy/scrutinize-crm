@@ -46,7 +46,7 @@ const dbWorker = (() => {
   }, {})
 })()
 
-// console.log(dbWorker)
+console.log(dbWorker)
 
 const APP_WRAPPER_STYLE: any = {
   display: 'flex',

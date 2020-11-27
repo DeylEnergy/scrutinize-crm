@@ -212,7 +212,10 @@ function ToBuy() {
         ),
       }
 
-      const name = item.name || item._product.nameModel[0]
+      const nameModel =
+        item?._product?.nameModel || item?._legacyProductNameModel
+
+      const name = item.name || nameModel[0]
       const nameCell = {
         value: name,
         onDoubleClick: handleCellDblClick.bind(null, 'name', name, 'string'),
@@ -223,7 +226,7 @@ function ToBuy() {
         ),
       }
 
-      const model = item.model || item._product.nameModel[1]
+      const model = item.model || nameModel[1]
       const modelCell = {
         value: model,
         onDoubleClick: handleCellDblClick.bind(null, 'model', model, 'string'),
