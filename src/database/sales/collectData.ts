@@ -19,7 +19,7 @@ export default async function collectData(
   const usersCache = readCacheName(cache, SN.USERS)
   const customersCache = readCacheName(cache, SN.CUSTOMERS)
 
-  let product = productsCache[value._productId]
+  let product = value._productId ? productsCache[value._productId] : {}
   if (!product) {
     product = await handleIdbRequest(productsObjectStore.get(value._productId))
     productsCache[value._productId] = product
@@ -28,6 +28,11 @@ export default async function collectData(
 
   // we don't need additional data for unsold items; so let's return earlier
   if (value.__cartId__) {
+    return value
+  }
+
+  // no cartId means no participants
+  if (!value.cartId) {
     return value
   }
 
