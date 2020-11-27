@@ -23,23 +23,28 @@ function Acquisitions() {
 
   const serializeItem = React.useCallback(
     (item: any) => {
+      const nameModel =
+        item?._product?.nameModel || item?._legacyProductNameModel
+
       const priceCell = Number(item.price).toLocaleString(STRING_FORMAT)
 
       const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+
+      const aqIdCell = item._legacyId ? '' : item.id.split('-')[0]
 
       return {
         id: item.id,
         cells: [
           new Date(item.datetime).toLocaleDateString(STRING_FORMAT),
-          item._product.nameModel[0],
-          item._product.nameModel[1],
+          nameModel[0],
+          nameModel[1],
           priceCell,
           item.count,
           sumCell,
           item._supplier?.name,
           item._user?.name,
-          item._productId.split('-')[0],
-          item.id.split('-')[0],
+          item?._productId?.split('-')[0],
+          aqIdCell,
         ],
       }
     },
