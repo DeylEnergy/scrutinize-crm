@@ -4,7 +4,12 @@ import SearchInput from '../../components/SearchInput'
 import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useUpdate,
+  withErrorBoundary,
+} from '../../utilities'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
 const FETCH_ITEM_LIMIT = 20
@@ -25,6 +30,8 @@ function Sales() {
 
   const db = useDatabase()
   const itemsRef = React.useRef<any>(null)
+
+  const loaderRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -125,8 +132,9 @@ function Sales() {
     fetchItems({from, to, searchQuery, lastKey})
   }, [fetchItems, from, to, searchQuery, lastKey])
 
-  React.useEffect(() => {
+  useUpdate(() => {
     fetchItems({from, to, searchQuery})
+    loaderRef.current?.resetloadMoreItemsCache()
   }, [from, to, searchQuery, fetchItems])
 
   const handleSearchQuery = React.useCallback(
@@ -179,6 +187,7 @@ function Sales() {
           hasNextPage={loadedItems.hasNextPage}
           isItemLoaded={isItemLoaded}
           loadMoreItems={loadMoreItems}
+          loaderRef={loaderRef}
         />
       </Pane>
     </PageWrapper>
