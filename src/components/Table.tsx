@@ -473,6 +473,8 @@ interface TableProps {
   onFirstFetchComplete?: (rows: any) => void
 
   gridOuterRef?: any
+
+  loaderRef?: any
 }
 
 function Table({
@@ -486,6 +488,7 @@ function Table({
   loadMoreItems,
   onFirstFetchComplete = noop,
   gridOuterRef,
+  loaderRef,
 }: TableProps) {
   const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
   const [selectedRow, setSelectedRow] = React.useState<any>({
@@ -499,6 +502,8 @@ function Table({
   const gridComponentRef = React.useRef<any>()
 
   const outerRef = React.useRef<any>()
+
+  const infiniteLoaderRef = React.useRef<any>()
 
   const stretchColumns = React.useCallback(() => {
     if (isFirstFetched) {
@@ -580,6 +585,13 @@ function Table({
     gridOuterRef.current = outerRef.current
   }
 
+  if (
+    loaderRef?.hasOwnProperty('current') &&
+    loaderRef.current !== infiniteLoaderRef.current
+  ) {
+    loaderRef.current = infiniteLoaderRef.current
+  }
+
   const innerElementType = innerElementTypeRender(
     adjustedColumns,
     rows,
@@ -600,7 +612,7 @@ function Table({
               isItemLoaded={isItemLoaded}
               itemCount={itemCount}
               loadMoreItems={loadMoreItems}
-              // minimumBatchSize={20}
+              ref={infiniteLoaderRef}
             >
               {({onItemsRendered, ref}: any) => {
                 return (
