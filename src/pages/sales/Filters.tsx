@@ -1,7 +1,7 @@
 import React from 'react'
 import {SelectField} from 'evergreen-ui'
 import FiltersPopoverButton from '../../components/FiltersPopoverButton'
-import {useLocale, useDatabase} from '../../utilities'
+import {useLocale, useDatabase, reversePeriodView} from '../../utilities'
 import {STORE_NAME as SN, SPACING} from '../../constants'
 
 export const FILTER_PARAMS_DEFAULT = {
@@ -40,7 +40,7 @@ function Options({period, handleFilterChange}: any) {
       <option value="all">{PERIOD.OPTION_ALL_TIME}</option>
       {periodOptions.map((x: any) => (
         <option key={x.label} value={x.label}>
-          {x.label}
+          {reversePeriodView(x.label)}
         </option>
       ))}
     </SelectField>
