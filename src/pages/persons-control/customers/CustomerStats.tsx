@@ -2,7 +2,12 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../../components/Table'
 import {STORE_NAME as SN} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  reversePeriodView,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PageWrapper} from '../../../layouts'
 
 const TABLE_HEIGHT = 250
@@ -50,7 +55,12 @@ function CustomerStats({customerId}: any) {
 
       return {
         id: item.id,
-        cells: [period, soldSumCell, incomeSumCell, returnedSumCell || ''],
+        cells: [
+          reversePeriodView(period),
+          soldSumCell,
+          incomeSumCell,
+          returnedSumCell || '',
+        ],
       }
     },
     [STRING_FORMAT],

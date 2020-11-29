@@ -2,7 +2,12 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../../components/Table'
 import {STORE_NAME as SN} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  reversePeriodView,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PageWrapper} from '../../../layouts'
 
 const TABLE_HEIGHT = 250
@@ -49,7 +54,12 @@ function UserStats({userId}: any) {
 
       return {
         id: item.id,
-        cells: [period, soldSumCell, incomeSumCell, spentSumCell || ''],
+        cells: [
+          reversePeriodView(period),
+          soldSumCell,
+          incomeSumCell,
+          spentSumCell || '',
+        ],
       }
     },
     [STRING_FORMAT],

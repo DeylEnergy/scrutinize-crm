@@ -2,7 +2,12 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../components/Table'
 import {STORE_NAME as SN} from '../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  reversePeriodView,
+  withErrorBoundary,
+} from '../../utilities'
 import {PageWrapper} from '../../layouts'
 
 const FETCH_ITEM_LIMIT = 20
@@ -41,7 +46,12 @@ function Stats() {
 
       return {
         id: item.id,
-        cells: [item.period, soldSumCell, incomeSumCell, spentSumCell || ''],
+        cells: [
+          reversePeriodView(item.period),
+          soldSumCell,
+          incomeSumCell,
+          spentSumCell || '',
+        ],
       }
     },
     [STRING_FORMAT],
