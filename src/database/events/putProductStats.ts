@@ -50,7 +50,6 @@ export default async function putProductStats({
       foundPeriod.returnedSum += sum
     } else if (parentEvent === PROCESS_ACQUISITIONS) {
       foundPeriod.acquiredCount += payload.count
-      foundPeriod.acquiredSum += sum
       foundPeriod.spentSum += sum
     }
 

@@ -11,7 +11,6 @@ export default function getEmptyPeriod(storeName?: string) {
     emptyPeriod.soldCount = 0
     emptyPeriod.acquiredCount = 0
     emptyPeriod.returnedCount = 0
-    emptyPeriod.acquiredSum = 0
     emptyPeriod.returnedSum = 0
   } else if (storeName === SN.CUSTOMERS_STATS) {
     emptyPeriod.returnedSum = 0
