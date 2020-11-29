@@ -5,6 +5,7 @@ import {
   PUT_PRODUCT,
   PUT_SALE,
   PUT_STAT,
+  PUT_PRODUCT_STATS,
   PUT_USER_STATS,
   PUT_CUSTOMER_STATS,
   PUT_SUPPLIER_STATS,
@@ -70,6 +71,21 @@ export default async function processSale({payload}: any) {
         send({
           type: PUT_PRODUCT,
           payload: productShapeAfterSale,
+          store,
+          emitEvent: false,
+        }),
+    })
+
+    events.push({
+      storeName: SN.PRODUCTS_STATS,
+      cb: ({store}: any) =>
+        send({
+          type: PUT_PRODUCT_STATS,
+          payload: {
+            ...cartItem,
+            currentDate,
+          },
+          parentEvent: PROCESS_SALE,
           store,
           emitEvent: false,
         }),

@@ -6,6 +6,7 @@ import {
   COMPLETE_ACQUISITION,
   RECOMPUTE_BUDGET,
   PUT_STAT,
+  PUT_PRODUCT_STATS,
   PUT_USER_STATS,
   PUT_SUPPLIER_STATS,
   PROCESS_ACQUISITIONS,
@@ -49,6 +50,21 @@ export default async function processAcquisitions() {
         storeName: SN.PRODUCTS,
         cb: ({store}: any) =>
           send({type: PUT_PRODUCT, payload: bought, store, emitEvent: false}),
+      },
+      {
+        storeName: SN.PRODUCTS_STATS,
+        cb: ({store}: any) =>
+          send({
+            type: PUT_PRODUCT_STATS,
+            payload: {
+              ...bought,
+              _productId: bought._productId || bought.futureProductId,
+              currentDate,
+            },
+            parentEvent: PROCESS_ACQUISITIONS,
+            store,
+            emitEvent: false,
+          }),
       },
       {
         storeName: SN.ACQUISITIONS,
