@@ -15,6 +15,12 @@ dbReq.onupgradeneeded = () => {
       .createIndex(IN.NAME_MODEL, IN.NAME_MODEL)
   }
 
+  if (!objectStores.contains(SN.PRODUCTS_STATS)) {
+    db.current.createObjectStore(SN.PRODUCTS_STATS, {
+      keyPath: 'productIdPeriod',
+    })
+  }
+
   if (!objectStores.contains(SN.SALES)) {
     const sales = db.current.createObjectStore(SN.SALES, keyPath)
     sales.createIndex(IN.DATETIME, IN.DATETIME)

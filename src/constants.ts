@@ -2,6 +2,7 @@ export const SPACING = 8
 
 export const STORE_NAME = {
   PRODUCTS: 'products',
+  PRODUCTS_STATS: 'productsStats',
   SALES: 'sales',
   ACQUISITIONS: 'acquisitions',
   BUDGET: 'budget',
