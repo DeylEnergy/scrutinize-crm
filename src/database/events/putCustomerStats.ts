@@ -1,8 +1,4 @@
-import {
-  handleAsync,
-  getPeriodOfDate,
-  getEmptyCustomerPeriod,
-} from '../../utilities'
+import {handleAsync, getPeriodOfDate, getEmptyPeriod} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -33,7 +29,7 @@ export default async function putCustomerStats({
     )
 
     if (!foundPeriod) {
-      foundPeriod = getEmptyCustomerPeriod()
+      foundPeriod = getEmptyPeriod(SN.CUSTOMERS_STATS)
       foundPeriod.customerIdPeriod = customerIdPeriod
     }
 
