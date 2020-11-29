@@ -101,6 +101,8 @@ function Products() {
 
   const itemsRef = React.useRef<any>(null)
 
+  const loaderRef = React.useRef<any>(null)
+
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => {
@@ -219,6 +221,7 @@ function Products() {
 
   const loadMoreItems = React.useCallback(() => {
     fetchItems({lastKey, searchQuery})
+    loaderRef.current?.resetloadMoreItemsCache()
   }, [fetchItems, lastKey, searchQuery])
 
   useUpdate(() => {
@@ -277,6 +280,7 @@ function Products() {
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
         loadMoreItems={loadMoreItems}
+        loaderRef={loaderRef}
       />
       {sideSheet.value && (
         <UpdateProduct
