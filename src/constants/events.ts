@@ -1,6 +1,9 @@
 // products
 export const PUT_PRODUCT = 'putProduct'
 
+// productsStats
+export const PUT_PRODUCT_STATS = 'putProductStats'
+
 // acquisitions
 export const PROCESS_ACQUISITIONS = 'processAcquisitions'
 export const COMPLETE_ACQUISITION = 'completeAcquisition'
