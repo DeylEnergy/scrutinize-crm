@@ -74,6 +74,45 @@
         "INPUTS": {
           "EXPECTED_COST": "Примерная цена",
           "COUNT": "Кол-во"
+        },
+        "LABELS": {
+          "PRODUCT_STATS": "Статистика"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Период",
+              "WIDTH": 80
+            },
+            "SOLD_COUNT": {
+              "TITLE": "Продано",
+              "WIDTH": 80
+            },
+            "ACQUIRED_COUNT": {
+              "TITLE": "Привезено, кол-во",
+              "WIDTH": 135
+            },
+            "RETURNED_COUNT": {
+              "TITLE": "Возвращено, кол-во",
+              "WIDTH": 150
+            },
+            "SOLD_SUM": {
+              "TITLE": "Продано, сумма",
+              "WIDTH": 125
+            },
+            "INCOME_SUM": {
+              "TITLE": "Прибыль",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Потрачено",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Возвращено, сумма",
+              "WIDTH": 145
+            }
+          }
         }
       }
     },

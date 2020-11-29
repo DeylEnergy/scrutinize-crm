@@ -74,6 +74,45 @@
         "INPUTS": {
           "EXPECTED_COST": "Expected cost",
           "COUNT": "Count"
+        },
+        "LABELS": {
+          "PRODUCT_STATS": "Product stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_COUNT": {
+              "TITLE": "Sold Count",
+              "WIDTH": 100
+            },
+            "ACQUIRED_COUNT": {
+              "TITLE": "Acquired Count",
+              "WIDTH": 120
+            },
+            "RETURNED_COUNT": {
+              "TITLE": "Returned Count",
+              "WIDTH": 120
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Spent Sum",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Returned Sum",
+              "WIDTH": 120
+            }
+          }
         }
       }
     },

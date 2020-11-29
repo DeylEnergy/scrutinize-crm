@@ -1,8 +1,11 @@
 import React from 'react'
+import {Pane, Heading} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {useLocale, useDatabase} from '../../../utilities'
 import {PUT_PRODUCT} from '../../../constants/events'
+import ProductStats from './ProductStats'
+import {SPACING} from '../../../constants'
 
 type SideSheetType = {
   value: any
@@ -95,6 +98,8 @@ function UpdateProduct({
     (s, v) => ({...s, ...v}),
     defineInputValues(doc),
   )
+
+  const [isStatsShown, setIsStatsShown] = React.useState(false)
 
   const handleInput = React.useCallback((value, e) => {
     setInput({[e.target.name]: value})
@@ -193,6 +198,10 @@ function UpdateProduct({
     })
   }
 
+  const handleStatsDisplay = React.useCallback(() => {
+    setIsStatsShown(true)
+  }, [setIsStatsShown])
+
   const productExists = Boolean(doc.id)
 
   return (
@@ -203,6 +212,7 @@ function UpdateProduct({
       isShown={sideSheet.isShown}
       onSaveButtonClick={saveChanges}
       onCloseComplete={onCloseComplete}
+      onOpenComplete={handleStatsDisplay}
       canSave={canSave(input)}
     >
       <pre>
@@ -294,6 +304,22 @@ function UpdateProduct({
           placeholder="10"
           required
         />
+      )}
+      {productExists && (
+        <>
+          <Heading
+            size={400}
+            fontWeight={500}
+            color="#425A70"
+            marginTop={SPACING / 2}
+            marginBottom={SPACING / 2}
+          >
+            {DRAWER.LABELS.PRODUCT_STATS}
+          </Heading>
+          <Pane marginBottom={SPACING} padding={2}>
+            {isStatsShown && <ProductStats productId={doc.id} />}
+          </Pane>
+        </>
       )}
     </SideSheet>
   )
