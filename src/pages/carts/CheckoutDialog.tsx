@@ -72,7 +72,8 @@ const CONTENT_CONTAINER_STYLE = {
 
 export default function CheckoutDialog({
   isShown,
-  handleCheckoutCompleteClose,
+  handleCheckoutClose,
+  handleDialogTabSwitch,
   handleCheckoutSuccess,
   cartId,
   totalSum,
@@ -83,6 +84,8 @@ export default function CheckoutDialog({
   const [{permissions}] = useAccount()
 
   const db = useDatabase()
+
+  const [isCartCompleted, setIsCartCompleted] = React.useState(false)
 
   const [selectedAction, setSelectedAction] = React.useState(PROCESS_SALE)
 
@@ -116,17 +119,26 @@ export default function CheckoutDialog({
   }, [CHECKOUT, permissions])
 
   const handleConfirm = React.useCallback(() => {
-    db.sendEvent({type: selectedAction, payload: {cartId}}).then(
-      handleCheckoutSuccess,
-    )
+    db.sendEvent({type: selectedAction, payload: {cartId}}).then(() => {
+      setIsCartCompleted(true)
+      handleCheckoutSuccess()
+    })
   }, [cartId, db, handleCheckoutSuccess, selectedAction])
+
+  const handleCompleteClose = React.useCallback(() => {
+    if (isCartCompleted) {
+      handleDialogTabSwitch()
+    } else {
+      handleCheckoutClose()
+    }
+  }, [isCartCompleted, handleDialogTabSwitch, handleCheckoutClose])
 
   return (
     <Dialog
       shouldCloseOnOverlayClick={false}
       isShown={isShown}
       title={CHECKOUT.TITLE}
-      onCloseComplete={handleCheckoutCompleteClose}
+      onCloseComplete={handleCompleteClose}
       width={300}
       topOffset="auto"
       isConfirmDisabled={
