@@ -63,7 +63,7 @@ function SelectAcquisition({
           })
         },
         id: item.id,
-        cells: [item.id.split('-')[0], item.count, acquisitionDateCell],
+        cells: [item.id.split('-')[0], item.inStockCount, acquisitionDateCell],
         style: CELL_STYLE,
       }
     },
