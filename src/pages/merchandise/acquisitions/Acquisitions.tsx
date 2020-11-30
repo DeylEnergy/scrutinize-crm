@@ -30,7 +30,7 @@ function Acquisitions() {
 
       const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
 
-      const aqIdCell = item._legacyId ? '' : item.id.split('-')[0]
+      const aqIdCell = item.id.split('-')[0]
 
       return {
         id: item.id,
