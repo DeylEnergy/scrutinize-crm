@@ -22,7 +22,7 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
-function CustomerStats({productId}: any) {
+function ProductStats({productId}: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {DRAWER} = locale.vars.PAGES.PRODUCTS
@@ -101,7 +101,7 @@ function CustomerStats({productId}: any) {
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
         items: [...itemsRef.current, ...newItemsSerialized],
         lastKey:
-          newItems.length && newItems[newItems.length - 1].userIdDatetime,
+          newItems.length && newItems[newItems.length - 1].productIdPeriod,
       })
     })
   }, [db, lastKey, serializeItem, productId])
@@ -176,4 +176,4 @@ function CustomerStats({productId}: any) {
   )
 }
 
-export default withErrorBoundary(CustomerStats)
+export default withErrorBoundary(ProductStats)

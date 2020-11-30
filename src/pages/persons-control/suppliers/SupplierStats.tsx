@@ -92,7 +92,7 @@ function SupplierStats({supplierId}: any) {
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
         items: [...itemsRef.current, ...newItemsSerialized],
         lastKey:
-          newItems.length && newItems[newItems.length - 1].userIdDatetime,
+          newItems.length && newItems[newItems.length - 1].supplierIdPeriod,
       })
     })
   }, [db, lastKey, serializeItem, supplierId])

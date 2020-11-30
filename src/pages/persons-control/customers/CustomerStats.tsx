@@ -93,7 +93,7 @@ function CustomerStats({customerId}: any) {
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
         items: [...itemsRef.current, ...newItemsSerialized],
         lastKey:
-          newItems.length && newItems[newItems.length - 1].userIdDatetime,
+          newItems.length && newItems[newItems.length - 1].customerIdPeriod,
       })
     })
   }, [db, lastKey, serializeItem, customerId])
