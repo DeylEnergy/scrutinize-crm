@@ -64,10 +64,13 @@ async function createStickers(products?: any) {
   const pages = []
 
   for (const item of products) {
+    const [aqId] = item.acquisitionId.split('-')
+    const [prId] = item.productId.split('-')
+
     const [createdQRCode, errorOnCreation] = await handleAsync(
       generateProductQRCode(
         item.code,
-        {nameModel: item.nameModel, productId: item.id.split('-')[0]},
+        {nameModel: item.nameModel, aqId, prId},
         QR_SIZE,
       ),
     )

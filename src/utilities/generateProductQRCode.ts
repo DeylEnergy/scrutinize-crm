@@ -1,6 +1,7 @@
 import QRCode from 'qrcode'
 
 const HEADER_TOP_OFFSET = 12
+const LEFT_SIDE_OFFSET = 12
 const FOOTER_EXTRA_TOP_OFFSET = 5
 const HEADER_NAME_MAX_LENGTH = 7
 const HEADER_MODEL_MAX_LENGTH = 9
@@ -39,7 +40,7 @@ function getTextLeftOffset(qrSize: number, width: number) {
 
 function generateProductQRCode(
   code: string,
-  {nameModel, productId}: any,
+  {nameModel, aqId, prId}: any,
   qrSize: number,
   margin = 8,
 ) {
@@ -70,7 +71,7 @@ function generateProductQRCode(
       const headerLeftOffset = getTextLeftOffset(qrSize, headerWidth)
       ctx.fillText(headerText, headerLeftOffset, HEADER_TOP_OFFSET)
 
-      const footerText = productId
+      const footerText = prId
       const footerWidth = ctx.measureText(footerText).width
       const footerLeftOffset = getTextLeftOffset(qrSize, footerWidth)
       ctx.fillText(
@@ -78,6 +79,13 @@ function generateProductQRCode(
         footerLeftOffset,
         qrSize - FOOTER_EXTRA_TOP_OFFSET,
       )
+
+      const leftSideText = aqId
+      const leftSideWidth = ctx.measureText(leftSideText).width
+      const leftSideTopOffset = (qrSize + leftSideWidth) / 2
+      ctx.translate(LEFT_SIDE_OFFSET, leftSideTopOffset)
+      ctx.rotate((Math.PI / 180) * -90)
+      ctx.fillText(leftSideText, 0, 0)
 
       resolve(canvas)
     })

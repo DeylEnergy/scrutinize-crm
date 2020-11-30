@@ -31,7 +31,8 @@ export default async function processAcquisitions() {
             ...total,
             {
               count: cur.toPrintStickersCount,
-              id: cur._productId || cur.futureProductId,
+              acquisitionId: cur.id,
+              productId: cur._productId || cur.futureProductId,
               code: `${codePrefixes[SN.ACQUISITIONS]}::${cur.id}`,
               nameModel: cur?._product?.nameModel || [cur.name, cur.model],
             },
