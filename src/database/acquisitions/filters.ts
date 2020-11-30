@@ -1,7 +1,7 @@
 export default function filters({productId}: any) {
   return {
-    productId: ({_productId}: any) => {
-      return _productId === productId
+    productId: ({_productId, inStockCount}: any) => {
+      return _productId === productId && inStockCount > 0
     },
     active: (x: any) => !x.isFrozen,
     haveToBuy: (x: any) => !x.isDone && !x.isFrozen,
