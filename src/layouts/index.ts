@@ -1,3 +1,7 @@
 export {default as Header} from './Header'
 export {default as PageWrapper} from './PageWrapper'
 export {default as ControlWrapper} from './ControlWrapper'
+export {default as TabsControlsWrapper} from './TabsControlsWrapper'
+export {default as ControlButtonsWrapper} from './ControlButtonsWrapper'
+export {default as FreeWidthTaker} from './FreeWidthTaker'
+export {default as HorizontallyScrollable} from './HorizontallyScrollable'
