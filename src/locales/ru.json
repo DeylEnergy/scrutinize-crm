@@ -692,6 +692,9 @@
         "CARTS_LIST": {
           "CART_TITLE": "Корзина"
         },
+        "ADD_NEW_CART": {
+          "TITLE": "Добавить корзину"
+        },
         "DELETE_CART": {
           "BUTTON_TITLE": "Корзина",
           "DIALOG": {

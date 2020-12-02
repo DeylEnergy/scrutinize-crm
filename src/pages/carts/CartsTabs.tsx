@@ -21,7 +21,7 @@ export default function CartsTabs({
 }: any) {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.CARTS
-  const {CARTS_LIST} = PAGE_CONST.CONTROLS
+  const {CARTS_LIST, ADD_NEW_CART} = PAGE_CONST.CONTROLS
 
   const [{user}] = useAccount()
 
@@ -143,7 +143,8 @@ export default function CartsTabs({
           </HorizontallyScrollable>
           <ControlButtonsWrapper>
             <Tab onSelect={handleNewCart} marginLeft={0}>
-              <AddIcon color="green" marginRight={SPACING / 2} /> Add Cart
+              <AddIcon color="green" marginRight={SPACING / 2} />{' '}
+              {ADD_NEW_CART.TITLE}
             </Tab>
           </ControlButtonsWrapper>
           <FreeWidthTaker />

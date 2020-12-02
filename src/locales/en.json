@@ -689,6 +689,9 @@
         "CARTS_LIST": {
           "CART_TITLE": "Cart"
         },
+        "ADD_NEW_CART": {
+          "TITLE": "Add Cart"
+        },
         "DELETE_CART": {
           "BUTTON_TITLE": "Cart",
           "DIALOG": {
