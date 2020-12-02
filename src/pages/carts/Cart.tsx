@@ -22,7 +22,7 @@ import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
-import {PageWrapper, ControlWrapper} from '../../layouts'
+import {PageWrapper} from '../../layouts'
 import DeleteCart from './DeleteCart'
 import AddProduct from './AddProduct'
 import SelectCount from './SelectCount'
@@ -37,9 +37,15 @@ interface CartProps {
   cartId: string
   fetchComputedCartSum: () => void
   completeCartDelete: () => void
+  setControlPanel: (comp: React.ReactNode) => void
 }
 
-function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
+function Cart({
+  cartId,
+  fetchComputedCartSum,
+  completeCartDelete,
+  setControlPanel,
+}: CartProps) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS
@@ -344,6 +350,19 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
     onChange: handleNewScannedProduct,
   })
 
+  React.useEffect(() => {
+    setControlPanel(
+      <>
+        <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
+        <AddProduct handleSelectedProduct={handleSelectedProduct} />
+      </>,
+    )
+
+    return () => {
+      setControlPanel(null)
+    }
+  }, [cartId, setControlPanel, completeCartDelete, handleSelectedProduct])
+
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
     return [
@@ -361,10 +380,6 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
   return (
     <PageWrapper>
-      <ControlWrapper>
-        <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
-        <AddProduct handleSelectedProduct={handleSelectedProduct} />
-      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}

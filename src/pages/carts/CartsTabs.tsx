@@ -1,11 +1,17 @@
 import React from 'react'
-import {Pane, Tablist, Tab, AddIcon} from 'evergreen-ui'
+import {Pane, Tab, AddIcon} from 'evergreen-ui'
 import {v4 as uuidv4} from 'uuid'
 import Block from '../../components/Block'
 import Cart from './Cart'
 import {useLocale, useDatabase, useAccount} from '../../utilities'
-import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
+import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../constants'
 import {ADD_CART} from '../../constants/events'
+import {
+  TabsControlsWrapper,
+  ControlButtonsWrapper,
+  FreeWidthTaker,
+  HorizontallyScrollable,
+} from '../../layouts'
 
 export default function CartsTabs({
   state,
@@ -22,6 +28,10 @@ export default function CartsTabs({
   const db = useDatabase()
 
   const {tabs, selectedCartId} = state
+
+  const [controlPanel, setControlPanel] = React.useState<any>()
+
+  const horizontallyScrollableRef = React.useRef<HTMLDivElement | null>(null)
 
   const excludeCart = React.useCallback((tabs: any, selectedCartId: string) => {
     const updatedTabs = tabs.filter((x: any) => x.cartId !== selectedCartId)
@@ -70,6 +80,13 @@ export default function CartsTabs({
       },
     }).then((result: any) => {
       if (result) {
+        if (horizontallyScrollableRef.current) {
+          horizontallyScrollableRef.current.scrollTo(
+            horizontallyScrollableRef.current.scrollWidth,
+            0,
+          )
+        }
+
         return
       }
 
@@ -107,8 +124,8 @@ export default function CartsTabs({
   return (
     <Block ratio={0}>
       <Pane height="100%" display="flex" flexDirection="column">
-        <Tablist marginBottom={8}>
-          <>
+        <TabsControlsWrapper>
+          <HorizontallyScrollable ref={horizontallyScrollableRef}>
             {tabs.map(({label, cartId}: any) => (
               <Tab
                 key={label}
@@ -118,17 +135,20 @@ export default function CartsTabs({
                 }}
                 isSelected={cartId === state.selectedCartId}
                 aria-controls={`panel-${label}`}
+                flexShrink={0}
               >
                 {label}
               </Tab>
             ))}
-            <Tab onSelect={handleNewCart}>
-              <span>
-                <AddIcon color="green" position="relative" top="3px" /> Add Cart
-              </span>
+          </HorizontallyScrollable>
+          <ControlButtonsWrapper>
+            <Tab onSelect={handleNewCart} marginLeft={0}>
+              <AddIcon color="green" marginRight={SPACING / 2} /> Add Cart
             </Tab>
-          </>
-        </Tablist>
+          </ControlButtonsWrapper>
+          <FreeWidthTaker />
+          <ControlButtonsWrapper>{controlPanel}</ControlButtonsWrapper>
+        </TabsControlsWrapper>
         <Pane role="tabpanel" height="calc(100vh - 54vh)">
           {isDialogOpenCompleted && state.selectedCartId && (
             <Cart
@@ -136,6 +156,7 @@ export default function CartsTabs({
               cartId={state.selectedCartId}
               fetchComputedCartSum={fetchComputedCartSum}
               completeCartDelete={completeCartDelete}
+              setControlPanel={setControlPanel}
             />
           )}
         </Pane>
