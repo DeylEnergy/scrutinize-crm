@@ -24,8 +24,8 @@ import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
 import {PageWrapper} from '../../layouts'
 import DeleteCart from './DeleteCart'
-import AddProduct from './AddProduct'
-import SelectCount from './SelectCount'
+import SelectProduct from '../common/select-product'
+import SelectProductCount from '../common/select-product-count'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -265,13 +265,13 @@ function Cart({
           salePriceCell,
           {
             value: (
-              <SelectCount
+              <SelectProductCount
                 selectedAcquisitions={item.selectedAcquisitions}
                 updateSelectedAcquisitions={updateItem}
                 gridOuterRef={gridOuterRef}
               >
                 {item.count}
-              </SelectCount>
+              </SelectProductCount>
             ),
           },
           sumCell,
@@ -354,7 +354,10 @@ function Cart({
     setControlPanel(
       <>
         <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
-        <AddProduct handleSelectedProduct={handleSelectedProduct} />
+        <SelectProduct
+          key={cartId}
+          handleSelectedProduct={handleSelectedProduct}
+        />
       </>,
     )
 
