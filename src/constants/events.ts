@@ -56,3 +56,9 @@ export const PUT_CART = 'putCart'
 export const ADD_CART = 'addCart'
 export const REMOVE_CART = 'removeCart'
 export const PUT_CART_PARTICIPANTS = 'putCartParticipants'
+
+// stickers
+export const PUT_STICKER = 'putSticker'
+export const PUT_STICKERS_SELECTION_ITEM = 'putStickersSelectionItem'
+export const DELETE_STICKERS_SELECTION = 'deleteStickersSelection'
+export const DELETE_STICKERS_SELECTION_ITEM = 'deleteStickersSelectionItem'
