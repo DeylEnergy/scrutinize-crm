@@ -152,7 +152,7 @@
             "TITLE": "Мин. кол-во",
             "WIDTH": 100
           },
-          "STICKERS_MANAGER": {
+          "STICKERS": {
             "TITLE": "Кол-во стикеров",
             "WIDTH": 130
           },
