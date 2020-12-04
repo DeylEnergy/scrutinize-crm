@@ -86,9 +86,11 @@ export default function Merchandise() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={PRODUCTS_PATH}>
-              {permissions.includes(RIGHTS.CAN_SEE_PRODUCTS) && <Products />}
-            </Route>
+            {permissions.includes(RIGHTS.CAN_SEE_PRODUCTS) && (
+              <Route path={PRODUCTS_PATH}>
+                <Products />
+              </Route>
+            )}
             {permissions.includes(RIGHTS.CAN_SEE_TO_BUY_LIST) && (
               <Route path={TO_BUY_LIST_PATH}>
                 <ToBuy />
