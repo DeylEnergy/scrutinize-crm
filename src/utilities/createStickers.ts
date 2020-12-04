@@ -1,4 +1,4 @@
-import {handleAsync, generateProductQRCode} from '../../../utilities'
+import {handleAsync, generateProductQRCode} from './index'
 
 const QR_SIZE = 90
 const PAPER_SIZE = {
