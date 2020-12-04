@@ -152,7 +152,7 @@
             "TITLE": "Lowest Bound",
             "WIDTH": 110
           },
-          "STICKERS": {
+          "STICKERS_MANAGER": {
             "TITLE": "Stickers",
             "WIDTH": 80
           },
@@ -462,6 +462,9 @@
           "STATS": {
             "CAN_SEE_STATS": "Can see stats"
           },
+          "STICKERS_MANAGER": {
+            "CAN_SEE_STICKERS_MANAGER": "Can see stickers manager"
+          },
           "CARTS": {
             "CAN_SEE_CARTS": "Can see carts"
           },
@@ -593,6 +596,66 @@
         "PLEASE": "Please",
         "SCAN": "scan",
         "YOUR_AUTH_KEY": "your authorization key to work with the app."
+      }
+    },
+    "STICKERS_MANAGER": {
+      "TITLE": "Stickers Manager",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 230
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITIONS_IDS": {
+            "TITLE": "AQIDs",
+            "WIDTH": 250
+          }
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "In Stock"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Stickers Manager"
+      },
+      "CONTROLS": {
+        "STICKERS_SELECTIONS_LIST": {
+          "TAB_TITLE": "Selection"
+        },
+        "ADD_STICKERS_SELECTION": {
+          "TITLE": "Add Selection"
+        },
+        "DELETE_STICKERS_SELECTION": {
+          "BUTTON_TITLE": "Selection",
+          "DIALOG": {
+            "TITLE": "Delete Selection",
+            "CANCEL_LABEL": "Cancel",
+            "CONFIRM_LABEL": "Delete",
+            "WARNING_TEXT": "Are you sure you want to delete the stickers selection?"
+          }
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Confirm"
+        }
       }
     },
     "CARTS": {

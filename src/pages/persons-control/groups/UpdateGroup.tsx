@@ -91,6 +91,13 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       [RIGHTS.CAN_SEE_CARTS, PERMISSIONS.CARTS.CAN_SEE_CARTS],
     ]
 
+    const STICKERS_MANAGER_PERMISSIONS = [
+      [
+        RIGHTS.CAN_SEE_STICKERS_MANAGER,
+        PERMISSIONS.STICKERS_MANAGER.CAN_SEE_STICKERS_MANAGER,
+      ],
+    ]
+
     const CASHBOX_PERMISSIONS = [
       [RIGHTS.CAN_SEE_CASHBOX, PERMISSIONS.CASHBOX.CAN_SEE_CASHBOX],
       [
@@ -112,6 +119,7 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
       ...USERS_PERMISSIONS,
       ...USER_GROUPS,
       ...STATS_PERMISSIONS,
+      ...STICKERS_MANAGER_PERMISSIONS,
       ...CARTS_PERMISSIONS,
       ...CASHBOX_PERMISSIONS,
       ...BACKUP_PERMISSIONS,

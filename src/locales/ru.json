@@ -152,7 +152,7 @@
             "TITLE": "Мин. кол-во",
             "WIDTH": 100
           },
-          "STICKERS": {
+          "STICKERS_MANAGER": {
             "TITLE": "Кол-во стикеров",
             "WIDTH": 130
           },
@@ -465,6 +465,9 @@
           "STATS": {
             "CAN_SEE_STATS": "Может видеть статистику"
           },
+          "STICKERS_MANAGER": {
+            "CAN_SEE_STICKERS_MANAGER": "Может видеть менеджер стикеров"
+          },
           "CARTS": {
             "CAN_SEE_CARTS": "Может видеть корзины"
           },
@@ -596,6 +599,66 @@
         "PLEASE": "Пожалуйста",
         "SCAN": "отсканируйте",
         "YOUR_AUTH_KEY": "ваш код авторизации."
+      }
+    },
+    "STICKERS_MANAGER": {
+      "TITLE": "Менеджер стикеров",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 200
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 230
+          },
+          "COUNT": {
+            "TITLE": "Кол-во",
+            "WIDTH": 70
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITIONS_IDS": {
+            "TITLE": "AQIDs",
+            "WIDTH": 250
+          }
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "В наличии"
+        },
+        "OPTIONS": {
+          "REMOVE": "Удалить"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Менеджер стикеров"
+      },
+      "CONTROLS": {
+        "STICKERS_SELECTIONS_LIST": {
+          "TAB_TITLE": "Набор"
+        },
+        "ADD_STICKERS_SELECTION": {
+          "TITLE": "Добавить набор"
+        },
+        "DELETE_STICKERS_SELECTION": {
+          "BUTTON_TITLE": "Набор",
+          "DIALOG": {
+            "TITLE": "Удаление набора",
+            "CANCEL_LABEL": "Отмена",
+            "CONFIRM_LABEL": "Удалить",
+            "WARNING_TEXT": "Вы уверены что хотите удалить набор стикеров?"
+          }
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Выполнить"
+        }
       }
     },
     "CARTS": {

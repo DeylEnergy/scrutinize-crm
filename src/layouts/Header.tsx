@@ -7,6 +7,7 @@ import IconButton from '../components/IconButton'
 import Carts from '../pages/carts'
 import {useLocale, useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
+import StickersManager from '../pages/stickers-manager'
 import Cashbox from '../pages/cashbox'
 import UserProfile from '../pages/user-profile'
 
@@ -96,17 +97,13 @@ export default function Header() {
             </Tooltip>
           </Link>
         )}
-        {/* No manual stickers for the first version. */}
-        {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
-          <Link to="/">
-            <Tooltip content="Stickers manager">
-              <IconButton icon={<FaQrcode />} />
-            </Tooltip>
-          </Link>
-        )} */}
       </ActionsContainer>
       <Logo>Scrutinize</Logo>
+
       <ActionsContainer last>
+        {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
+          <StickersManager />
+        )}
         {permissions?.includes(RIGHTS.CAN_SEE_CASHBOX) && <Cashbox />}
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
         {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && <UserProfile />}
