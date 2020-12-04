@@ -311,14 +311,6 @@ export function getFullIndexStore(params: any): any {
         }
       }
 
-      if (filterBy) {
-        rows = rows.filter(filterFn)
-      }
-
-      if (sortFn) {
-        rows = sortFn(rows)
-      }
-
       const matchProps: any[] = Object.entries(matchProperties)
 
       // match properties
@@ -332,6 +324,14 @@ export function getFullIndexStore(params: any): any {
 
           return true
         })
+      }
+
+      if (filterBy) {
+        rows = rows.filter(filterFn)
+      }
+
+      if (sortFn) {
+        rows = sortFn(rows)
       }
 
       if (outputFormatFn) {
