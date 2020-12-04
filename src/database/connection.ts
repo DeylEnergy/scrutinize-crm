@@ -93,6 +93,12 @@ dbReq.onupgradeneeded = () => {
       .createIndex(IN.DATETIME, IN.DATETIME)
   }
 
+  if (!objectStores.contains(SN.STICKERS)) {
+    db.current
+      .createObjectStore(SN.STICKERS, keyPath)
+      .createIndex(IN.STICKERS_SELECTION_ID, IN.STICKERS_SELECTION_ID)
+  }
+
   if (!objectStores.contains(SN.EVENTS)) {
     db.current
       .createObjectStore(SN.EVENTS, keyPath)
