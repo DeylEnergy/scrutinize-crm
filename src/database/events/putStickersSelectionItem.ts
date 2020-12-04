@@ -18,7 +18,6 @@ export default async function putStickersSelectionItem({
   emitEvent = true,
   consumer = 'server',
 }: any) {
-  debugger
   if (
     payload._stickersSelectionId &&
     payload._productId &&
