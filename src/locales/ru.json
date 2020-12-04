@@ -462,6 +462,12 @@
           "USER_GROUPS": {
             "CAN_SEE_USER_GROUPS": "Может видеть группы"
           },
+          "SUPPLIERS": {
+            "CAN_SEE_SUPPLIERS": "Может видеть поставщиков"
+          },
+          "CUSTOMERS": {
+            "CAN_SEE_CUSTOMERS": "Может видеть покупателей"
+          },
           "STATS": {
             "CAN_SEE_STATS": "Может видеть статистику"
           },

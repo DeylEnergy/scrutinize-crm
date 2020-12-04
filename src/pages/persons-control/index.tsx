@@ -13,7 +13,8 @@ import Groups from './groups/Groups'
 import Suppliers from './suppliers/Suppliers'
 import Customers from './customers/Customers'
 import {PERSONS_CONTROL_ROUTE} from '../../constants/routes'
-import {useLocale} from '../../utilities'
+import {useLocale, useAccount} from '../../utilities'
+import RIGHTS from '../../constants/rights'
 
 const USERS_PATH = `/${PERSONS_CONTROL_ROUTE}/users`
 const GROUPS_PATH = `/${PERSONS_CONTROL_ROUTE}/group`
@@ -29,29 +30,66 @@ export default function PersonsControl() {
     CUSTOMERS: CUSTOMERS_CONST,
   } = locale.vars.PAGES
 
+  const [{permissions}] = useAccount()
+
   const history = useHistory()
   const location = useLocation()
 
+  const [redirectToLink, setRedirectToLink] = React.useState('/')
+
   const tabs = React.useMemo(() => {
-    return [
-      {
+    const allowedTabs = []
+    let redirectPath
+    if (permissions.includes(RIGHTS.CAN_SEE_USERS)) {
+      allowedTabs.push({
         label: USERS_CONST.TITLE,
         path: USERS_PATH,
-      },
-      {
+      })
+      redirectPath = USERS_PATH
+    }
+
+    if (permissions.includes(RIGHTS.CAN_SEE_USER_GROUPS)) {
+      allowedTabs.push({
         label: USER_GROUPS_CONST.TITLE,
         path: GROUPS_PATH,
-      },
-      {
+      })
+      if (!redirectPath) {
+        redirectPath = GROUPS_PATH
+      }
+    }
+
+    if (permissions.includes(RIGHTS.CAN_SEE_SUPPLIERS)) {
+      allowedTabs.push({
         label: SUPPLIERS_CONST.TITLE,
         path: SUPPLIERS_PATH,
-      },
-      {
+      })
+      if (!redirectPath) {
+        redirectPath = SUPPLIERS_PATH
+      }
+    }
+
+    if (permissions.includes(RIGHTS.CAN_SEE_CUSTOMERS)) {
+      allowedTabs.push({
         label: CUSTOMERS_CONST.TITLE,
         path: CUSTOMERS_PATH,
-      },
-    ]
-  }, [USERS_CONST, USER_GROUPS_CONST, SUPPLIERS_CONST, CUSTOMERS_CONST])
+      })
+      if (!redirectPath) {
+        redirectPath = CUSTOMERS_PATH
+      }
+    }
+
+    if (redirectPath) {
+      setRedirectToLink(redirectPath)
+    }
+
+    return allowedTabs
+  }, [
+    USERS_CONST,
+    USER_GROUPS_CONST,
+    SUPPLIERS_CONST,
+    CUSTOMERS_CONST,
+    permissions,
+  ])
 
   return (
     <Block ratio={1}>
@@ -73,19 +111,27 @@ export default function PersonsControl() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={USERS_PATH}>
-              <Users />
-            </Route>
-            <Route path={GROUPS_PATH}>
-              <Groups />
-            </Route>
-            <Route path={SUPPLIERS_PATH}>
-              <Suppliers />
-            </Route>
-            <Route path={CUSTOMERS_PATH}>
-              <Customers />
-            </Route>
-            <Redirect to={USERS_PATH} />
+            {permissions.includes(RIGHTS.CAN_SEE_USERS) && (
+              <Route path={USERS_PATH}>
+                <Users />
+              </Route>
+            )}
+            {permissions.includes(RIGHTS.CAN_SEE_USER_GROUPS) && (
+              <Route path={GROUPS_PATH}>
+                <Groups />
+              </Route>
+            )}
+            {permissions.includes(RIGHTS.CAN_SEE_SUPPLIERS) && (
+              <Route path={SUPPLIERS_PATH}>
+                <Suppliers />
+              </Route>
+            )}
+            {permissions.includes(RIGHTS.CAN_SEE_CUSTOMERS) && (
+              <Route path={CUSTOMERS_PATH}>
+                <Customers />
+              </Route>
+            )}
+            <Redirect to={redirectToLink} />
           </Switch>
         </Pane>
       </Pane>

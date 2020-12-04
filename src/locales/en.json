@@ -459,6 +459,12 @@
           "USER_GROUPS": {
             "CAN_SEE_USER_GROUPS": "Can see user groups"
           },
+          "SUPPLIERS": {
+            "CAN_SEE_SUPPLIERS": "Can see suppliers"
+          },
+          "CUSTOMERS": {
+            "CAN_SEE_CUSTOMERS": "Can see customers"
+          },
           "STATS": {
             "CAN_SEE_STATS": "Can see stats"
           },

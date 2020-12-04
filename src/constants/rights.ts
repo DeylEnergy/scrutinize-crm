@@ -13,6 +13,8 @@ export default {
   CAN_SEE_USER_GROUPS: 'canSeeUserGroups',
   CAN_SEE_USER_PROFILE: 'canSeeUserProfile',
   CAN_SEE_OTHER_USER_SECRET_KEYS: 'canSeeOtherUserSecretKeys',
+  CAN_SEE_SUPPLIERS: 'canSeeSuppliers',
+  CAN_SEE_CUSTOMERS: 'canSeeCustomers',
   CAN_SEE_CARTS: 'canSeeCarts',
   CAN_SEE_STICKERS_MANAGER: 'canSeeStickersManager',
   CAN_SEE_STATS: 'canSeeStats',
