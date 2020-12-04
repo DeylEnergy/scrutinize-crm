@@ -211,7 +211,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             marginBottom={SPACING * 1.5}
           >
             <SeeSecretKeyPopover
-              userId={doc.id ?? doc.futureId}
+              userId={doc.id ?? input.futureId}
               secretKey={secretKey}
               disabled={!canBeSaved}
             />
