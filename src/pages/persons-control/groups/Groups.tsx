@@ -144,10 +144,11 @@ function Groups() {
         }
 
         if (updatedGroup.id === account.groupId) {
-          setAccount({
+          setAccount((prev: any) => ({
+            ...prev,
             groupName: updatedGroup.name,
             permissions: updatedGroup.permissions,
-          })
+          }))
         }
 
         const items = itemsRef.current
