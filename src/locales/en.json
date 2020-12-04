@@ -639,28 +639,6 @@
         },
         "OPTIONS": {
           "REMOVE": "Remove"
-        },
-        "CELLS": {
-          "SELECT_COUNT": {
-            "MODAL_TITLE": "Edit Count",
-            "TABLE": {
-              "COLUMNS": {
-                "ACQUISITION_ID": {
-                  "WIDTH": 100
-                },
-                "COUNT": {
-                  "WIDTH": 60
-                },
-                "DELETE": {
-                  "WIDTH": 40
-                }
-              },
-              "TOOLTIP": {
-                "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
-                "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the cart."
-              }
-            }
-          }
         }
       },
       "DIALOG": {
@@ -699,43 +677,6 @@
             "CANCEL_LABEL": "Cancel",
             "CONFIRM_LABEL": "Delete Cart",
             "WARNING_TEXT": "Are you sure you want to delete the cart?"
-          }
-        },
-        "ADD_PRODUCT": {
-          "MODAL_TITLE": "Select Product",
-          "ADD_BUTTON": {
-            "TITLE": "Product"
-          }
-        },
-        "SELECT_PRODUCT": {
-          "SEARCH_PLACEHOLDER": "Product name or model...",
-          "TABLE": {
-            "COLUMNS": {
-              "NAME_MODEL": {
-                "WIDTH": 200
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              }
-            }
-          }
-        },
-        "SELECT_ACQUISITION": {
-          "RETURN_BACK_BUTTON": {
-            "TITLE": "Return back"
-          },
-          "TABLE": {
-            "COLUMNS": {
-              "ACQUISITION_ID": {
-                "WIDTH": 100
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              },
-              "DATE": {
-                "WIDTH": 100
-              }
-            }
           }
         },
         "SALESPERSON": {
@@ -862,6 +803,65 @@
           "TITLE": "Welcome to ScrutinizeCRM",
           "FIRST_ITEM": "In order to start working with the app please fill out forms below.",
           "SECOND_ITEM": "If you want to just try the app better check \"Generate dummy data\""
+        }
+      }
+    },
+    "COMMON": {
+      "SELECT_PRODUCT": {
+        "MODAL_TITLE": "Select Product",
+        "ADD_BUTTON": {
+          "TITLE": "Product"
+        }
+      },
+      "PICK_PRODUCT": {
+        "SEARCH_PLACEHOLDER": "Product name or model...",
+        "TABLE": {
+          "COLUMNS": {
+            "NAME_MODEL": {
+              "WIDTH": 200
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            }
+          }
+        }
+      },
+      "PICK_ACQUISITION": {
+        "RETURN_BACK_BUTTON": {
+          "TITLE": "Return back"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            },
+            "DATE": {
+              "WIDTH": 100
+            }
+          }
+        }
+      },
+      "SELECT_PRODUCT_COUNT": {
+        "MODAL_TITLE": "Edit Count",
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "COUNT": {
+              "WIDTH": 60
+            },
+            "DELETE": {
+              "WIDTH": 40
+            }
+          },
+          "TOOLTIP": {
+            "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
+            "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the table."
+          }
         }
       }
     }

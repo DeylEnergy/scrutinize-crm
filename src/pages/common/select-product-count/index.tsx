@@ -21,7 +21,7 @@ const CELL_STYLE = {justifyContent: 'center'}
 
 function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.TABLE.CELLS.SELECT_COUNT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.SELECT_PRODUCT_COUNT
   const {TABLE} = PAGE_CONST
 
   const itemsRef = React.useRef<any>(null)
@@ -206,7 +206,7 @@ function SelectProductCount({
   children,
 }: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.TABLE.CELLS.SELECT_COUNT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.SELECT_PRODUCT_COUNT
 
   const latestData = React.useRef<any>(selectedAcquisitions)
 

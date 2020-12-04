@@ -12,7 +12,7 @@ const MODAL_POPOVER_SIZE = {
 
 function SelectProduct({handleSelectedProduct}: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.ADD_PRODUCT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.SELECT_PRODUCT
 
   const [currentScreen, setCurrentScreen] = React.useState({})
 

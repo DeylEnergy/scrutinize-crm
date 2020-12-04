@@ -37,7 +37,7 @@ function PickAcquisition({
 }: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.SELECT_ACQUISITION
+  const PAGE_CONST = locale.vars.PAGES.COMMON.PICK_ACQUISITION
   const {TABLE} = PAGE_CONST
 
   const db = useDatabase()

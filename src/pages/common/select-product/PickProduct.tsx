@@ -27,7 +27,7 @@ const CELL_STYLE = {cursor: 'pointer'}
 
 function PickProduct({handleProductSelect}: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.SELECT_PRODUCT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.PICK_PRODUCT
   const {TABLE} = PAGE_CONST
   const {STRING_FORMAT} = locale.vars.GENERAL
 

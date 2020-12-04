@@ -642,28 +642,6 @@
         },
         "OPTIONS": {
           "REMOVE": "Удалить"
-        },
-        "CELLS": {
-          "SELECT_COUNT": {
-            "MODAL_TITLE": "Изменить кол-во",
-            "TABLE": {
-              "COLUMNS": {
-                "ACQUISITION_ID": {
-                  "WIDTH": 100
-                },
-                "COUNT": {
-                  "WIDTH": 60
-                },
-                "DELETE": {
-                  "WIDTH": 40
-                }
-              },
-              "TOOLTIP": {
-                "COUNT_CANNOT_BE_ZERO": "Количество не может быть 0.",
-                "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в корзине."
-              }
-            }
-          }
         }
       },
       "DIALOG": {
@@ -702,43 +680,6 @@
             "CANCEL_LABEL": "Отмена",
             "CONFIRM_LABEL": "Удалить",
             "WARNING_TEXT": "Вы уверены что хотите удалить корзину?"
-          }
-        },
-        "ADD_PRODUCT": {
-          "MODAL_TITLE": "Выбрать товар",
-          "ADD_BUTTON": {
-            "TITLE": "Товар"
-          }
-        },
-        "SELECT_PRODUCT": {
-          "SEARCH_PLACEHOLDER": "Название товара или модель...",
-          "TABLE": {
-            "COLUMNS": {
-              "NAME_MODEL": {
-                "WIDTH": 200
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              }
-            }
-          }
-        },
-        "SELECT_ACQUISITION": {
-          "RETURN_BACK_BUTTON": {
-            "TITLE": "Вернуться"
-          },
-          "TABLE": {
-            "COLUMNS": {
-              "ACQUISITION_ID": {
-                "WIDTH": 100
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              },
-              "DATE": {
-                "WIDTH": 100
-              }
-            }
           }
         },
         "SALESPERSON": {
@@ -865,6 +806,65 @@
           "TITLE": "Добро пожаловать в ScrutinizeCRM",
           "FIRST_ITEM": "Для того, чтобы начать работу настройте формы ниже.",
           "SECOND_ITEM": "Если вы просто хотите посмотреть приложение в деле отметьте \"Демо-данные\""
+        }
+      }
+    },
+    "COMMON": {
+      "SELECT_PRODUCT": {
+        "MODAL_TITLE": "Выбрать товар",
+        "ADD_BUTTON": {
+          "TITLE": "Товар"
+        }
+      },
+      "PICK_PRODUCT": {
+        "SEARCH_PLACEHOLDER": "Название товара или модель...",
+        "TABLE": {
+          "COLUMNS": {
+            "NAME_MODEL": {
+              "WIDTH": 200
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            }
+          }
+        }
+      },
+      "PICK_ACQUISITION": {
+        "RETURN_BACK_BUTTON": {
+          "TITLE": "Вернуться"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            },
+            "DATE": {
+              "WIDTH": 100
+            }
+          }
+        }
+      },
+      "SELECT_PRODUCT_COUNT": {
+        "MODAL_TITLE": "Изменить кол-во",
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "COUNT": {
+              "WIDTH": 60
+            },
+            "DELETE": {
+              "WIDTH": 40
+            }
+          },
+          "TOOLTIP": {
+            "COUNT_CANNOT_BE_ZERO": "Количество не может быть 0.",
+            "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в таблице."
+          }
         }
       }
     }
