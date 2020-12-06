@@ -783,7 +783,8 @@
         }
       },
       "TOASTER": {
-        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+        "UNKNOWN_QR_CODE": "Неизвестный QR code.",
+        "UNKNOWN_ACQUISITION": "Не найден товар с такими данными."
       }
     },
     "CASHBOX": {
@@ -825,7 +826,8 @@
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "был добавлен.",
         "SUCCESSFULLY_AUTHORIZED": "успешно авторизован.",
-        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+        "UNKNOWN_QR_CODE": "Неизвестный QR code.",
+        "UNKNOWN_ACQUISITION": "Не найден товар с такими данными."
       }
     },
     "SETTINGS": {

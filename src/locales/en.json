@@ -780,7 +780,8 @@
         }
       },
       "TOASTER": {
-        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+        "UNKNOWN_QR_CODE": "Unknown type of QR code.",
+        "UNKNOWN_ACQUISITION": "Acquisition was not found."
       }
     },
     "CASHBOX": {
@@ -822,7 +823,8 @@
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "was added.",
         "SUCCESSFULLY_AUTHORIZED": "successfully authorized.",
-        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+        "UNKNOWN_QR_CODE": "Unknown type of QR code.",
+        "UNKNOWN_ACQUISITION": "Acquisition was not found."
       }
     },
     "SETTINGS": {

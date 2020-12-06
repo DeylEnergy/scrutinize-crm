@@ -13,11 +13,9 @@ import {
   useTasksAfterUpdate,
   useScannerListener,
   withErrorBoundary,
-  recognizeQRCode,
 } from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {PUT_SALE, DELETE_SALE_ITEM} from '../../constants/events'
-import codePrefixes from '../../constants/codePrefixes'
 import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
@@ -26,6 +24,7 @@ import {PageWrapper} from '../../layouts'
 import DeleteCart from './DeleteCart'
 import SelectProduct from '../common/select-product'
 import SelectProductCount from '../common/select-product-count'
+import careOfScannedQRCode from '../common/care-of-scanned-qr-code'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -332,22 +331,24 @@ function Cart({
     [cartId, db, refetchAll],
   )
 
-  const handleNewScannedProduct = React.useCallback(
-    (scanResult: any) => {
-      const [prefix, data] = recognizeQRCode(scanResult?.value)
-      if (prefix === codePrefixes.acquisitions) {
-        db.getRow({storeName: SN.ACQUISITIONS, key: data}).then((aq: any) => {
-          handleSelectedProduct({productId: aq._productId, acquisitionId: data})
-        })
-      } else {
-        toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE)
-      }
+  const handleNewScannedCode = React.useCallback(
+    (scannedCode: any) => {
+      careOfScannedQRCode({
+        db,
+        scannedCode,
+        cartId,
+        onProductScanned: refetchAll,
+        onUnknownScanned: () =>
+          toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE),
+        onUnknownAcquisitionScanned: () =>
+          toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_ACQUISITION),
+      })
     },
-    [PAGE_CONST, db, handleSelectedProduct],
+    [PAGE_CONST, db, cartId, refetchAll],
   )
 
   useScannerListener({
-    onChange: handleNewScannedProduct,
+    onChange: handleNewScannedCode,
   })
 
   React.useEffect(() => {
