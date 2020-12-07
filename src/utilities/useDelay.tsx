@@ -34,11 +34,11 @@ export default function useDelay(
         const extraDelayMs = passedMs >= delayMs ? 0 : delayMs - passedMs
 
         deferredId.current = setTimeout(() => {
-          cb()
+          requestAnimationFrame(cb)
           setIsDelayed(false)
         }, extraDelayMs)
       } else {
-        cb()
+        requestAnimationFrame(cb)
         setIsDelayed(true)
         lastCalledAt.current = Date.now()
         clearTimeout(deferredId.current)
