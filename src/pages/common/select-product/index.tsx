@@ -18,9 +18,13 @@ function SelectProduct({handleSelectedProduct}: any) {
 
   const [resetScreen, setResetScreen] = React.useState<number>(0)
 
+  const [isPopoverOpenCompleted, setIsPopoverOpenCompleted] = React.useState(
+    false,
+  )
+
   const handleResetScreen = React.useCallback(() => {
     setResetScreen(Date.now())
-  }, [setResetScreen])
+  }, [])
 
   const handleAcquisitionSelect = React.useCallback(
     (payload: any) => {
@@ -44,18 +48,33 @@ function SelectProduct({handleSelectedProduct}: any) {
     [handleResetScreen, handleAcquisitionSelect],
   )
 
+  const handleOpenComplete = React.useCallback(() => {
+    console.log('complete')
+    setIsPopoverOpenCompleted(true)
+  }, [])
+
+  const handleCloseComplete = React.useCallback(() => {
+    setIsPopoverOpenCompleted(false)
+    handleResetScreen()
+  }, [handleResetScreen])
+
   React.useEffect(() => {
-    setCurrentScreen({
-      component: <PickProduct handleProductSelect={handleProductSelect} />,
-    })
+    if (isPopoverOpenCompleted) {
+      setCurrentScreen({
+        component: <PickProduct handleProductSelect={handleProductSelect} />,
+      })
+    } else {
+      setCurrentScreen({component: null})
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetScreen])
+  }, [resetScreen, isPopoverOpenCompleted])
 
   return (
     <ModalPopover
       title={PAGE_CONST.MODAL_TITLE}
       popoverProps={{
-        onCloseComplete: handleResetScreen,
+        onOpenComplete: handleOpenComplete,
+        onCloseComplete: handleCloseComplete,
       }}
       {...MODAL_POPOVER_SIZE}
       {...currentScreen}
