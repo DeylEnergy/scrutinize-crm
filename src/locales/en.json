@@ -867,7 +867,9 @@
         "FINISH_BUTTON_TITLE": "Finish installation"
       },
       "TOASTER": {
-        "CHANGES_SAVED": "Changes saved."
+        "CHANGES_SAVED": "Changes saved.",
+        "IMPORT_SUCCESS":"Dummy data was created.",
+        "IMPORT_FAIL":"Cannot create dummy data. Try again. Otherwise uncheck 'Generate dummy data' checkbox."
       },
       "ALERTS": {
         "WELCOME": {

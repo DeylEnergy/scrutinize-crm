@@ -1,8 +1,16 @@
 import React from 'react'
-import {Pane, Alert, SelectField, Button, Checkbox} from 'evergreen-ui'
+import {useHistory} from 'react-router-dom'
+import {Pane, Alert, SelectField, Button, Checkbox, toaster} from 'evergreen-ui'
 import Block from '../../components/Block'
-import {useLocale, withErrorBoundary} from '../../utilities'
-import {SPACING} from '../../constants'
+import {
+  useLocale,
+  useDatabase,
+  useDelay,
+  useLocalStorage,
+  handleAsync,
+  withErrorBoundary,
+} from '../../utilities'
+import {SPACING, IS_SETUP_FINISHED_LOCAL_STATE} from '../../constants'
 
 const PAGE_WRAPPER_STYLE = {padding: `0 ${SPACING}px`}
 
@@ -11,11 +19,24 @@ const LIST_STYLE = {
   padding: 0,
 }
 
+const FINISH_SETUP_MIN_DELAY = 3000
+
 function Settings() {
   const [locale, setLocale] = useLocale()
-  const {INPUTS, CONTROLS, ALERTS} = locale.vars.PAGES.SETUP
+  const {INPUTS, CONTROLS, ALERTS, TOASTER} = locale.vars.PAGES.SETUP
+
+  const db = useDatabase()
+
+  const history = useHistory()
+
+  const [isProcessing, {handleDelay}] = useDelay(false, FINISH_SETUP_MIN_DELAY)
 
   const [isDummyData, setIsDummyData] = React.useState(false)
+
+  const [, setIsSetupFinished] = useLocalStorage(
+    IS_SETUP_FINISHED_LOCAL_STATE,
+    false,
+  )
 
   const handleLanguageChange = React.useCallback(
     (e: any) => {
@@ -30,6 +51,46 @@ function Settings() {
     },
     [setIsDummyData],
   )
+
+  const handleDummyDataImport = React.useCallback(() => {
+    return import('../../dummyData.json').then((fileContent: any) => {
+      return db.importObjectStoresData(fileContent).then((result: any) => {
+        if (!result) {
+          return Promise.reject('Error on file processing.')
+        }
+
+        return result
+      })
+    })
+  }, [db])
+
+  const referToMainPage = React.useCallback(() => {
+    history.push('/')
+  }, [history])
+
+  const handleInstallationComplete = React.useCallback(async () => {
+    handleDelay({isProgressing: true})
+    if (isDummyData) {
+      const [hasBeenImported] = await handleAsync(handleDummyDataImport())
+
+      if (hasBeenImported) {
+        toaster.success(TOASTER.IMPORT_SUCCESS)
+      } else {
+        toaster.danger(TOASTER.IMPORT_FAIL)
+        return handleDelay({isProgressing: false})
+      }
+    }
+
+    setIsSetupFinished(true)
+    handleDelay({isProgressing: false, cb: referToMainPage})
+  }, [
+    isDummyData,
+    handleDummyDataImport,
+    setIsSetupFinished,
+    referToMainPage,
+    handleDelay,
+    TOASTER,
+  ])
 
   return (
     <Block ratio={1}>
@@ -61,7 +122,12 @@ function Settings() {
           marginBottom={SPACING * 1.5}
           width="auto"
         />
-        <Button appearance="primary" width="auto" onClick={() => {}}>
+        <Button
+          appearance="primary"
+          width="auto"
+          isLoading={isProcessing}
+          onClick={handleInstallationComplete}
+        >
           {CONTROLS.FINISH_BUTTON_TITLE}
         </Button>
       </Pane>
