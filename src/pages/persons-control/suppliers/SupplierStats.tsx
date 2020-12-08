@@ -5,6 +5,7 @@ import {STORE_NAME as SN} from '../../../constants'
 import {
   useLocale,
   useDatabase,
+  useCancellablePromise,
   reversePeriodView,
   withErrorBoundary,
 } from '../../../utilities'
@@ -27,6 +28,9 @@ function SupplierStats({supplierId}: any) {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {DRAWER} = locale.vars.PAGES.SUPPLIERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>([])
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -75,14 +79,18 @@ function SupplierStats({supplierId}: any) {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.SUPPLIERS_STATS,
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      filterBy: 'supplierId',
-      filterParams: {_supplierId: supplierId},
-      lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.SUPPLIERS_STATS,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        filterBy: 'supplierId',
+        filterParams: {_supplierId: supplierId},
+        lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -95,7 +103,7 @@ function SupplierStats({supplierId}: any) {
           newItems.length && newItems[newItems.length - 1].supplierIdPeriod,
       })
     })
-  }, [db, lastKey, serializeItem, supplierId])
+  }, [makeCancellablePromise, db, lastKey, serializeItem, supplierId])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = DRAWER.TABLE

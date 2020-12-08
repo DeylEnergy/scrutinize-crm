@@ -3,7 +3,12 @@ import {Pane, Tab, AddIcon} from 'evergreen-ui'
 import {v4 as uuidv4} from 'uuid'
 import Block from '../../components/Block'
 import Cart from './Cart'
-import {useLocale, useDatabase, useAccount} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useAccount,
+  useCancellablePromise,
+} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../constants'
 import {ADD_CART} from '../../constants/events'
 import {
@@ -26,6 +31,8 @@ export default function CartsTabs({
   const [{user}] = useAccount()
 
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
 
   const {tabs, selectedCartId} = state
 
@@ -104,12 +111,16 @@ export default function CartsTabs({
   }, [excludeCart, tabs, selectedCartId, setState])
 
   React.useEffect(() => {
-    db.getRows({
-      storeName: SN.SALES,
-      indexName: IN.ACTIVE_CART_ID,
-      format: 'cartIds',
-      dataCollecting: false,
-    }).then((rows: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.SALES,
+        indexName: IN.ACTIVE_CART_ID,
+        format: 'cartIds',
+        dataCollecting: false,
+      }),
+    )
+
+    queryFetch.then((rows: any) => {
       setState({
         selectedCartId: rows[0],
         tabs: rows.map((cartId: string, index: number) => ({

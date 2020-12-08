@@ -1,6 +1,11 @@
 import React from 'react'
 import Table from '../../../components/Table'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  withErrorBoundary,
+} from '../../../utilities'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -15,6 +20,9 @@ function Acquisitions() {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.ACQUISITIONS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
     (s, v) => ({...s, ...v}),
@@ -59,13 +67,17 @@ function Acquisitions() {
   )
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: 'acquisitions',
-      indexName: 'datetime',
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      lastKey: loadedItems.lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: 'acquisitions',
+        indexName: 'datetime',
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        lastKey: loadedItems.lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
       setLoadedItems({
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
@@ -73,7 +85,13 @@ function Acquisitions() {
         lastKey: newItems.length && newItems[newItems.length - 1].datetime,
       })
     })
-  }, [db, loadedItems.items, loadedItems.lastKey, serializeItem])
+  }, [
+    makeCancellablePromise,
+    db,
+    loadedItems.items,
+    loadedItems.lastKey,
+    serializeItem,
+  ])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE

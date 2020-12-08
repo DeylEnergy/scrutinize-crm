@@ -5,6 +5,7 @@ import {STORE_NAME as SN} from '../../../constants'
 import {
   useLocale,
   useDatabase,
+  useCancellablePromise,
   reversePeriodView,
   withErrorBoundary,
 } from '../../../utilities'
@@ -27,6 +28,9 @@ function UserStats({userId}: any) {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {DRAWER} = locale.vars.PAGES.USERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>([])
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -75,14 +79,18 @@ function UserStats({userId}: any) {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.USERS_STATS,
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      filterBy: 'userId',
-      filterParams: {_userId: userId},
-      lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.USERS_STATS,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        filterBy: 'userId',
+        filterParams: {_userId: userId},
+        lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -95,7 +103,7 @@ function UserStats({userId}: any) {
           newItems.length && newItems[newItems.length - 1].userIdDatetime,
       })
     })
-  }, [db, lastKey, serializeItem, userId])
+  }, [makeCancellablePromise, db, lastKey, serializeItem, userId])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = DRAWER.TABLE

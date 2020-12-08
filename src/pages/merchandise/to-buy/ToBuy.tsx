@@ -32,6 +32,7 @@ import {
   useLocale,
   useAccount,
   useDatabase,
+  useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
 
@@ -61,6 +62,9 @@ function ToBuy() {
   const {TABLE} = PAGE_CONST
   const [{permissions}] = useAccount()
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -93,10 +97,12 @@ function ToBuy() {
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   const fetchComputedOfToBuyList = React.useCallback(() => {
-    db.perform({storeName: 'acquisitions', action: 'computeBuyList'}).then(
-      setComputedBuyList,
+    const performedFetch = makeCancellablePromise(
+      db.perform({storeName: 'acquisitions', action: 'computeBuyList'}),
     )
-  }, [db])
+
+    performedFetch.then(setComputedBuyList)
+  }, [makeCancellablePromise, db])
 
   React.useEffect(() => {
     // fetch computation of buy list
@@ -472,13 +478,17 @@ function ToBuy() {
   )
 
   const fetchAcquisitions = React.useCallback(() => {
-    db.getRows({
-      storeName: 'acquisitions',
-      indexName: 'neededSinceDatetime',
-      direction: 'prev',
-      sort: 'asc',
-      filterBy,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: 'acquisitions',
+        indexName: 'neededSinceDatetime',
+        direction: 'prev',
+        sort: 'asc',
+        filterBy,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
@@ -489,7 +499,7 @@ function ToBuy() {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [db, filterBy, serializeItem, loadedItems])
+  }, [makeCancellablePromise, db, filterBy, serializeItem, loadedItems])
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
     setSideSheet(SIDE_SHEET_DEFAULT)

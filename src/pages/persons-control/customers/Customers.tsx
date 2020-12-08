@@ -15,7 +15,12 @@ import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateCustomer from './UpdateCustomer'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PUT_CUSTOMER} from '../../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 
@@ -41,6 +46,9 @@ function Customers() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.CUSTOMERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -109,14 +117,18 @@ function Customers() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      db.getRows({
-        storeName: SN.CUSTOMERS,
-        indexName: IN.NAME,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-        filterBy: 'consist',
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.CUSTOMERS,
+          indexName: IN.NAME,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -129,7 +141,7 @@ function Customers() {
         })
       })
     },
-    [db, serializeItem],
+    [makeCancellablePromise, db, serializeItem],
   )
 
   const {lastKey} = loadedItems

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
-import {useLocale, useDatabase} from '../../utilities'
+import {useLocale, useDatabase, useCancellablePromise} from '../../utilities'
 import {SPACING, STORE_NAME as SN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
@@ -17,6 +17,9 @@ export default function CartsDialog({isShown, setIsShown}: any) {
   const {DIALOG} = PAGE_CONST
 
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   // @ts-ignore
   const [state, setState] = React.useReducer((s, v) => ({...s, ...v}), TABS)
 
@@ -62,12 +65,19 @@ export default function CartsDialog({isShown, setIsShown}: any) {
   }, [selectedCartId, tabs, handleCheckoutClose])
 
   const fetchComputedCartSum = React.useCallback(() => {
-    db.perform({
-      storeName: SN.SALES,
-      action: 'computeCartSum',
-      params: {__cartId__: selectedCartId},
-    }).then((cartSum: number) => setState({currentCartSum: cartSum}))
-  }, [db, selectedCartId])
+    const performedFetch = makeCancellablePromise(
+      db.perform({
+        storeName: SN.SALES,
+        action: 'computeCartSum',
+        params: {__cartId__: selectedCartId},
+      }),
+    )
+
+    // @ts-ignore
+    performedFetch.then((cartSum: number) =>
+      setState({currentCartSum: cartSum}),
+    )
+  }, [makeCancellablePromise, db, selectedCartId])
 
   return (
     <>

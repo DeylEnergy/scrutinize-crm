@@ -8,6 +8,7 @@ import {
   useLocale,
   useDatabase,
   useUpdate,
+  useCancellablePromise,
   withErrorBoundary,
 } from '../../utilities'
 import {PageWrapper, ControlWrapper} from '../../layouts'
@@ -29,6 +30,9 @@ function Sales() {
   const PAGE_CONST = locale.vars.PAGES.SALES
 
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const loaderRef = React.useRef<any>(null)
@@ -97,18 +101,23 @@ function Sales() {
         lastKey ?? (from && [from, Infinity]) ?? PERIOD_STOP_DEFAULT
       const includeFirstItem = Boolean(lastKey)
       const excludeLastItem = false
-      db.getRows({
-        storeName: SN.SALES,
-        indexName: IN.DATETIME,
-        direction: 'prev',
-        limit: FETCH_ITEM_LIMIT,
-        customKeyRange: {
-          method: 'bound',
-          args: [startDate, stopDate, excludeLastItem, includeFirstItem],
-        },
-        filterBy: 'consist',
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.SALES,
+          indexName: IN.DATETIME,
+          direction: 'prev',
+          limit: FETCH_ITEM_LIMIT,
+          customKeyRange: {
+            method: 'bound',
+            args: [startDate, stopDate, excludeLastItem, includeFirstItem],
+          },
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -122,7 +131,7 @@ function Sales() {
         })
       })
     },
-    [db, serializeItem],
+    [makeCancellablePromise, db, serializeItem],
   )
 
   const {from, to} = filterParams

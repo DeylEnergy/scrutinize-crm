@@ -25,6 +25,7 @@ import {
   useDatabase,
   useUpdate,
   useLocalStorage,
+  useCancellablePromise,
   getLocaleTimeString,
 } from '../../../utilities'
 
@@ -98,6 +99,8 @@ function Products() {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const [{permissions, user}] = useAccount()
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
 
   const itemsRef = React.useRef<any>(null)
 
@@ -194,14 +197,18 @@ function Products() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      db.getRows({
-        storeName: SN.PRODUCTS,
-        indexName: IN.NAME_MODEL,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-        filterBy,
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.PRODUCTS,
+          indexName: IN.NAME_MODEL,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy,
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -214,7 +221,7 @@ function Products() {
         })
       })
     },
-    [db, filterBy, serializeItem, loadedItems],
+    [makeCancellablePromise, db, filterBy, serializeItem, loadedItems],
   )
 
   const {lastKey} = loadedItems

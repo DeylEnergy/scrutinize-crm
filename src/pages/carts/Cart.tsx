@@ -10,6 +10,7 @@ import {
 import {
   useLocale,
   useDatabase,
+  useCancellablePromise,
   useTasksAfterUpdate,
   useScannerListener,
   withErrorBoundary,
@@ -50,6 +51,9 @@ function Cart({
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {TABLE} = PAGE_CONST
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -291,12 +295,16 @@ function Cart({
   )
 
   const fetchCartItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.SALES,
-      indexName: IN.__CART_ID__,
-      matchProperties: {__cartId__: cartId},
-      sort: 'asc',
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.SALES,
+        indexName: IN.__CART_ID__,
+        matchProperties: {__cartId__: cartId},
+        sort: 'asc',
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
@@ -306,7 +314,7 @@ function Cart({
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [cartId, db, serializeItem])
+  }, [makeCancellablePromise, cartId, db, serializeItem])
 
   const refetchAll = React.useCallback(() => {
     fetchCartItems()

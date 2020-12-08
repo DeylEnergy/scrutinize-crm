@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Pane, Tooltip, CubeIcon, KeyShiftIcon} from 'evergreen-ui'
-import {useLocale, useDatabase} from '../../utilities'
+import {useLocale, useDatabase, useCancellablePromise} from '../../utilities'
 import {SPACING, STORE_NAME as SN} from '../../constants'
 
 const PRODUCT_NUMBERS_ICON_COLOR = '#50a3f1'
@@ -21,58 +21,60 @@ function ProductsOutlinePanel() {
 
   const db = useDatabase()
 
+  const makeCancellablePromise = useCancellablePromise()
+
   const [panelItems, setPanelItems] = React.useState<any>([])
 
   React.useEffect(() => {
-    db.perform({storeName: SN.STATS, action: 'currentProductsOutline'}).then(
-      (result: any) => {
-        if (!result) {
-          return
-        }
-
-        const {
-          activeProductsNumber,
-          potentialIncomeSum,
-          potentialSaleSum,
-        } = result
-
-        const currentPanelItems = [
-          {
-            icon: (
-              <CubeIcon color={PRODUCT_NUMBERS_ICON_COLOR} marginRight={4} />
-            ),
-            label: PRODUCTS_OUTLINE_PANEL.PRODUCTS_NUMBER,
-            value: activeProductsNumber,
-          },
-          {
-            icon: (
-              <KeyShiftIcon
-                color={POTENTIAL_INCOME_SUM_ICON_COLOR}
-                marginRight={4}
-              />
-            ),
-            label: PRODUCTS_OUTLINE_PANEL.POTENTIAL_INCOME_SUM,
-            value:
-              potentialIncomeSum &&
-              Number(potentialIncomeSum).toLocaleString(STRING_FORMAT),
-          },
-          {
-            icon: (
-              <KeyShiftIcon
-                color={POTENTIAL_SALE_SUM_ICON_COLOR}
-                marginRight={4}
-              />
-            ),
-            label: PRODUCTS_OUTLINE_PANEL.POTENTIAL_SALE_SUM,
-            value:
-              potentialSaleSum &&
-              Number(potentialSaleSum).toLocaleString(STRING_FORMAT),
-          },
-        ]
-        setPanelItems(currentPanelItems)
-      },
+    const performedFetch = makeCancellablePromise(
+      db.perform({storeName: SN.STATS, action: 'currentProductsOutline'}),
     )
-  }, [db, STRING_FORMAT, PRODUCTS_OUTLINE_PANEL])
+
+    performedFetch.then((result: any) => {
+      if (!result) {
+        return
+      }
+
+      const {
+        activeProductsNumber,
+        potentialIncomeSum,
+        potentialSaleSum,
+      } = result
+
+      const currentPanelItems = [
+        {
+          icon: <CubeIcon color={PRODUCT_NUMBERS_ICON_COLOR} marginRight={4} />,
+          label: PRODUCTS_OUTLINE_PANEL.PRODUCTS_NUMBER,
+          value: activeProductsNumber,
+        },
+        {
+          icon: (
+            <KeyShiftIcon
+              color={POTENTIAL_INCOME_SUM_ICON_COLOR}
+              marginRight={4}
+            />
+          ),
+          label: PRODUCTS_OUTLINE_PANEL.POTENTIAL_INCOME_SUM,
+          value:
+            potentialIncomeSum &&
+            Number(potentialIncomeSum).toLocaleString(STRING_FORMAT),
+        },
+        {
+          icon: (
+            <KeyShiftIcon
+              color={POTENTIAL_SALE_SUM_ICON_COLOR}
+              marginRight={4}
+            />
+          ),
+          label: PRODUCTS_OUTLINE_PANEL.POTENTIAL_SALE_SUM,
+          value:
+            potentialSaleSum &&
+            Number(potentialSaleSum).toLocaleString(STRING_FORMAT),
+        },
+      ]
+      setPanelItems(currentPanelItems)
+    })
+  }, [makeCancellablePromise, db, STRING_FORMAT, PRODUCTS_OUTLINE_PANEL])
 
   return (
     <Pane display="inline-flex" alignItems="flex-end" paddingTop={4}>

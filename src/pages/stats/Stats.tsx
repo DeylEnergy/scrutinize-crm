@@ -4,6 +4,7 @@ import {STORE_NAME as SN} from '../../constants'
 import {
   useLocale,
   useDatabase,
+  useCancellablePromise,
   reversePeriodView,
   withErrorBoundary,
 } from '../../utilities'
@@ -24,6 +25,8 @@ function Stats() {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
+
+  const makeCancellablePromise = useCancellablePromise()
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -67,12 +70,16 @@ function Stats() {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.STATS,
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.STATS,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -84,7 +91,7 @@ function Stats() {
         lastKey: newItems.length && newItems[newItems.length - 1].period,
       })
     })
-  }, [db, lastKey, serializeItem])
+  }, [db, lastKey, serializeItem, makeCancellablePromise])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE

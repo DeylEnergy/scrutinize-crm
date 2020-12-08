@@ -4,6 +4,7 @@ import {
   useLocale,
   useDatabase,
   useTasksAfterUpdate,
+  useCancellablePromise,
   withErrorBoundary,
 } from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
@@ -40,6 +41,9 @@ function StickersSelection({
   const PAGE_CONST = locale.vars.PAGES.STICKERS_MANAGER
   const {TABLE} = PAGE_CONST
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -198,11 +202,15 @@ function StickersSelection({
   )
 
   const fetchStickersSelectionItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.STICKERS,
-      matchProperties: {_stickersSelectionId: stickersSelectionId},
-      sort: 'asc',
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.STICKERS,
+        matchProperties: {_stickersSelectionId: stickersSelectionId},
+        sort: 'asc',
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
@@ -212,7 +220,7 @@ function StickersSelection({
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [stickersSelectionId, db, serializeItem])
+  }, [makeCancellablePromise, stickersSelectionId, db, serializeItem])
 
   const refetchAll = React.useCallback(() => {
     fetchStickersSelectionItems()
