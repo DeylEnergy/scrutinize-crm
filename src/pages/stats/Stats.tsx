@@ -1,5 +1,4 @@
 import React from 'react'
-import {Pane} from 'evergreen-ui'
 import Table from '../../components/Table'
 import {STORE_NAME as SN} from '../../constants'
 import {
@@ -8,7 +7,8 @@ import {
   reversePeriodView,
   withErrorBoundary,
 } from '../../utilities'
-import {PageWrapper} from '../../layouts'
+import {PageWrapper, ControlWrapper} from '../../layouts'
+import ProductsOutlinePanel from './ProductsOutlinePanel'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -110,15 +110,18 @@ function Stats() {
 
   return (
     <PageWrapper>
-      <Pane flex={1}>
-        <Table
-          columns={columns}
-          rows={loadedItems.items}
-          hasNextPage={loadedItems.hasNextPage}
-          isItemLoaded={isItemLoaded}
-          loadMoreItems={loadMoreItems}
-        />
-      </Pane>
+      <ControlWrapper>
+        <ProductsOutlinePanel />
+      </ControlWrapper>
+      {/* <Pane flex={1}>, */}
+      <Table
+        columns={columns}
+        rows={loadedItems.items}
+        hasNextPage={loadedItems.hasNextPage}
+        isItemLoaded={isItemLoaded}
+        loadMoreItems={loadMoreItems}
+      />
+      {/* </Pane> */}
     </PageWrapper>
   )
 }

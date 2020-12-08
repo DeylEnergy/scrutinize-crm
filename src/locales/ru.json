@@ -362,6 +362,13 @@
             "WIDTH": 100
           }
         }
+      },
+      "CONTROLS": {
+        "PRODUCTS_OUTLINE_PANEL": {
+          "PRODUCTS_NUMBER": "Ассортимент товаров",
+          "POTENTIAL_INCOME_SUM":"Чистая прибыль(потенциально)",
+          "POTENTIAL_SALE_SUM": "Доход(потенциально)"
+        }
       }
     },
     "PERSONS_CONTROL": {

@@ -359,6 +359,13 @@
             "WIDTH": 100
           }
         }
+      },
+      "CONTROLS": {
+        "PRODUCTS_OUTLINE_PANEL": {
+          "PRODUCTS_NUMBER": "Products number",
+          "POTENTIAL_INCOME_SUM":"Potential income sum",
+          "POTENTIAL_SALE_SUM": "Potential sale sum"
+        }
       }
     },
     "PERSONS_CONTROL": {
