@@ -24,6 +24,7 @@ import createDbWorker from 'workerize-loader!./database' // eslint-disable-line 
 import RIGHTS from './constants/rights'
 import {useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
+import {IS_SETUP_FINISHED_LOCAL_STATE} from './constants'
 
 const fns: any = createDbWorker()
 
@@ -58,6 +59,11 @@ const APP_WRAPPER_STYLE: any = {
 
 const App = () => {
   const [{permissions}] = useAccount()
+
+  const [isSetupFinished] = useLocalStorage(
+    IS_SETUP_FINISHED_LOCAL_STATE,
+    false,
+  )
 
   const canSeeMerchandise =
     permissions?.includes(RIGHTS.CAN_SEE_PRODUCTS) ||
@@ -97,9 +103,11 @@ const App = () => {
           <Route path="/settings">
             <Settings />
           </Route>
-          <Route path="/setup">
-            <Setup />
-          </Route>
+          {!isSetupFinished && (
+            <Route path="/setup">
+              <Setup />
+            </Route>
+          )}
           <Route path="/">
             <Redirect to="/" />
             <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
