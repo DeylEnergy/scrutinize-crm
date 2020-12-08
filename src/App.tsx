@@ -58,7 +58,7 @@ const APP_WRAPPER_STYLE: any = {
 }
 
 const App = () => {
-  const [{permissions}] = useAccount()
+  const [{user, permissions}] = useAccount()
 
   const [isSetupFinished] = useLocalStorage(
     IS_SETUP_FINISHED_LOCAL_STATE,
@@ -97,9 +97,11 @@ const App = () => {
               <PersonsControlPage />
             </Route>
           )}
-          <Route path="/sign-in">
-            <SignInPage />
-          </Route>
+          {!user && (
+            <Route path="/sign-in">
+              <SignInPage />
+            </Route>
+          )}
           <Route path="/settings">
             <Settings />
           </Route>
@@ -109,8 +111,7 @@ const App = () => {
             </Route>
           )}
           <Route path="/">
-            <Redirect to="/" />
-            <div style={{flex: 1, padding: '8px 16px'}}>Home</div>
+            {user ? <Redirect to="/sales" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
       </Router>
@@ -152,7 +153,7 @@ const LOCALE_DEFAULT = 'en'
 function AppProvider() {
   const [language, setLanguage] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
   const [locale, setLocale] = React.useState<any>(null)
-  // TODO: implement auth logic
+
   const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
     isShown: false,
