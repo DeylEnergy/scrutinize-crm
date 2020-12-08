@@ -195,6 +195,11 @@
           "MODEL_BEFORE": "До",
           "PREVIOUS_PRICE": "Раньше",
           "IN_STOCK": "В наличии"
+        },
+        "OPTIONS": {
+          "REMOVE": "Удалить",
+          "FREEZE": "Заморозить",
+          "UNFREEZE": "Разморозить"
         }
       },
       "CONTROLS": {

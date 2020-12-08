@@ -195,6 +195,11 @@
           "MODEL_BEFORE": "After",
           "PREVIOUS_PRICE": "Previous",
           "IN_STOCK": "In stock"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove",
+          "FREEZE": "Freeze",
+          "UNFREEZE": "Unfreeze"
         }
       },
       "CONTROLS": {

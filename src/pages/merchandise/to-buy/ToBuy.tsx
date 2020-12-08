@@ -5,14 +5,23 @@ import {
   useLocalStorage,
   useUpdate,
 } from '../../../utilities'
-import {Button} from 'evergreen-ui'
+import {
+  Button,
+  Menu,
+  Position,
+  IconButton,
+  MoreIcon,
+  TrashIcon,
+  SnowflakeIcon,
+} from 'evergreen-ui'
 import {TO_BUY_FILTER_OPTIONS as FILTER_OPTIONS} from '../../../constants'
 import RIGHTS from '../../../constants/rights'
-import {PUT_ACQUISITION} from '../../../constants/events'
+import {PUT_ACQUISITION, DELETE_TO_BUY_ITEM} from '../../../constants/events'
 import Table from '../../../components/Table'
 import CellCheckbox from '../../../components/CellCheckbox'
 import EditableCellInput from '../../../components/EditableCellInput'
 import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
+import Popover from '../../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import FundPanel from './FundPanel'
 import AddProduct from './AddProduct'
@@ -93,6 +102,23 @@ function ToBuy() {
     // fetch computation of buy list
     fetchComputedOfToBuyList()
   }, [db, fetchComputedOfToBuyList])
+
+  const handleItemDelete = React.useCallback(
+    (aqId: string) => {
+      db.sendEvent({type: DELETE_TO_BUY_ITEM, payload: {id: aqId}}).then(
+        (result: any) => {
+          if (!result) {
+            return
+          }
+
+          setLoadedItems({
+            items: itemsRef.current.filter((x: any) => x.id !== aqId),
+          })
+        },
+      )
+    },
+    [db],
+  )
 
   const serializeItem = React.useCallback(
     (item: any) => {
@@ -353,6 +379,58 @@ function ToBuy() {
         ),
       }
 
+      const toggleFrozen = () => {
+        updateItem({isFrozen: !item.isFrozen})
+      }
+
+      const optionsMenu = (
+        <Popover
+          content={({close}: any) => (
+            <Menu>
+              <Menu.Group>
+                {!item.isFrozen && item._productId && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      toggleFrozen()
+                    }}
+                    icon={SnowflakeIcon}
+                  >
+                    {TABLE.OPTIONS.FREEZE}
+                  </Menu.Item>
+                )}
+                {item.isFrozen && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      toggleFrozen()
+                    }}
+                    icon={SnowflakeIcon}
+                  >
+                    {TABLE.OPTIONS.UNFREEZE}
+                  </Menu.Item>
+                )}
+                {!item._productId && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      handleItemDelete(item.id)
+                    }}
+                    icon={TrashIcon}
+                    intent="danger"
+                  >
+                    {TABLE.OPTIONS.REMOVE}
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </Menu>
+          )}
+          position={Position.BOTTOM_RIGHT}
+        >
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+        </Popover>
+      )
+
       return {
         id: item.id,
         cells: [
@@ -371,6 +449,7 @@ function ToBuy() {
           new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
           item._productId?.split('-')[0] || '-',
         ],
+        optionsMenu,
       }
     },
     [
@@ -381,6 +460,7 @@ function ToBuy() {
       filterBy,
       addTask,
       fetchComputedOfToBuyList,
+      handleItemDelete,
     ],
   )
 
@@ -503,6 +583,7 @@ function ToBuy() {
       {label: COLUMNS.FROZEN.TITLE, width: COLUMNS.FROZEN.WIDTH},
       {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
+      {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])
 
