@@ -2,8 +2,8 @@ import {getRowFromStore, getRowFromIndexStore} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {handleAsync} from '../../../utilities'
 
-export default async function computeCartSum({cartId}: {cartId: string}) {
-  const [participants, error] = await handleAsync(
+export default async function getCartParticipants({cartId}: {cartId: string}) {
+  const [participants] = await handleAsync(
     getRowFromIndexStore({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
@@ -16,7 +16,7 @@ export default async function computeCartSum({cartId}: {cartId: string}) {
   }
 
   if (participants._userId) {
-    const [userData, userError] = await handleAsync(
+    const [userData] = await handleAsync(
       getRowFromStore(SN.USERS, participants._userId),
     )
 
@@ -27,7 +27,7 @@ export default async function computeCartSum({cartId}: {cartId: string}) {
   }
 
   if (participants._customerId) {
-    const [_customer, customerError] = await handleAsync(
+    const [_customer] = await handleAsync(
       getRowFromStore(SN.CUSTOMERS, participants._customerId),
     )
 
