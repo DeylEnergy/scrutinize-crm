@@ -8,7 +8,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import {Spinner} from 'evergreen-ui'
 import Tooltip from './Tooltip'
 import CellTextWrapper from './CellTextWrapper'
-import {useUpdate, useOneTime} from '../utilities'
+import {useLocale, useUpdate, useOneTime} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
@@ -490,6 +490,9 @@ function Table({
   gridOuterRef,
   loaderRef,
 }: TableProps) {
+  const [locale] = useLocale()
+  const COMPONENT_CONST = locale.vars.GENERAL.COMPONENTS.TABLE
+
   const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
   const [selectedRow, setSelectedRow] = React.useState<any>({
     rows,
@@ -670,7 +673,9 @@ function Table({
             <Spinner size={32} />
           </FlashBlock>
         )}
-        {isFirstFetched && !rows.length && <FlashBlock>No data.</FlashBlock>}
+        {isFirstFetched && !rows.length && (
+          <FlashBlock>{COMPONENT_CONST.NO_DATA}</FlashBlock>
+        )}
       </>
     </TableContext.Provider>
   )

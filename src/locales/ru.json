@@ -4,6 +4,9 @@
     "COMPONENTS": {
       "FILTERS_POPOVER": {
         "BUTTON_TITLE": "Фильтры"
+      },
+      "TABLE": {
+        "NO_DATA": "Нет данных."
       }
     }
   },
