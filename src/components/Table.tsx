@@ -509,51 +509,53 @@ function Table({
   const infiniteLoaderRef = React.useRef<any>()
 
   const stretchColumns = React.useCallback(() => {
-    if (isFirstFetched) {
-      return
-    }
+    requestAnimationFrame(() => {
+      if (isFirstFetched) {
+        return
+      }
 
-    const gridEl = outerRef.current
-    if (gridEl) {
-      const gridDimensions = gridEl.getBoundingClientRect()
-      const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
-      const gridWidth = gridDimensions.width - gridScrollWidth
+      const gridEl = outerRef.current
+      if (gridEl) {
+        const gridDimensions = gridEl.getBoundingClientRect()
+        const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
+        const gridWidth = gridDimensions.width - gridScrollWidth
 
-      const columnsTotalWidth = columns.reduce(
-        (a, b) => a + b.width,
-        isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
-      )
-
-      if (gridWidth > columnsTotalWidth) {
-        let totalExtraWidth = gridWidth - columnsTotalWidth
-
-        const growableColumnsCount = columns.reduce(
-          (a, b) => (b.canGrow ? a + 1 : a),
-          0,
+        const columnsTotalWidth = columns.reduce(
+          (a, b) => a + b.width,
+          isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
         )
 
-        const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+        if (gridWidth > columnsTotalWidth) {
+          let totalExtraWidth = gridWidth - columnsTotalWidth
 
-        const columnsUpdate = JSON.parse(JSON.stringify(columns))
-        for (const column of columnsUpdate) {
-          if (column.canGrow) {
-            let extraWidthForThisColumn = extraWidthForEachColumn
-            if (totalExtraWidth < extraWidthForEachColumn) {
-              extraWidthForThisColumn = totalExtraWidth
+          const growableColumnsCount = columns.reduce(
+            (a, b) => (b.canGrow ? a + 1 : a),
+            0,
+          )
+
+          const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+
+          const columnsUpdate = JSON.parse(JSON.stringify(columns))
+          for (const column of columnsUpdate) {
+            if (column.canGrow) {
+              let extraWidthForThisColumn = extraWidthForEachColumn
+              if (totalExtraWidth < extraWidthForEachColumn) {
+                extraWidthForThisColumn = totalExtraWidth
+              }
+              column.width += extraWidthForThisColumn
+              totalExtraWidth -= extraWidthForThisColumn
             }
-            column.width += extraWidthForThisColumn
-            totalExtraWidth -= extraWidthForThisColumn
           }
-        }
 
-        setAdjustedColumns(columnsUpdate)
-        setTimeout(() => {
-          if (gridComponentRef.current) {
-            gridComponentRef.current.resetAfterColumnIndex(0)
-          }
-        })
+          setAdjustedColumns(columnsUpdate)
+          requestAnimationFrame(() => {
+            if (gridComponentRef.current) {
+              gridComponentRef.current.resetAfterColumnIndex(0)
+            }
+          })
+        }
       }
-    }
+    })
   }, [isFirstFetched, columns, isRowNumberShown])
 
   useUpdate(() => {
