@@ -8,12 +8,7 @@ import PersonsControlPage from './pages/persons-control'
 import SignInPage from './pages/sign-in'
 import Settings from './pages/settings'
 import Setup from './pages/setup'
-import {
-  Switch,
-  Route,
-  BrowserRouter as Router,
-  Redirect,
-} from 'react-router-dom'
+import {Switch, Route, Redirect} from 'react-router-dom'
 import LocaleContext from './contexts/localeContext'
 import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
@@ -25,6 +20,14 @@ import RIGHTS from './constants/rights'
 import {useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
 import {IS_SETUP_FINISHED_LOCAL_STATE} from './constants'
+
+let Router: any
+
+if (process.env.REACT_APP_WRAPPER === 'electron') {
+  Router = require('react-router-dom').HashRouter
+} else {
+  Router = require('react-router-dom').BrowserRouter
+}
 
 const fns: any = createDbWorker()
 
