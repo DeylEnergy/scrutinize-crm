@@ -32,6 +32,7 @@ export const PUT_STAT = 'putStat'
 
 // users
 export const PUT_USER = 'putUser'
+export const PUT_OWNER_USER = 'putOwnerUser'
 
 // usersStats
 export const PUT_USER_STATS = 'putUserStats'
