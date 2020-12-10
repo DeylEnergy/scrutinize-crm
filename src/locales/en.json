@@ -876,6 +876,8 @@
       "TITLE": "Setup",
       "INPUTS": {
         "LANGUAGE": "Language",
+        "OWNER_NAME": "Owner name",
+        "SAVED_SECRET_KEY":"I saved the secret key",
         "GENERATE_DUMMY_DATA": "Generate dummy data"
       },
       "CONTROLS": {
@@ -884,14 +886,23 @@
       "TOASTER": {
         "CHANGES_SAVED": "Changes saved.",
         "IMPORT_SUCCESS":"Dummy data was created.",
-        "IMPORT_FAIL":"Cannot create dummy data. Try again. Otherwise uncheck 'Generate dummy data' checkbox."
+        "IMPORT_FAIL":"Cannot create dummy data. Try again. Otherwise uncheck 'Generate dummy data' checkbox.",
+        "REGISTER_OWNER_FAIL": "Cannot register owner user.",
+        "BUDGET_STORE_FAIL": "Cannot create default budget values."
       },
       "ALERTS": {
         "WELCOME": {
           "TITLE": "Welcome to ScrutinizeCRM",
           "FIRST_ITEM": "In order to start working with the app please fill out forms below.",
-          "SECOND_ITEM": "If you want to just try the app better check \"Generate dummy data\""
+          "SECOND_ITEM": "Don't forget to capture/screenshot the secret key.",
+          "THIRD_ITEM": "If you want to just try the app better check \"Generate dummy data\""
         }
+      },
+      "TOOLTIP": {
+        "SEE_SECRET_KEY": "See secret key"
+      },
+      "MISC": {
+        "OWNER_GROUP_NAME": "Owner" 
       }
     },
     "COMMON": {
