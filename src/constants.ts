@@ -58,5 +58,3 @@ export const CELL_TEXT_VERTICAL_POSITION = `
   position: relative;
   top: -1px;
 `
-
-export const IS_SETUP_FINISHED_LOCAL_STATE = 'IS_SETUP_FINISHED'
