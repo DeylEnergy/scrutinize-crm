@@ -9,6 +9,7 @@ import {
   PUT_USER_STATS,
   PUT_CUSTOMER_STATS,
   PUT_SUPPLIER_STATS,
+  PUT_BUDGET,
   PROCESS_RETURN_ITEMS,
   DELETE_TO_BUY_ITEM,
   DELETE_SALE_ITEM,
@@ -42,6 +43,13 @@ function getSaleShapeAfterReturn(
   soldItem.returned = true
 
   return soldItem
+}
+
+function getReturnTotalSum(cartProducts: any) {
+  return cartProducts.reduce(
+    (total: number, current: any) => total + current.sum,
+    0,
+  )
 }
 
 export default async function processReturnItems({payload}: any) {
@@ -229,6 +237,20 @@ export default async function processReturnItems({payload}: any) {
       }
     }
   }
+
+  const returnTotalSum = getReturnTotalSum(cartProducts)
+
+  events.push({
+    storeName: SN.BUDGET,
+    cb: ({store}: any) =>
+      send({
+        type: PUT_BUDGET,
+        payload: {returnTotalSum},
+        store,
+        parentEvent: PROCESS_RETURN_ITEMS,
+        emitEvent: false,
+      }),
+  })
 
   const selectedActiveCart: any = await getRowFromIndexStore({
     storeName: SN.SALES,

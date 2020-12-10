@@ -2,13 +2,18 @@ import {handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
-import {PUT_BUDGET} from '../../constants/events'
+import {
+  PROCESS_SALE,
+  PROCESS_RETURN_ITEMS,
+  PUT_BUDGET,
+} from '../../constants/events'
 import {getRowFromStore} from '../queries'
 
 export default async function putBudget({
   store = null,
   type,
   payload,
+  parentEvent,
   emitEvent = true,
 }: any) {
   const [budget, budgetError] = await handleAsync(
@@ -17,6 +22,14 @@ export default async function putBudget({
 
   if (budgetError) {
     return Promise.reject(`Error fetching budget`)
+  }
+
+  if (parentEvent === PROCESS_SALE) {
+    budget.cashboxValue += payload.saleTotalSum
+    delete payload.saleTotalSum
+  } else if (parentEvent === PROCESS_RETURN_ITEMS) {
+    budget.cashboxValue -= payload.returnTotalSum
+    delete payload.returnTotalSum
   }
 
   payload = {...budget, ...payload}

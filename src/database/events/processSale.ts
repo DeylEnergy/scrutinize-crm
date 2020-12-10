@@ -9,6 +9,7 @@ import {
   PUT_USER_STATS,
   PUT_CUSTOMER_STATS,
   PUT_SUPPLIER_STATS,
+  PUT_BUDGET,
   PROCESS_SALE,
   PUT_ACQUISITION,
   SELL_ACQUISITIONS,
@@ -41,6 +42,13 @@ function getSaleShapeAfterSale(
   soldItem.datetime = [saleDatetime, saleOrder]
 
   return soldItem
+}
+
+function getSaleTotalSum(cartProducts: any) {
+  return cartProducts.reduce(
+    (total: number, current: any) => total + current.sum,
+    0,
+  )
 }
 
 export default async function processSale({payload}: any) {
@@ -232,6 +240,20 @@ export default async function processSale({payload}: any) {
       }
     }
   }
+
+  const saleTotalSum = getSaleTotalSum(cartProducts)
+
+  events.push({
+    storeName: SN.BUDGET,
+    cb: ({store}: any) =>
+      send({
+        type: PUT_BUDGET,
+        payload: {saleTotalSum},
+        store,
+        parentEvent: PROCESS_SALE,
+        emitEvent: false,
+      }),
+  })
 
   const selectedActiveCart: any = await getRowFromIndexStore({
     storeName: SN.SALES,
