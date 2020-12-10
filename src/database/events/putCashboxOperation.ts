@@ -10,7 +10,9 @@ export default async function putCashboxOperation({
   payload,
   emitEvent = true,
 }: any) {
-  const [, updateError] = await handleAsync(putRow(SN.USERS, payload, store))
+  const [, updateError] = await handleAsync(
+    putRow(SN.CASHBOX_HISTORY, payload, store),
+  )
 
   if (updateError) {
     return Promise.reject(updateError)
