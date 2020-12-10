@@ -7,13 +7,14 @@ import {
   Avatar,
   Heading,
   Button,
+  EyeOpenIcon,
   RefreshIcon,
   toaster,
 } from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
-import SeeSecretKeyPopover from './SeeSecretKeyPopover'
+import SeeSecretKeyPopover from '../../../components/SeeSecretKeyPopover'
 import {useLocale, useAccount, useDatabase} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
 import UserStats from './UserStats'
@@ -214,7 +215,17 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
               userId={doc.id ?? input.futureId}
               secretKey={secretKey}
               disabled={!canBeSaved}
-            />
+            >
+              <Button
+                intent="success"
+                iconBefore={EyeOpenIcon}
+                justifyContent="center"
+                width="49%"
+                disabled={!canBeSaved}
+              >
+                {DRAWER.BUTTONS.SEE_AUTHORIZATION_KEY}
+              </Button>
+            </SeeSecretKeyPopover>
             <Button
               intent="warning"
               iconBefore={RefreshIcon}
