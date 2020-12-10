@@ -5,6 +5,7 @@ export default async function computeBuyList() {
   const buyList = await getFullIndexStore({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
+    filterBy: 'active',
   })
 
   let budget: any = await getRowFromStore(SN.BUDGET, 1)
