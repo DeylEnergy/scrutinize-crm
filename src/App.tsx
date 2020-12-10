@@ -10,6 +10,7 @@ import Settings from './pages/settings'
 import Setup from './pages/setup'
 import {Switch, Route, Redirect} from 'react-router-dom'
 import LocaleContext from './contexts/localeContext'
+import SetupContext from './contexts/setupContext'
 import DatabaseContext from './contexts/databaseContext'
 import AccountContext from './contexts/accountContext'
 import GlobalScannerContext from './contexts/globalScannerContext'
@@ -17,9 +18,8 @@ import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
 import createDbWorker from 'workerize-loader!./database' // eslint-disable-line import/no-webpack-loader-syntax
 import RIGHTS from './constants/rights'
-import {useAccount, useLocalStorage} from './utilities'
+import {useSetup, useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
-import {IS_SETUP_FINISHED_LOCAL_STATE} from './constants'
 
 let Router: any
 
@@ -61,12 +61,9 @@ const APP_WRAPPER_STYLE: any = {
 }
 
 const App = () => {
-  const [{user, permissions}] = useAccount()
+  const [{isFinished: isSetupFinished}] = useSetup()
 
-  const [isSetupFinished] = useLocalStorage(
-    IS_SETUP_FINISHED_LOCAL_STATE,
-    false,
-  )
+  const [{user, permissions}] = useAccount()
 
   const canSeeMerchandise =
     permissions?.includes(RIGHTS.CAN_SEE_PRODUCTS) ||
@@ -102,7 +99,7 @@ const App = () => {
           )}
           {!user && (
             <Route path="/sign-in">
-              <SignInPage />
+              {isSetupFinished ? <SignInPage /> : <Redirect to="/setup" />}
             </Route>
           )}
           <Route path="/settings">
@@ -114,7 +111,13 @@ const App = () => {
             </Route>
           )}
           <Route path="/">
-            {user ? <Redirect to="/sales" /> : <Redirect to="/sign-in" />}
+            {user ? (
+              <Redirect to="/sales" />
+            ) : isSetupFinished ? (
+              <Redirect to="/sign-in" />
+            ) : (
+              <Redirect to="/setup" />
+            )}
           </Route>
         </Switch>
       </Router>
@@ -153,9 +156,15 @@ const ACCOUNT_MOCK = {
 
 const LOCALE_DEFAULT = 'en'
 
+const SETUP_DEFAULT = {
+  isFinished: false,
+}
+
 function AppProvider() {
   const [language, setLanguage] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
   const [locale, setLocale] = React.useState<any>(null)
+
+  const [setup, setSetup] = useLocalStorage('SETUP', SETUP_DEFAULT)
 
   const [account, setAccount] = React.useState(ACCOUNT_MOCK)
   const [globalScanner, setGlobalScanner] = React.useState({
@@ -177,19 +186,21 @@ function AppProvider() {
 
   return (
     <LocaleContext.Provider value={[locale, setLanguage]}>
-      <AccountContext.Provider value={[account, setAccount]}>
-        <DatabaseContext.Provider value={dbWorker}>
-          <GlobalScannerContext.Provider
-            value={[globalScanner, setGlobalScanner]}
-          >
-            <ScannerListenerContext.Provider
-              value={[scannerListener, setScannerListener]}
+      <SetupContext.Provider value={[setup, setSetup]}>
+        <AccountContext.Provider value={[account, setAccount]}>
+          <DatabaseContext.Provider value={dbWorker}>
+            <GlobalScannerContext.Provider
+              value={[globalScanner, setGlobalScanner]}
             >
-              <App />
-            </ScannerListenerContext.Provider>
-          </GlobalScannerContext.Provider>
-        </DatabaseContext.Provider>
-      </AccountContext.Provider>
+              <ScannerListenerContext.Provider
+                value={[scannerListener, setScannerListener]}
+              >
+                <App />
+              </ScannerListenerContext.Provider>
+            </GlobalScannerContext.Provider>
+          </DatabaseContext.Provider>
+        </AccountContext.Provider>
+      </SetupContext.Provider>
     </LocaleContext.Provider>
   )
 }
