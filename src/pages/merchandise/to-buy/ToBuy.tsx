@@ -333,11 +333,7 @@ function ToBuy() {
       const supplierCell = {
         value: (
           <AsyncSelectMenu
-            selected={
-              item._supplier
-                ? {value: item._supplierId, label: item._supplier.name}
-                : {value: null, label: null}
-            }
+            selected={item._supplierId}
             title={CELLS.SUPPLIER.POPOVER_TITLE}
             onSelect={handleSupplierPick}
             storeName="suppliers"
@@ -356,11 +352,7 @@ function ToBuy() {
       const executorCell = {
         value: (
           <AsyncSelectMenu
-            selected={
-              item._supplier
-                ? {value: item._supplierId, label: item._supplier.name}
-                : {value: null, label: null}
-            }
+            selected={item._userId}
             title={CELLS.EXECUTOR.POPOVER_TITLE}
             onSelect={handleExecutorPick}
             storeName="users"
