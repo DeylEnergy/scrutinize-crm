@@ -6,6 +6,7 @@ import {
   useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -69,8 +70,8 @@ function Acquisitions() {
   const loadMoreItems = React.useCallback(() => {
     const queryFetch = makeCancellablePromise(
       db.getRows({
-        storeName: 'acquisitions',
-        indexName: 'datetime',
+        storeName: SN.ACQUISITIONS,
+        indexName: IN.DATETIME,
         direction: 'prev',
         limit: FETCH_ITEM_LIMIT,
         lastKey: loadedItems.lastKey,

@@ -35,6 +35,7 @@ import {
   useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -98,7 +99,7 @@ function ToBuy() {
 
   const fetchComputedOfToBuyList = React.useCallback(() => {
     const performedFetch = makeCancellablePromise(
-      db.perform({storeName: 'acquisitions', action: 'computeBuyList'}),
+      db.perform({storeName: SN.ACQUISITIONS, action: 'computeBuyList'}),
     )
 
     performedFetch.then(setComputedBuyList)
@@ -472,8 +473,8 @@ function ToBuy() {
   const fetchAcquisitions = React.useCallback(() => {
     const queryFetch = makeCancellablePromise(
       db.getRows({
-        storeName: 'acquisitions',
-        indexName: 'neededSinceDatetime',
+        storeName: SN.ACQUISITIONS,
+        indexName: IN.NEEDED_SINCE_DATETIME,
         direction: 'prev',
         sort: 'asc',
         filterBy,
