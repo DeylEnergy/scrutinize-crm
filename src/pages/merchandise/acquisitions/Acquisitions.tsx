@@ -69,6 +69,16 @@ function Acquisitions() {
 
       const priceCell = Number(item.price).toLocaleString(STRING_FORMAT)
 
+      const countCell = {
+        value: item.count,
+        tooltipContent: (
+          <>
+            <b>{PAGE_CONST.TABLE.TOOLTIP.IN_STOCK_COUNT}:</b>{' '}
+            {item.inStockCount || 0}
+          </>
+        ),
+      }
+
       const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
 
       const aqIdCell = item.id.split('-')[0]
@@ -80,7 +90,7 @@ function Acquisitions() {
           nameModel[0],
           nameModel[1],
           priceCell,
-          item.count,
+          countCell,
           sumCell,
           item._supplier?.name,
           item._user?.name,

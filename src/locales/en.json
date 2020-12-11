@@ -286,6 +286,9 @@
         },
         "OPTIONS": {
           "EDIT_IN_STOCK_COUNT": "Edit In Stock Count"
+        },
+        "TOOLTIP": {
+          "IN_STOCK_COUNT":"In Stock Count"
         }
       },
       "DRAWER": {

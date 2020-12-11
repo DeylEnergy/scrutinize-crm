@@ -286,6 +286,9 @@
         },
         "OPTIONS": {
           "EDIT_IN_STOCK_COUNT": "Редактировать наличие"
+        },
+        "TOOLTIP": {
+          "IN_STOCK_COUNT":"В наличии"
         }
       },
       "DRAWER": {
