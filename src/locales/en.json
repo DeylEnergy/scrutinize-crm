@@ -283,6 +283,15 @@
             "TITLE": "AQID",
             "WIDTH": 95
           }
+        },
+        "OPTIONS": {
+          "EDIT_IN_STOCK_COUNT": "Edit In Stock Count"
+        }
+      },
+      "DRAWER": {
+        "TITLE": "Edit In Stock Count",
+        "INPUTS": {
+          "IN_STOCK_COUNT": "In Stock Count"
         }
       }
     },
