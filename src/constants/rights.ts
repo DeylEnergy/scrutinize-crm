@@ -7,6 +7,7 @@ export default {
   CAN_PRINT_TO_BUY_LIST: 'canPrintToBuyList',
   CAN_COMPLETE_TO_BUY_LIST: 'canCompleteToBuyList',
   CAN_SEE_ACQUISITIONS: 'canSeeAcquisitions',
+  CAN_EDIT_ACQUISITION_IN_STOCK_COUNT: 'canEditAcquisitionInStockCount',
   CAN_SEE_SALES: 'canSeeSales',
   CAN_RETURN_SALES_ITEMS: 'canReturnSalesItems',
   CAN_SEE_USERS: 'canSeeUsers',

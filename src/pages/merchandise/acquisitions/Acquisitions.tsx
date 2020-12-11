@@ -6,11 +6,13 @@ import Popover from '../../../components/Popover'
 import {
   useLocale,
   useDatabase,
+  useAccount,
   useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {UPDATE_ACQUISITION_IN_STOCK_COUNT} from '../../../constants/events'
+import RIGHTS from '../../../constants/rights'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -30,6 +32,8 @@ function Acquisitions() {
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.ACQUISITIONS
   const db = useDatabase()
+
+  const [{permissions}] = useAccount()
 
   const makeCancellablePromise = useCancellablePromise()
 
@@ -83,7 +87,9 @@ function Acquisitions() {
           item?._productId?.split('-')[0],
           aqIdCell,
         ],
-        optionsMenu: (
+        optionsMenu: permissions.includes(
+          RIGHTS.CAN_EDIT_ACQUISITION_IN_STOCK_COUNT,
+        ) && (
           <Popover
             content={
               <Menu>
@@ -101,7 +107,7 @@ function Acquisitions() {
         ),
       }
     },
-    [STRING_FORMAT, PAGE_CONST],
+    [STRING_FORMAT, PAGE_CONST, permissions],
   )
 
   const isItemLoaded = React.useCallback(
@@ -169,7 +175,8 @@ function Acquisitions() {
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
-    return [
+
+    const tableColumns = [
       {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
       {label: COLUMNS.NAME.TITLE, width: COLUMNS.NAME.WIDTH, canGrow: true},
       {label: COLUMNS.MODEL.TITLE, width: COLUMNS.MODEL.WIDTH, canGrow: true},
@@ -183,9 +190,14 @@ function Acquisitions() {
         label: COLUMNS.ACQUISITION_ID.TITLE,
         width: COLUMNS.ACQUISITION_ID.WIDTH,
       },
-      {label: 'OPTIONS', width: 50},
     ]
-  }, [PAGE_CONST])
+
+    if (permissions.includes(RIGHTS.CAN_EDIT_ACQUISITION_IN_STOCK_COUNT)) {
+      tableColumns.push({label: 'OPTIONS', width: 50})
+    }
+
+    return tableColumns
+  }, [PAGE_CONST, permissions])
 
   return (
     <>

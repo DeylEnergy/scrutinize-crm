@@ -469,7 +469,8 @@
             "CAN_COMPLETE_TO_BUY_LIST": "Can process to buy list"
           },
           "ACQUISITIONS": {
-            "CAN_SEE_ACQUISITIONS": "Can see acquisitions"
+            "CAN_SEE_ACQUISITIONS": "Can see acquisitions",
+            "CAN_EDIT_ACQUISITION_IN_STOCK_COUNT": "Can edit acquisition's in stock count"
           },
           "SALES": {
             "CAN_SEE_SALES": "Can see sales",

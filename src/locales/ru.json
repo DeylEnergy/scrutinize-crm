@@ -472,7 +472,8 @@
             "CAN_COMPLETE_TO_BUY_LIST": "Может завершить список закупок"
           },
           "ACQUISITIONS": {
-            "CAN_SEE_ACQUISITIONS": "Может видеть приобретения"
+            "CAN_SEE_ACQUISITIONS": "Может видеть приобретения",
+            "CAN_EDIT_ACQUISITION_IN_STOCK_COUNT": "Может редактировать наличие приобретений"
           },
           "SALES": {
             "CAN_SEE_SALES": "Может видеть продажи",

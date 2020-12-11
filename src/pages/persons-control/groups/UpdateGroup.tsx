@@ -63,6 +63,10 @@ function UpdateGroup({sideSheet, onCloseComplete, handleUpdateGroup}: any) {
         RIGHTS.CAN_SEE_ACQUISITIONS,
         PERMISSIONS.ACQUISITIONS.CAN_SEE_ACQUISITIONS,
       ],
+      [
+        RIGHTS.CAN_EDIT_ACQUISITION_IN_STOCK_COUNT,
+        PERMISSIONS.ACQUISITIONS.CAN_EDIT_ACQUISITION_IN_STOCK_COUNT,
+      ],
     ]
 
     const SALES_PERMISSIONS = [
