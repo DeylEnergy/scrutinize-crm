@@ -34,7 +34,8 @@ export default async function putSale({
     } else {
       const datetime = Date.now()
       const uId = uuidv4()
-      payload.__cartId__ = `${datetime}_${uId}`
+      const newCartId = `${datetime}_${uId}`
+      payload.__cartId__ = payload.activeCartId = newCartId
     }
   }
 
