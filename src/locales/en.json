@@ -609,6 +609,9 @@
       }
     },
     "USER_PROFILE": {
+      "TOOLTIP": {
+        "ICON_TITLE": "Profile"
+      },
       "LOGOUT_BUTTON": "Log Out"
     },
     "SIGN_IN": {

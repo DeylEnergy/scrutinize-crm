@@ -612,6 +612,9 @@
       }
     },
     "USER_PROFILE": {
+      "TOOLTIP": {
+        "ICON_TITLE": "Профиль"
+      },
       "LOGOUT_BUTTON": "Выйти"
     },
     "SIGN_IN": {
