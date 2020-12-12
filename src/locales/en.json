@@ -341,13 +341,7 @@
         }
       },
       "CONTROLS": {
-        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
-        "FILTERS": {
-          "PERIOD": {
-            "TITLE": "Period",
-            "OPTION_ALL_TIME": "All time"
-          }
-        }
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter..."
       }
     },
     "STATS": {
@@ -978,6 +972,10 @@
             "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the table."
           }
         }
+      },
+      "PICK_PERIOD": {
+        "TITLE": "Period",
+        "OPTION_ALL_TIME": "All time"
       }
     }
   }

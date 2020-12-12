@@ -344,13 +344,7 @@
         }
       },
       "CONTROLS": {
-        "SEARCH_PLACEHOLDER": "Название или Модель...",
-        "FILTERS": {
-          "PERIOD": {
-            "TITLE": "Период",
-            "OPTION_ALL_TIME": "Все время"
-          }
-        }
+        "SEARCH_PLACEHOLDER": "Название или Модель..."
       }
     },
     "STATS": {
@@ -981,6 +975,10 @@
             "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в таблице."
           }
         }
+      },
+      "PICK_PERIOD": {
+        "TITLE": "Период",
+        "OPTION_ALL_TIME": "Все время"
       }
     }
   }
