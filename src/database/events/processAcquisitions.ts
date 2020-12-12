@@ -3,7 +3,7 @@ import {getFullIndexStore} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
-  COMPLETE_ACQUISITION,
+  PUT_ACQUISITION,
   RECOMPUTE_BUDGET,
   PUT_STAT,
   PUT_PRODUCT_STATS,
@@ -15,6 +15,29 @@ import codePrefixes from '../../constants/codePrefixes'
 import send from './index'
 
 import pushEvents from '../pushEvents'
+
+function getAcquisitionShape({bought, currentDatetime, currentOrder}: any) {
+  console.log(bought)
+  const {
+    /* eslint-disable */
+    _product,
+    _user,
+    _supplier,
+    toPrintStickersCount,
+    neededSinceDatetime,
+    name,
+    model,
+    /* eslint-enable */
+    futureProductId,
+    ...acquisition
+  } = bought
+
+  acquisition._productId = acquisition._productId ?? futureProductId
+  acquisition.datetime = [currentDatetime, currentOrder]
+  acquisition.lastChangeDatetime.currentDatetime
+
+  return acquisition
+}
 
 export default async function processAcquisitions() {
   const boughtProducts = await getFullIndexStore({
@@ -41,12 +64,15 @@ export default async function processAcquisitions() {
     [],
   )
 
-  let successCount = 0
+  let currentOrder = 0
 
   const currentDate = new Date()
+  const currentDatetime = currentDate.getTime()
+
+  let events: any[] = []
 
   for (const bought of boughtProducts.reverse()) {
-    const events = [
+    const itemEvents = [
       {
         storeName: SN.PRODUCTS,
         cb: ({store}: any) =>
@@ -71,8 +97,12 @@ export default async function processAcquisitions() {
         storeName: SN.ACQUISITIONS,
         cb: ({store, eventsResults}: any) =>
           send({
-            type: COMPLETE_ACQUISITION,
-            payload: bought,
+            type: PUT_ACQUISITION,
+            payload: getAcquisitionShape({
+              bought,
+              currentDatetime,
+              currentOrder: currentOrder++,
+            }),
             store,
             emitEvent: false,
             eventsResults,
@@ -137,12 +167,14 @@ export default async function processAcquisitions() {
       })
     }
 
-    const [wasProcessed] = await handleAsync(pushEvents(events))
-
-    if (wasProcessed) {
-      successCount += 1
-    }
+    events = [...events, ...itemEvents]
   }
 
-  return {successCount, stickersToPrint}
+  const [, error] = await handleAsync(pushEvents(events))
+
+  if (error) {
+    return Promise.reject(`Error on acquisitions processing. ${error}`)
+  }
+
+  return {stickersToPrint}
 }
