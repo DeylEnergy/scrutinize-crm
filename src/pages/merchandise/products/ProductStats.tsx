@@ -53,9 +53,8 @@ function ProductStats({productId}: any) {
 
       const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
 
-      const acquiredSumCell =
-        item.acquiredSum &&
-        Number(item.acquiredSum).toLocaleString(STRING_FORMAT)
+      const spentSumCell =
+        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
 
       const returnedSumCell =
         item.returnedSum &&
@@ -70,7 +69,7 @@ function ProductStats({productId}: any) {
           item.returnedCount,
           soldSumCell,
           incomeSumCell,
-          acquiredSumCell || '',
+          spentSumCell || '',
           returnedSumCell || '',
         ],
       }
