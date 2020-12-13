@@ -1,5 +1,7 @@
 import React from 'react'
 import {Menu, IconButton, MoreIcon, EditIcon, Position} from 'evergreen-ui'
+import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
+import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateAcquisitionInStockCount from './UpdateAcquisitionInStockCount'
 import Popover from '../../../components/Popover'
@@ -8,8 +10,10 @@ import {
   useDatabase,
   useAccount,
   useCancellablePromise,
+  useUpdate,
   withErrorBoundary,
 } from '../../../utilities'
+import {PageWrapper, ControlWrapper} from '../../../layouts'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {UPDATE_ACQUISITION_IN_STOCK_COUNT} from '../../../constants/events'
 import RIGHTS from '../../../constants/rights'
@@ -27,6 +31,9 @@ const SIDE_SHEET_DEFAULT = {
   isShown: false,
 }
 
+const PERIOD_START_DEFAULT = [-Infinity]
+const PERIOD_STOP_DEFAULT = [Infinity]
+
 function Acquisitions() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -43,6 +50,8 @@ function Acquisitions() {
     SIDE_SHEET_DEFAULT,
   )
 
+  const loaderRef = React.useRef<any>(null)
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -55,6 +64,14 @@ function Acquisitions() {
     LOADED_ITEMS_DEFAULT,
   )
 
+  const [searchQuery, setSearchQuery] = React.useState('')
+
+  const [filterParams, setFilterParams] = React.useReducer(
+    // @ts-ignore
+    (s, v) => ({...s, ...v}),
+    FILTER_PARAMS_DEFAULT,
+  )
+
   const serializeItem = React.useCallback(
     (item: any) => {
       const editSideSheet = () => {
@@ -62,6 +79,11 @@ function Acquisitions() {
           value: {id: item.id, inStockCount: item.inStockCount},
           isShown: true,
         })
+      }
+
+      const acquiredDate = new Date(item.datetime[0])
+      const acquiredDateCell = {
+        value: acquiredDate.toLocaleDateString(STRING_FORMAT),
       }
 
       const nameModel =
@@ -86,7 +108,7 @@ function Acquisitions() {
       return {
         id: item.id,
         cells: [
-          new Date(item.datetime).toLocaleDateString(STRING_FORMAT),
+          acquiredDateCell,
           nameModel[0],
           nameModel[1],
           priceCell,
@@ -127,32 +149,71 @@ function Acquisitions() {
     [loadedItems.hasNextPage, loadedItems.items],
   )
 
-  const loadMoreItems = React.useCallback(() => {
-    const queryFetch = makeCancellablePromise(
-      db.getRows({
-        storeName: SN.ACQUISITIONS,
-        indexName: IN.DATETIME,
-        direction: 'prev',
-        limit: FETCH_ITEM_LIMIT,
-        lastKey: loadedItems.lastKey,
-      }),
-    )
+  const fetchItems = React.useCallback(
+    ({from, to, lastKey, searchQuery = ''}: any) => {
+      const startDate = (to && [to]) ?? PERIOD_START_DEFAULT
+      const stopDate =
+        lastKey ?? (from && [from, Infinity]) ?? PERIOD_STOP_DEFAULT
+      const includeFirstItem = Boolean(lastKey)
+      const excludeLastItem = false
 
-    queryFetch.then((newItems: any) => {
-      const newItemsSerialized = newItems.map(serializeItem)
-      setLoadedItems({
-        hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
-        items: [...loadedItems.items, ...newItemsSerialized],
-        lastKey: newItems.length && newItems[newItems.length - 1].datetime,
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.ACQUISITIONS,
+          indexName: IN.DATETIME,
+          direction: 'prev',
+          limit: FETCH_ITEM_LIMIT,
+          customKeyRange: {
+            method: 'bound',
+            args: [startDate, stopDate, excludeLastItem, includeFirstItem],
+          },
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
+        if (!newItems) {
+          return
+        }
+
+        const newItemsSerialized = newItems.map(serializeItem)
+        setLoadedItems({
+          hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
+          items: [...(lastKey ? itemsRef.current : []), ...newItemsSerialized],
+          lastKey:
+            (newItems.length && newItems[newItems.length - 1].datetime) || null,
+        })
       })
-    })
-  }, [
-    makeCancellablePromise,
-    db,
-    loadedItems.items,
-    loadedItems.lastKey,
-    serializeItem,
-  ])
+    },
+    [makeCancellablePromise, db, serializeItem],
+  )
+
+  const {from, to} = filterParams
+  const {lastKey} = loadedItems
+
+  const loadMoreItems = React.useCallback(() => {
+    fetchItems({from, to, searchQuery, lastKey})
+  }, [fetchItems, from, to, searchQuery, lastKey])
+
+  useUpdate(() => {
+    fetchItems({from, to, searchQuery})
+    loaderRef.current?.resetloadMoreItemsCache()
+  }, [from, to, searchQuery, fetchItems])
+
+  const handleSearchQuery = React.useCallback(
+    (value: string) => {
+      setSearchQuery(value)
+    },
+    [setSearchQuery],
+  )
+
+  const handleFilterChange = React.useCallback(
+    (params: any) => {
+      setFilterParams(params)
+    },
+    [setFilterParams],
+  )
 
   const handleAcquisitionInStockCountUpdate = React.useCallback(
     updatedAcquisition => {
@@ -210,13 +271,26 @@ function Acquisitions() {
   }, [PAGE_CONST, permissions])
 
   return (
-    <>
+    <PageWrapper>
+      <ControlWrapper>
+        <SearchInput
+          width={210}
+          placeholder={PAGE_CONST.CONTROLS.SEARCH_PLACEHOLDER}
+          value={searchQuery}
+          handleSearchQuery={handleSearchQuery}
+        />
+        <Filters
+          period={filterParams.period}
+          handleFilterChange={handleFilterChange}
+        />
+      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
         loadMoreItems={loadMoreItems}
+        loaderRef={loaderRef}
       />
       {sideSheet.value && (
         <UpdateAcquisitionInStockCount
@@ -227,7 +301,7 @@ function Acquisitions() {
           onCloseComplete={handleSlideSheetCloseComplete}
         />
       )}
-    </>
+    </PageWrapper>
   )
 }
 

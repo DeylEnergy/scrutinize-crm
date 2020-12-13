@@ -296,6 +296,9 @@
         "INPUTS": {
           "IN_STOCK_COUNT": "В наличии"
         }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Название, модель, участник..."
       }
     },
     "SALES": {

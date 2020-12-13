@@ -296,6 +296,9 @@
         "INPUTS": {
           "IN_STOCK_COUNT": "In Stock Count"
         }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, Model, Participant..."
       }
     },
     "SALES": {
