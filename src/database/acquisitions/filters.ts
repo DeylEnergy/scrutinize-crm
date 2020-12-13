@@ -1,5 +1,37 @@
-export default function filters({productId}: any) {
+import {isSearchValueIncluded} from '../../utilities'
+
+export default function filters({searchQuery, productId}: any) {
+  if (searchQuery) {
+    searchQuery = searchQuery.toLowerCase()
+  }
+
   return {
+    consist: (acquisition: any) => {
+      const searchValues = []
+      const productNameModel =
+        acquisition?._product?.nameModel || acquisition?._legacyProductNameModel
+      if (productNameModel) {
+        searchValues.push(...productNameModel)
+      }
+
+      const userName = acquisition?._user?.name
+      if (userName) {
+        searchValues.push(userName)
+      }
+
+      const supplierName = acquisition?._supplier?.name
+      if (supplierName) {
+        searchValues.push(supplierName)
+      }
+
+      for (const searchValue of searchValues) {
+        if (isSearchValueIncluded(searchValue, searchQuery)) {
+          return true
+        }
+      }
+
+      return false
+    },
     productId: ({_productId, inStockCount}: any) => {
       return _productId === productId && inStockCount > 0
     },
