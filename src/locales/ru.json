@@ -864,7 +864,8 @@
     "GENERAL_SETTINGS": {
       "TITLE": "Общие",
       "INPUTS": {
-        "LANGUAGE": "Язык"
+        "LANGUAGE": "Язык",
+        "CAMERA": "Камера"
       },
       "CONTROLS": {
         "SAVE_BUTTON_TITLE": "Сохранить"

@@ -1,7 +1,7 @@
 import React from 'react'
 // @ts-ignore
 import scannerWorker from 'workerize-loader!../scanner' // eslint-disable-line import/no-webpack-loader-syntax
-import {debounce, throttle} from '../utilities'
+import {useVideoDeviceId, debounce, throttle} from '../utilities'
 
 let scanner: any
 let rId: any
@@ -36,6 +36,9 @@ const CONSECUTIVE_SCAN_DELAY_MS = 1000
 function QRScanner({cameraSize, postponeInactive, onResult}: any) {
   const canvasRef = React.useRef<any>(null)
   const scanCanvasRef = React.useRef<any>(null)
+
+  const [videoDeviceId] = useVideoDeviceId()
+
   React.useEffect(() => {
     scanner = scannerWorker()
 
@@ -53,7 +56,12 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
 
     if (canvasRef.current && scanCanvasRef.current) {
       navigator.mediaDevices
-        .getUserMedia({video: {facingMode: 'environment'}})
+        .getUserMedia({
+          video: {
+            facingMode: 'environment',
+            deviceId: videoDeviceId,
+          },
+        })
         .then(function(stream) {
           video.srcObject = stream
           // @ts-ignore
@@ -76,7 +84,7 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
       clearSt()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [videoDeviceId])
 
   const {camera, scanArea} = cameraSize
 

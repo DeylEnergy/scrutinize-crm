@@ -861,7 +861,8 @@
     "GENERAL_SETTINGS": {
       "TITLE": "General",
       "INPUTS": {
-        "LANGUAGE": "Language"
+        "LANGUAGE": "Language",
+        "CAMERA": "Camera"
       },
       "CONTROLS": {
         "SAVE_BUTTON_TITLE": "Save"
