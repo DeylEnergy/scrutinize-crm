@@ -40,7 +40,6 @@ function CartParticipants({selectedCartId}: any) {
       )
 
       performedFetch.then(({_user, _userId, _customer, _customerId}: any) => {
-        debugger
         setHasLoaded(true)
         setCartParticipants({
           _userName: _user?.name,

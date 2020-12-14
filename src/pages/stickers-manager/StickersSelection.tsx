@@ -244,10 +244,6 @@ function StickersSelection({
     [stickersSelectionId, db, refetchAll],
   )
 
-  const cb = React.useCallback(() => {
-    console.log('sId', stickersSelectionId)
-  }, [stickersSelectionId])
-
   React.useEffect(() => {
     setControlPanel(
       <>
@@ -265,7 +261,6 @@ function StickersSelection({
     stickersSelectionId,
     setControlPanel,
     completeStickersSelectionDelete,
-    cb,
     handleSelectedProduct,
   ])
 

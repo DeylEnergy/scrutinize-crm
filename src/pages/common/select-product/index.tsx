@@ -49,7 +49,6 @@ function SelectProduct({handleSelectedProduct}: any) {
   )
 
   const handleOpenComplete = React.useCallback(() => {
-    console.log('complete')
     setIsPopoverOpenCompleted(true)
   }, [])
 

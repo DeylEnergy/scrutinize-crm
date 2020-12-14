@@ -26,7 +26,7 @@ export default function StickerSelectionsTabs({
 
   const {tabs, selectedStickersSelectionId} = state
 
-  const [controlPanel, setControlPanel] = React.useState<any>(<>cool</>)
+  const [controlPanel, setControlPanel] = React.useState<any>()
 
   const horizontallyScrollableRef = React.useRef<HTMLDivElement | null>(null)
 

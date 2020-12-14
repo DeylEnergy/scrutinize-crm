@@ -17,7 +17,6 @@ import send from './index'
 import pushEvents from '../pushEvents'
 
 function getAcquisitionShape({bought, currentDatetime, currentOrder}: any) {
-  console.log(bought)
   const {
     /* eslint-disable */
     _product,
