@@ -5,7 +5,7 @@ import {SPACING} from '../../constants'
 
 const PAGE_WRAPPER_STYLE = {padding: `0 ${SPACING}px`}
 
-function Settings() {
+function GeneralSettings() {
   const [locale, setLocale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.GENERAL_SETTINGS
 
@@ -79,4 +79,4 @@ function Settings() {
   )
 }
 
-export default withErrorBoundary(Settings)
+export default withErrorBoundary(GeneralSettings)
