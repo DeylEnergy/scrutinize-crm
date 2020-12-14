@@ -215,20 +215,6 @@ function UpdateProduct({
       onOpenComplete={handleStatsDisplay}
       canSave={canSave(input)}
     >
-      <pre>
-        {JSON.stringify(
-          input,
-          [
-            'name',
-            'model',
-            'realPrice',
-            'inStockCount',
-            'soldCount',
-            'lowestBoundCount',
-          ],
-          2,
-        )}
-      </pre>
       <TextInputField
         name="name"
         value={input.name}
@@ -249,6 +235,7 @@ function UpdateProduct({
       />
       <TextInputField
         type="number"
+        disabled={productExists}
         name={productExists ? 'realPrice' : 'price'}
         value={productExists ? input.realPrice : input.price}
         // @ts-ignore
@@ -273,6 +260,7 @@ function UpdateProduct({
       )}
       <TextInputField
         type="number"
+        disabled={productExists}
         name={productExists ? 'inStockCount' : 'count'}
         value={productExists ? input.inStockCount : input.count}
         // @ts-ignore
@@ -283,6 +271,7 @@ function UpdateProduct({
       />
       {productExists && (
         <TextInputField
+          disabled={true}
           type="number"
           name="soldCount"
           value={input.soldCount}
