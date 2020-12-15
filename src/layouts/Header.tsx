@@ -59,6 +59,8 @@ export default function Header() {
     permissions?.includes(RIGHTS.CAN_EXPORT_DATA) ||
     permissions?.includes(RIGHTS.CAN_IMPORT_DATA)
 
+  const isElectronApp = process.env.REACT_APP_WRAPPER === 'electron'
+
   return (
     <Stripe>
       <ActionsContainer>
@@ -98,7 +100,7 @@ export default function Header() {
           </Link>
         )}
       </ActionsContainer>
-      <Logo>Scrutinize</Logo>
+      <Logo>{!isElectronApp && 'Scrutinize'}</Logo>
 
       <ActionsContainer last>
         {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
