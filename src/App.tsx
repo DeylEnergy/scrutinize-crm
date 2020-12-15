@@ -20,11 +20,26 @@ import createDbWorker from 'workerize-loader!./database' // eslint-disable-line 
 import RIGHTS from './constants/rights'
 import {useSetup, useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
+// console.log(electron)
+
+function enableDevToolsInProduction() {
+  const {remote} = window.require('electron')
+  remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
+    // @ts-ignore
+    remote.BrowserWindow.getFocusedWindow().webContents.openDevTools()
+  })
+
+  window.addEventListener('beforeunload', () => {
+    console.log('stop it')
+    remote.globalShortcut.unregisterAll()
+  })
+}
 
 let Router: any
 
 if (process.env.REACT_APP_WRAPPER === 'electron') {
   Router = require('react-router-dom').HashRouter
+  enableDevToolsInProduction()
 } else {
   Router = require('react-router-dom').BrowserRouter
 }
@@ -175,6 +190,7 @@ function AppProvider() {
   const [scannerListener, setScannerListener] = React.useState<any>(null)
 
   React.useEffect(() => {
+    console.log(window)
     import(`./locales/${language}`).then(({default: _, ...vars}: any) => {
       setLocale({language, vars})
     })
