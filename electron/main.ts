@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron'
+import {app, Menu, BrowserWindow} from 'electron'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
 import installExtension, {
@@ -10,11 +10,17 @@ let win: BrowserWindow | null = null
 function createWindow() {
   win = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 700,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   })
+  win.maximize()
+
+  const template: any = []
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 
   if (isDev) {
     win.loadURL('http://localhost:3000/index.html')
