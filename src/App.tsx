@@ -142,31 +142,31 @@ const App = () => {
 }
 
 const ACCOUNT_MOCK = {
-  user: {
-    name: 'Joe Doe',
-  },
-  permissions: [
-    'canSeeUsers',
-    'canSeeUserGroups',
-    'canSeeSales',
-    'canSeeProducts',
-    'canEditProducts',
-    'canSeeToBuyList',
-    'canSeeAcquisitions',
-    'canEditItemsInToBuyItems',
-    'canAddItemToBuyList',
-    'canPrintToBuyList',
-    'canCompleteToBuyList',
-    'canSeeUserProfile',
-    'canSeeCarts',
-    'canSeeStickersManager',
-    'canSeeStats',
-    'canSeeCashbox',
-    'canPerformCashboxOperations',
-    'canExportData',
-    'canImportData',
-  ],
-  groupName: 'Administrator',
+  // user: {
+  //   name: 'Joe Doe',
+  // },
+  // permissions: [
+  //   'canSeeUsers',
+  //   'canSeeUserGroups',
+  //   'canSeeSales',
+  //   'canSeeProducts',
+  //   'canEditProducts',
+  //   'canSeeToBuyList',
+  //   'canSeeAcquisitions',
+  //   'canEditItemsInToBuyItems',
+  //   'canAddItemToBuyList',
+  //   'canPrintToBuyList',
+  //   'canCompleteToBuyList',
+  //   'canSeeUserProfile',
+  //   'canSeeCarts',
+  //   'canSeeStickersManager',
+  //   'canSeeStats',
+  //   'canSeeCashbox',
+  //   'canPerformCashboxOperations',
+  //   'canExportData',
+  //   'canImportData',
+  // ],
+  // groupName: 'Administrator',
 }
 
 const LOCALE_DEFAULT = 'en'

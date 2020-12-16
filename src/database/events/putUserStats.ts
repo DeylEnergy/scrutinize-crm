@@ -41,7 +41,7 @@ export default async function putUserStats({
     if (parentEvent === PROCESS_SALE) {
       foundPeriod.soldSum += sum
       foundPeriod.incomeSum += payload.income
-    } else if (parentEvent === PROCESS_SALE) {
+    } else if (parentEvent === PROCESS_RETURN_ITEMS) {
       foundPeriod.soldSum -= sum
       foundPeriod.incomeSum -= payload.income
     } else if (parentEvent === PROCESS_ACQUISITIONS) {
