@@ -32,6 +32,7 @@ function getAcquisitionShape({bought, currentDatetime, currentOrder}: any) {
   } = bought
 
   acquisition._productId = acquisition._productId ?? futureProductId
+  acquisition.inStockCount = acquisition.count
   acquisition.datetime = [currentDatetime, currentOrder]
   acquisition.lastChangeDatetime.currentDatetime
 
