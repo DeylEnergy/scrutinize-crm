@@ -50,7 +50,7 @@ function PickAcquisition({
 
   const serializeItem = React.useCallback(
     (item: any) => {
-      const dateTime = getLocaleTimeString(item.datetime, STRING_FORMAT)
+      const dateTime = getLocaleTimeString(item.datetime[0], STRING_FORMAT)
       const acquisitionDateCell = {
         value: dateTime && `${dateTime.date}`,
       }
