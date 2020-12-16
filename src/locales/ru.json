@@ -420,7 +420,7 @@
         },
         "LABELS": {
           "CREDENTIALS": "Авторизация",
-          "USER_STATS": "Статистика пользователя"
+          "USER_STATS": "Статистика"
         },
         "TOASTER": {
           "NEW_SECRET_KEY_GENERATION_SUCCESS": "Новый ключ был создан. Не забудьте нажать кнопку 'Сохранить'."
@@ -545,7 +545,7 @@
         "TITLE_NEW_SUPPLIER": "Добавить поставщика",
         "TITLE_EDIT_SUPPLIER": "Редактировать поставщика",
         "LABELS": {
-          "SUPPLIER_STATS": "Статистика поставщика"
+          "SUPPLIER_STATS": "Статистика"
         },
         "TABLE": {
           "COLUMNS": {
@@ -597,7 +597,7 @@
         "TITLE_NEW_CUSTOMER": "Добавить покупателя",
         "TITLE_EDIT_CUSTOMER": "Редактировать покупателя",
         "LABELS": {
-          "CUSTOMER_STATS": "Статистика покупателя"
+          "CUSTOMER_STATS": "Статистика"
         },
         "TABLE": {
           "COLUMNS": {

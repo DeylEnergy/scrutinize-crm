@@ -79,7 +79,7 @@
           "COUNT": "Count"
         },
         "LABELS": {
-          "PRODUCT_STATS": "Product stats"
+          "PRODUCT_STATS": "Stats"
         },
         "TABLE": {
           "COLUMNS": {
@@ -417,7 +417,7 @@
         },
         "LABELS": {
           "CREDENTIALS": "Credentials",
-          "USER_STATS": "User stats"
+          "USER_STATS": "Stats"
         },
         "TOASTER": {
           "NEW_SECRET_KEY_GENERATION_SUCCESS": "New secret key was created. Don't forget to click 'Save' button"
@@ -594,7 +594,7 @@
         "TITLE_NEW_CUSTOMER": "Add customer",
         "TITLE_EDIT_CUSTOMER": "Edit customer",
         "LABELS": {
-          "CUSTOMER_STATS": "Customer stats"
+          "CUSTOMER_STATS": "Stats"
         },
         "TABLE": {
           "COLUMNS": {
