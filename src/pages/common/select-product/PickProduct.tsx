@@ -1,5 +1,5 @@
 import React from 'react'
-import {TableHead, SearchTableHeaderCell, SearchIcon} from 'evergreen-ui'
+import {TableHead, SearchTableHeaderCell, SearchIcon, Pane} from 'evergreen-ui'
 import {PageWrapper} from '../../../layouts'
 import Table from '../../../components/Table'
 import {
@@ -127,16 +127,18 @@ function PickProduct({handleProductSelect}: any) {
           icon={SearchIcon}
         />
       </TableHead>
-      <Table
-        columns={columns}
-        rows={loadedItems.items}
-        rowHeight={32}
-        isHeaderShown={false}
-        isRowNumberShown={false}
-        hasNextPage={loadedItems.hasNextPage}
-        isItemLoaded={isItemLoaded}
-        loadMoreItems={loadMoreItems}
-      />
+      <Pane flexGrow={1}>
+        <Table
+          columns={columns}
+          rows={loadedItems.items}
+          rowHeight={32}
+          isHeaderShown={false}
+          isRowNumberShown={false}
+          hasNextPage={loadedItems.hasNextPage}
+          isItemLoaded={isItemLoaded}
+          loadMoreItems={loadMoreItems}
+        />
+      </Pane>
     </PageWrapper>
   )
 }
