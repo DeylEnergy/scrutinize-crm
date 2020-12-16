@@ -44,7 +44,7 @@
           },
           "LAST_SOLD": {
             "TITLE": "Last Sold",
-            "WIDTH": 130
+            "WIDTH": 170
           },
           "LAST_ACQUIRED": {
             "TITLE": "Last Acquired",
@@ -307,7 +307,7 @@
         "COLUMNS": {
           "TIME": {
             "TITLE": "Date",
-            "WIDTH": 160
+            "WIDTH": 170
           },
           "NAME": {
             "TITLE": "Name",
