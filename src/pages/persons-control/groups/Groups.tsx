@@ -86,7 +86,7 @@ function Groups() {
             content={
               <Menu>
                 <Menu.Group>
-                  <Menu.Item onSelect={() => {}} icon={EditIcon}>
+                  <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
                     {PAGE_CONST.TABLE.OPTIONS.EDIT}
                   </Menu.Item>
                 </Menu.Group>
