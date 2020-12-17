@@ -48,6 +48,7 @@ export default function CartsDialog({isShown, setIsShown}: any) {
 
   const handleCheckoutClose = React.useCallback(() => {
     setIsCheckoutDialogShown(false)
+    setState({currentCartSum: 0})
   }, [])
 
   const handleDialogTabSwitch = React.useCallback(() => {
