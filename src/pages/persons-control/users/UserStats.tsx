@@ -99,8 +99,7 @@ function UserStats({userId}: any) {
       setLoadedItems({
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
         items: [...itemsRef.current, ...newItemsSerialized],
-        lastKey:
-          newItems.length && newItems[newItems.length - 1].userIdDatetime,
+        lastKey: newItems.length && newItems[newItems.length - 1].userIdPeriod,
       })
     })
   }, [makeCancellablePromise, db, lastKey, serializeItem, userId])
