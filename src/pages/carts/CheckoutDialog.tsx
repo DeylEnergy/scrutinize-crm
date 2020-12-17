@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Dialog, Pane, Tablist, Tab, Alert} from 'evergreen-ui'
-import {useLocale, useDatabase, useAccount} from '../../utilities'
+import {useLocale, useDatabase, useAccount, useDelay} from '../../utilities'
 import {PROCESS_SALE, PROCESS_RETURN_ITEMS} from '../../constants/events'
 import TextInputField from '../../components/TextInputField'
 import {SPACING} from '../../constants'
@@ -70,6 +70,8 @@ const CONTENT_CONTAINER_STYLE = {
   height: 190,
 }
 
+const MIN_CONFIRM_DELAY_MS = 1000
+
 export default function CheckoutDialog({
   isShown,
   handleCheckoutClose,
@@ -84,6 +86,11 @@ export default function CheckoutDialog({
   const [{permissions}] = useAccount()
 
   const db = useDatabase()
+
+  const [isConfirmLoading, {handleDelay}] = useDelay(
+    false,
+    MIN_CONFIRM_DELAY_MS,
+  )
 
   const [isCartCompleted, setIsCartCompleted] = React.useState(false)
 
@@ -119,11 +126,15 @@ export default function CheckoutDialog({
   }, [CHECKOUT, permissions])
 
   const handleConfirm = React.useCallback(() => {
+    handleDelay({isProgressing: true})
     db.sendEvent({type: selectedAction, payload: {cartId}}).then(() => {
-      setIsCartCompleted(true)
-      handleCheckoutSuccess()
+      const handleSuccess = () => {
+        setIsCartCompleted(true)
+        handleCheckoutSuccess()
+      }
+      handleDelay({isProgressing: false, cb: handleSuccess})
     })
-  }, [cartId, db, handleCheckoutSuccess, selectedAction])
+  }, [cartId, db, handleCheckoutSuccess, handleDelay, selectedAction])
 
   const handleCompleteClose = React.useCallback(() => {
     if (isCartCompleted) {
@@ -133,14 +144,27 @@ export default function CheckoutDialog({
     }
   }, [isCartCompleted, handleDialogTabSwitch, handleCheckoutClose])
 
+  const handleCancel = React.useCallback(
+    (close: () => void) => {
+      if (isConfirmLoading) {
+        return
+      }
+
+      close()
+    },
+    [isConfirmLoading],
+  )
+
   return (
     <Dialog
       shouldCloseOnOverlayClick={false}
       isShown={isShown}
       title={CHECKOUT.TITLE}
       onCloseComplete={handleCompleteClose}
+      onCancel={handleCancel}
       width={300}
       topOffset="auto"
+      isConfirmLoading={isConfirmLoading}
       isConfirmDisabled={
         selectedAction === PROCESS_SALE && totalSum > 0 && changeSum < 0
       }
