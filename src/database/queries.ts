@@ -17,6 +17,42 @@ async function getFilter(
   return filtersParent[filterName]
 }
 
+export function getRow({
+  store,
+  storeName,
+  indexName,
+  key,
+}: {
+  store?: any
+  storeName?: string
+  indexName?: string
+  key: string | number
+}) {
+  return new Promise((resolve, reject) => {
+    let selectedStore = store
+
+    if (!selectedStore && storeName) {
+      const tx = setupTransaction(storeName)
+
+      selectedStore = tx?.objectStore(storeName)
+    }
+
+    if (indexName) {
+      selectedStore = selectedStore.index(indexName)
+    }
+
+    const req = selectedStore.get(key)
+
+    req.onsuccess = (event: any) => {
+      resolve(event.target.result)
+    }
+
+    req.onerror = (error: any) => {
+      reject(error)
+    }
+  })
+}
+
 export function getRowFromStore(
   storeName: string,
   id: any,
