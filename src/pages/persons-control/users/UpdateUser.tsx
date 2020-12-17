@@ -127,6 +127,20 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     user?.id === doc.id ||
     permissions.includes(RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS)
 
+  const giveDefaultGroupId = React.useCallback(() => {
+    if (groups.length) {
+      const [defaultGroup]: any = groups
+      setGroupId(defaultGroup.id)
+    }
+  }, [groups])
+
+  React.useEffect(() => {
+    if (!groupId) {
+      // this condition should execute once
+      giveDefaultGroupId()
+    }
+  }, [groupId, giveDefaultGroupId])
+
   React.useEffect(() => {
     if (!doc.id) {
       setInput({futureId: uuidv4()})
