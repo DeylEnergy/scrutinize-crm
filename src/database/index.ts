@@ -20,9 +20,7 @@ export function getRow(params: {
   indexName?: string
   key: string
 }) {
-  return params.indexName
-    ? queries.getRowFromIndexStore(params)
-    : queries.getRowFromStore(params.storeName, params.key)
+  return queries.getRow(params)
 }
 
 export async function search({storeName, ...params}: any) {
