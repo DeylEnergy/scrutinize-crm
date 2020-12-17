@@ -24,13 +24,7 @@ export default function filters({searchQuery, productId}: any) {
         searchValues.push(supplierName)
       }
 
-      for (const searchValue of searchValues) {
-        if (isSearchValueIncluded(searchValue, searchQuery)) {
-          return true
-        }
-      }
-
-      return false
+      return isSearchValueIncluded(searchValues, searchQuery)
     },
     productId: ({_productId, inStockCount}: any) => {
       return _productId === productId && inStockCount > 0

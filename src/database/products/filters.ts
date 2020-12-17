@@ -13,13 +13,7 @@ export default function filters({searchQuery}: any) {
       searchValues.push(...productNameModel)
     }
 
-    for (const searchValue of searchValues) {
-      if (isSearchValueIncluded(searchValue, searchQuery)) {
-        return true
-      }
-    }
-
-    return false
+    return isSearchValueIncluded(searchValues, searchQuery)
   }
 
   const all = (product: any) => {
