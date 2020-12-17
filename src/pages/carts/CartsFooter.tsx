@@ -57,6 +57,7 @@ function CartsFooter({
             isShown={isQRScannerShown}
             setIsShown={setIsQRScannerShown}
             buttonTitle={CONTROLS.SCANNER.BUTTON_TITLE}
+            disabled={!selectedCartId}
           />
           <Button
             disabled={!currentCartSum}
