@@ -1,10 +1,10 @@
-import {getRowFromStore, getRowFromIndexStore} from '../../queries'
+import {getRowFromStore, getRow} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {handleAsync} from '../../../utilities'
 
 export default async function getCartParticipants({cartId}: {cartId: string}) {
   const [participants] = await handleAsync(
-    getRowFromIndexStore({
+    getRow({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: cartId,

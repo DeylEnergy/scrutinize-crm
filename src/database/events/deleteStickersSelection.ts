@@ -1,6 +1,6 @@
 import {handleAsync} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {getRowFromIndexStore} from '../queries'
+import {getRow} from '../queries'
 import deleteRow from '../deleteRow'
 import saveEvent from './saveEvent'
 
@@ -10,7 +10,7 @@ export default async function deleteStickersSelection({
   payload,
   emitEvent = true,
 }: any) {
-  const stickersSelection: any = await getRowFromIndexStore({
+  const stickersSelection: any = await getRow({
     storeName: SN.STICKERS,
     indexName: IN.STICKERS_SELECTION_ID,
     key: payload.stickersSelectionId,
