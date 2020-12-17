@@ -30,29 +30,23 @@ function CartParticipants({selectedCartId}: any) {
   )
 
   React.useEffect(() => {
-    const reqId = requestAnimationFrame(() => {
-      const performedFetch = makeCancellablePromise(
-        db.perform({
-          storeName: SN.SALES,
-          action: 'getCartParticipants',
-          params: {cartId: selectedCartId},
-        }),
-      )
+    const performedFetch = makeCancellablePromise(
+      db.perform({
+        storeName: SN.SALES,
+        action: 'getCartParticipants',
+        params: {cartId: selectedCartId},
+      }),
+    )
 
-      performedFetch.then(({_user, _userId, _customer, _customerId}: any) => {
-        setHasLoaded(true)
-        setCartParticipants({
-          _userName: _user?.name,
-          _userId,
-          _customerName: _customer?.name,
-          _customerId,
-        })
+    performedFetch.then(({_user, _userId, _customer, _customerId}: any) => {
+      setHasLoaded(true)
+      setCartParticipants({
+        _userName: _user?.name,
+        _userId,
+        _customerName: _customer?.name,
+        _customerId,
       })
     })
-
-    return () => {
-      cancelAnimationFrame(reqId)
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db])
 
