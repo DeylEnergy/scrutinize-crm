@@ -1,4 +1,4 @@
-import {getFullStore} from '../queries'
+import {getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {handleAsync} from '../../utilities'
 
@@ -16,7 +16,7 @@ export default async function searchInSales({
   if (type === 'init') {
     // get sales datetime index store relative to filters
     const [sales] = await handleAsync(
-      getFullStore({
+      getAllRows({
         storeName: SN.SALES,
         indexName: IN.DATETIME,
         direction: 'prev',

@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getFullStore} from '../queries'
+import {getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
@@ -40,7 +40,7 @@ function getAcquisitionShape({bought, currentDatetime, currentOrder}: any) {
 }
 
 export default async function processAcquisitions() {
-  const boughtProducts = await getFullStore({
+  const boughtProducts = await getAllRows({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
     filterBy: 'bought',

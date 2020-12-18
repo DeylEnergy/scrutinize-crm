@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getFullStore} from '../queries'
+import {getRowFromStore, getAllRows} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -24,7 +24,7 @@ export default async function putStickersSelectionItem({
     payload._acquisitionId
   ) {
     const [selectedProducts] = await handleAsync(
-      getFullStore({
+      getAllRows({
         storeName: SN.STICKERS,
         direction: 'prev',
         matchProperties: {_stickersSelectionId: payload._stickersSelectionId},

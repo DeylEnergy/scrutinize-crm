@@ -253,7 +253,7 @@ export function getRows(params: any): any {
   })
 }
 
-export function getFullStore(params: any): any {
+export function getAllRows(params: any): any {
   const {
     direction = 'next',
     filterBy,

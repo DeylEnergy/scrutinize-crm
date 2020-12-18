@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getFullStore, getRow} from '../queries'
+import {getAllRows, getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
@@ -52,7 +52,7 @@ function getSaleTotalSum(cartProducts: any) {
 }
 
 export default async function processSale({payload}: any) {
-  const cartProducts = await getFullStore({
+  const cartProducts = await getAllRows({
     storeName: SN.SALES,
     indexName: IN.__CART_ID__,
     direction: 'prev',
@@ -213,7 +213,7 @@ export default async function processSale({payload}: any) {
       productShapeAfterSale.lowestBoundCount
     ) {
       const [theProductInBuyList] = await handleAsync(
-        getFullStore({
+        getAllRows({
           storeName: SN.ACQUISITIONS,
           indexName: IN.NEEDED_SINCE_DATETIME,
           dataCollecting: false,

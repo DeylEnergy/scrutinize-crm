@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getFullStore} from '../queries'
+import {getRowFromStore, getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -21,7 +21,7 @@ export default async function putSale({
   // in case sale item was scanned outside from particular cart give it the latest one
   if (!payload.__cartId__ && !payload.cartId) {
     const [saleItem] = await handleAsync(
-      getFullStore({
+      getAllRows({
         storeName: SN.SALES,
         indexName: IN.__CART_ID__,
         direction: 'prev',
@@ -42,7 +42,7 @@ export default async function putSale({
   // if _acquisitionId is provided it will manipulate count
   if (payload.__cartId__ && payload._productId && payload._acquisitionId) {
     const [saleItems] = await handleAsync(
-      getFullStore({
+      getAllRows({
         storeName: SN.SALES,
         indexName: IN.__CART_ID__,
         direction: 'prev',

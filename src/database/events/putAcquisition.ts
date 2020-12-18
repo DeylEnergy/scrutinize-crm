@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getFullStore} from '../queries'
+import {getRowFromStore, getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
