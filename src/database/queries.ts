@@ -58,29 +58,6 @@ export function getRow({
   })
 }
 
-export function getRowFromStore(
-  storeName: string,
-  id: any,
-  store?: IDBObjectStore | null,
-  tx?: IDBTransaction,
-) {
-  return new Promise(resolve => {
-    if (!tx) {
-      tx = setupTransaction(storeName, 'readonly')
-    }
-
-    if (!store) {
-      // @ts-ignore
-      store = tx?.objectStore(storeName)
-    }
-
-    // @ts-ignore
-    store.get(id).onsuccess = function(event: any) {
-      resolve(event.target.result)
-    }
-  })
-}
-
 function withoutFilter(includeAll = true) {
   return includeAll
 }
