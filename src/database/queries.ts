@@ -28,7 +28,7 @@ export function getRow({
   tx?: IDBTransaction
   storeName?: string
   indexName?: string
-  key: string | number
+  key: string | number | any[]
 }) {
   return new Promise((resolve, reject) => {
     let selectedStore = store
