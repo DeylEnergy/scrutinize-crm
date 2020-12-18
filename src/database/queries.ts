@@ -19,22 +19,27 @@ async function getFilter(
 
 export function getRow({
   store,
+  tx,
   storeName,
   indexName,
   key,
 }: {
   store?: any
+  tx?: IDBTransaction
   storeName?: string
   indexName?: string
   key: string | number
 }) {
   return new Promise((resolve, reject) => {
     let selectedStore = store
+    let activeTransaction = tx
+
+    if (!activeTransaction && !selectedStore && storeName) {
+      activeTransaction = setupTransaction(storeName)
+    }
 
     if (!selectedStore && storeName) {
-      const tx = setupTransaction(storeName)
-
-      selectedStore = tx?.objectStore(storeName)
+      selectedStore = activeTransaction?.objectStore(storeName)
     }
 
     if (indexName) {
