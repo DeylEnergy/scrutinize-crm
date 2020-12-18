@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore, getRowFromIndexStore} from '../queries'
+import {getFullIndexStore, getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
@@ -138,7 +138,7 @@ export default async function processSale({payload}: any) {
         }),
     })
 
-    const cartParticipants: any = await getRowFromIndexStore({
+    const cartParticipants: any = await getRow({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: cartItem.__cartId__,
@@ -255,7 +255,7 @@ export default async function processSale({payload}: any) {
       }),
   })
 
-  const selectedActiveCart: any = await getRowFromIndexStore({
+  const selectedActiveCart: any = await getRow({
     storeName: SN.SALES,
     indexName: IN.ACTIVE_CART_ID,
     key: payload.cartId,

@@ -76,31 +76,6 @@ export function getRowFromStore(
   })
 }
 
-export function getRowFromIndexStore(params: any) {
-  const {
-    storeName,
-    indexName,
-    key,
-  }: {
-    storeName: string
-    indexName: string
-    key: any
-  } = params
-  return new Promise((resolve, reject) => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
-
-    const indexStore = objectStore.index(indexName)
-
-    if (!indexStore) {
-      return reject('No index found')
-    }
-
-    indexStore.get(key).onsuccess = async (event: any) => {
-      resolve(event.target.result)
-    }
-  })
-}
-
 export function getFullStore(storeName: string) {
   return new Promise(resolve => {
     const {objectStore} = setupTransaction(storeName, 'readonly', true)
