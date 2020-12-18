@@ -90,22 +90,6 @@ function withoutFilter(includeAll = true) {
   return includeAll
 }
 
-async function aggregate({rows, params}: any) {
-  const {storeName} = params
-
-  const [aggregateFn, noAggregator] = await handleAsync(
-    import(`./${storeName}/aggregate`),
-  )
-
-  if (noAggregator) {
-    return rows
-  }
-
-  if (aggregateFn.default) {
-    return aggregateFn.default({rows, params})
-  }
-}
-
 function getCustomKeyRange(keyRange: any) {
   if (!keyRange) {
     return
