@@ -202,9 +202,9 @@ async function setupQuery(params: any) {
     outputFormatFn,
   }
 }
-// TODO: Rename with more generic name
-export function getAllFromIndexStore(params: any): any {
-  const {indexName, limit, lastKey, customKeyRange, direction = 'next'} = params
+
+export function getRows(params: any): any {
+  const {limit, lastKey, customKeyRange, direction = 'next'} = params
 
   return new Promise(async (resolve, reject) => {
     const [querySetup, querySetupError] = await handleAsync(setupQuery(params))
