@@ -1,4 +1,4 @@
-import {getAllRows, getRowFromStore} from '../../queries'
+import {getAllRows, getRow} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 export default async function computeBuyList() {
@@ -8,7 +8,7 @@ export default async function computeBuyList() {
     filterBy: 'active',
   })
 
-  let budget: any = await getRowFromStore(SN.BUDGET, 1)
+  let budget: any = await getRow({storeName: SN.BUDGET, key: 1})
 
   if (!budget) {
     return {}

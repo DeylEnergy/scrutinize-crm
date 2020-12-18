@@ -1,4 +1,4 @@
-import {getAllRows, getRowFromStore} from '../../queries'
+import {getAllRows} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 export default async function currentProductsOutline() {

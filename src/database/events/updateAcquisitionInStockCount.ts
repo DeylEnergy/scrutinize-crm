@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 import {
   UPDATE_ACQUISITION_IN_STOCK_COUNT,
@@ -18,11 +18,14 @@ export default async function updateAcquisitionInStockCount({
     return Promise.reject('Incorrect input number.')
   }
 
-  const acquisition: any = await getRowFromStore(SN.ACQUISITIONS, payload.id)
-  const product: any = await getRowFromStore(
-    SN.PRODUCTS,
-    acquisition._productId,
-  )
+  const acquisition: any = await getRow({
+    storeName: SN.ACQUISITIONS,
+    key: payload.id,
+  })
+  const product: any = await getRow({
+    storeName: SN.PRODUCTS,
+    key: acquisition._productId,
+  })
 
   const newAqInStockCount = payload.inStockCount
   const inStockCountDifference = newAqInStockCount - acquisition.inStockCount
@@ -67,18 +70,18 @@ export default async function updateAcquisitionInStockCount({
   }
 
   if (consumer === 'client' && acquisition._supplierId) {
-    acquisition._supplier = await getRowFromStore(
-      SN.SUPPLIERS,
-      acquisition._supplierId,
-    )
+    acquisition._supplier = await getRow({
+      storeName: SN.SUPPLIERS,
+      key: acquisition._supplierId,
+    })
   }
 
   if (consumer === 'client' && acquisition._userId) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {secretKey, ...userData}: any = await getRowFromStore(
-      SN.USERS,
-      acquisition._userId,
-    )
+    const {secretKey, ...userData}: any = await getRow({
+      storeName: SN.USERS,
+      key: acquisition._userId,
+    })
     acquisition._user = userData
   }
 

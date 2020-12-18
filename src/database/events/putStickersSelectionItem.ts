@@ -1,12 +1,12 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getAllRows} from '../queries'
+import {getRow, getAllRows} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 
 async function getAcquisitionData(id: string) {
-  const aq: any = await getRowFromStore(SN.ACQUISITIONS, id)
+  const aq: any = await getRow({storeName: SN.ACQUISITIONS, key: id})
 
   return aq
 }
@@ -86,10 +86,10 @@ export default async function putStickersSelectionItem({
   if (!payload.id) {
     payload.id = uuidv4()
     if (payload._productId) {
-      const _product: any = await getRowFromStore(
-        SN.PRODUCTS,
-        payload._productId,
-      )
+      const _product: any = await getRow({
+        storeName: SN.PRODUCTS,
+        key: payload._productId,
+      })
 
       payload._product = _product
     }

@@ -1,4 +1,4 @@
-import {getRowFromStore, getRow} from '../../queries'
+import {getRow} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {handleAsync} from '../../../utilities'
 
@@ -17,7 +17,7 @@ export default async function getCartParticipants({cartId}: {cartId: string}) {
 
   if (participants._userId) {
     const [userData] = await handleAsync(
-      getRowFromStore(SN.USERS, participants._userId),
+      getRow({storeName: SN.USERS, key: participants._userId}),
     )
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,7 +28,7 @@ export default async function getCartParticipants({cartId}: {cartId: string}) {
 
   if (participants._customerId) {
     const [_customer] = await handleAsync(
-      getRowFromStore(SN.CUSTOMERS, participants._customerId),
+      getRow({storeName: SN.CUSTOMERS, key: participants._customerId}),
     )
 
     participants._customer = _customer

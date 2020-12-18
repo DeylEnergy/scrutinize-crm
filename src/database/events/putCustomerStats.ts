@@ -7,7 +7,7 @@ import {
   PROCESS_SALE,
   PROCESS_RETURN_ITEMS,
 } from '../../constants/events'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 
 export default async function putCustomerStats({
   store = null,
@@ -25,7 +25,7 @@ export default async function putCustomerStats({
     const customerIdPeriod = [payload._customerId, currentPeriod]
 
     let [foundPeriod] = await handleAsync(
-      getRowFromStore(SN.CUSTOMERS_STATS, customerIdPeriod, store),
+      getRow({store, storeName: SN.CUSTOMERS_STATS, key: customerIdPeriod}),
     )
 
     if (!foundPeriod) {

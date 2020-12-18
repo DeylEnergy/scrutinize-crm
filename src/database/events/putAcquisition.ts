@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getAllRows} from '../queries'
+import {getRow, getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -18,12 +18,11 @@ export default async function putAcquisition({
   if (!payload.id) {
     payload.id = uuidv4()
     if (payload._productId) {
-      const _product: any = await getRowFromStore(
-        SN.PRODUCTS,
-        payload._productId,
-        null,
+      const _product: any = await getRow({
         tx,
-      )
+        storeName: SN.PRODUCTS,
+        key: payload._productId,
+      })
 
       payload.price = _product.realPrice
       payload.count = _product.lowestBoundCount
@@ -89,17 +88,20 @@ export default async function putAcquisition({
   let _supplierUpdated
 
   if (consumer === 'client' && payload._supplierId) {
-    _supplierUpdated = await getRowFromStore(SN.SUPPLIERS, payload._supplierId)
+    _supplierUpdated = await getRow({
+      storeName: SN.SUPPLIERS,
+      key: payload._supplierId,
+    })
   }
 
   let _userUpdated
 
   if (consumer === 'client' && payload._userId) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {secretKey, ...userData}: any = await getRowFromStore(
-      SN.USERS,
-      payload._userId,
-    )
+    const {secretKey, ...userData}: any = await getRow({
+      storeName: SN.USERS,
+      key: payload._userId,
+    })
     _userUpdated = userData
   }
 

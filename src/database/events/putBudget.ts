@@ -7,7 +7,7 @@ import {
   PROCESS_RETURN_ITEMS,
   PUT_BUDGET,
 } from '../../constants/events'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 
 export default async function putBudget({
   store = null,
@@ -17,7 +17,7 @@ export default async function putBudget({
   emitEvent = true,
 }: any) {
   const [budget, budgetError] = await handleAsync(
-    getRowFromStore(SN.BUDGET, 1, store),
+    getRow({store, storeName: SN.BUDGET, key: 1}),
   )
 
   if (budgetError) {
