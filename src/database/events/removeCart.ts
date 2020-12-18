@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore, getRow} from '../queries'
+import {getFullStore, getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {DELETE_SALE_ITEM} from '../../constants/events'
 import send from './index'
@@ -25,7 +25,7 @@ export default async function removeCart({payload}: any) {
     },
   ]
 
-  const cartProducts = await getFullIndexStore({
+  const cartProducts = await getFullStore({
     storeName: SN.SALES,
     indexName: IN.__CART_ID__,
     direction: 'prev',

@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore, getRow} from '../queries'
+import {getFullStore, getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
@@ -53,7 +53,7 @@ function getReturnTotalSum(cartProducts: any) {
 }
 
 export default async function processReturnItems({payload}: any) {
-  const cartProducts = await getFullIndexStore({
+  const cartProducts = await getFullStore({
     storeName: SN.SALES,
     indexName: IN.__CART_ID__,
     direction: 'prev',
@@ -211,7 +211,7 @@ export default async function processReturnItems({payload}: any) {
       productShapeAfterReturn.lowestBoundCount
     ) {
       const [theProductInBuyList] = await handleAsync(
-        getFullIndexStore({
+        getFullStore({
           storeName: SN.ACQUISITIONS,
           indexName: IN.NEEDED_SINCE_DATETIME,
           dataCollecting: false,

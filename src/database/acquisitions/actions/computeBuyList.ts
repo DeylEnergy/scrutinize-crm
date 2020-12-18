@@ -1,8 +1,8 @@
-import {getFullIndexStore, getRowFromStore} from '../../queries'
+import {getFullStore, getRowFromStore} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 export default async function computeBuyList() {
-  const buyList = await getFullIndexStore({
+  const buyList = await getFullStore({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
     filterBy: 'active',

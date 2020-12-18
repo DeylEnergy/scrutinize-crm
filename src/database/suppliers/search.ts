@@ -11,7 +11,7 @@ export default async function searchInSuppliers({
   query: string
 }) {
   if (type === 'init') {
-    const suppliers: any = await getFullStore(SN.SUPPLIERS)
+    const suppliers: any = await getFullStore({storeName: SN.SUPPLIERS})
 
     const keys = []
     for (const supplier of suppliers) {

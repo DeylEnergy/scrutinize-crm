@@ -1,8 +1,8 @@
-import {getFullIndexStore, getRowFromStore} from '../../queries'
+import {getFullStore, getRowFromStore} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 export default async function currentProductsOutline() {
-  const activeProducts = await getFullIndexStore({
+  const activeProducts = await getFullStore({
     storeName: SN.PRODUCTS,
     filterBy: 'inStock',
   })

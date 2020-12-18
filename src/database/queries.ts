@@ -76,16 +76,6 @@ export function getRowFromStore(
   })
 }
 
-export function getFullStore(storeName: string) {
-  return new Promise(resolve => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
-
-    objectStore.getAll().onsuccess = function(event: any) {
-      resolve(event.target.result)
-    }
-  })
-}
-
 function withoutFilter(includeAll = true) {
   return includeAll
 }
@@ -262,8 +252,8 @@ export function getAllFromIndexStore(params: any): any {
     }
   })
 }
-// TODO: Rename with more generic name
-export function getFullIndexStore(params: any): any {
+
+export function getFullStore(params: any): any {
   const {
     direction = 'next',
     filterBy,

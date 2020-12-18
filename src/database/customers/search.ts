@@ -11,7 +11,7 @@ export default async function searchInUsers({
   query: string
 }) {
   if (type === 'init') {
-    const customers: any = await getFullStore(SN.CUSTOMERS)
+    const customers: any = await getFullStore({storeName: SN.CUSTOMERS})
 
     const keys = []
     for (const customer of customers) {

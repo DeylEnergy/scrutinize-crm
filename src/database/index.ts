@@ -7,7 +7,7 @@ import _exportObjectStoresData from './exportObjectStoresData'
 import _importObjectStoresData from './importObjectStoresData'
 
 export function getRows(params: any) {
-  let fetcher = queries.getFullIndexStore
+  let fetcher = queries.getFullStore
   if (params.lastKey || params.limit) {
     fetcher = queries.getAllFromIndexStore
   }
