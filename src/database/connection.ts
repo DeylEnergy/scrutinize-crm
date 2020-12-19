@@ -115,6 +115,11 @@ dbReq.onupgradeneeded = () => {
 dbReq.onsuccess = () => {
   if (!db.current) {
     db.current = dbReq.result
+
+    /* eslint-disable */
+    // @ts-ignore
+    self.postMessage('ready')
+    /* eslint-enable */
   }
 }
 dbReq.onerror = () => console.error('db connection error', dbReq.error)

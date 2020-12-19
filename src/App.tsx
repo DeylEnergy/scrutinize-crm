@@ -44,7 +44,7 @@ if (process.env.REACT_APP_WRAPPER === 'electron') {
   Router = require('react-router-dom').BrowserRouter
 }
 
-const fns: any = createDbWorker()
+const workerFns: any = createDbWorker()
 
 function displayDanger(err: any) {
   toaster.danger('Error', {
@@ -54,13 +54,13 @@ function displayDanger(err: any) {
 
 function handleError(err: any) {
   displayDanger(err)
-  fns.sendEvent({type: 'saveError', payload: err}).catch(displayDanger)
+  workerFns.sendEvent({type: 'saveError', payload: err}).catch(displayDanger)
 }
 
 const dbWorker = (() => {
   // this way every caught exception will be displayed inside the toaster
-  return Object.keys(fns).reduce((total: any, cur: any) => {
-    total[cur] = (...args: any) => fns[cur](...args).catch(handleError)
+  return Object.keys(workerFns).reduce((total: any, cur: any) => {
+    total[cur] = (...args: any) => workerFns[cur](...args).catch(handleError)
     return total
   }, {})
 })()
@@ -165,6 +165,7 @@ const ACCOUNT_MOCK = {
   //   'canPerformCashboxOperations',
   //   'canExportData',
   //   'canImportData',
+  //   'canReturnSalesItems',
   // ],
   // groupName: 'Administrator',
 }
@@ -176,6 +177,8 @@ const SETUP_DEFAULT = {
 }
 
 function AppProvider() {
+  const [isDbWorkerReady, setIsDbWorkerReady] = React.useState(false)
+
   const [language, setLanguage] = useLocalStorage('LOCALE', LOCALE_DEFAULT)
   const [locale, setLocale] = React.useState<any>(null)
 
@@ -196,7 +199,15 @@ function AppProvider() {
     })
   }, [language, setLocale])
 
-  if (!locale) {
+  React.useEffect(() => {
+    workerFns.onmessage = (event: any) => {
+      if (event.data === 'ready') {
+        setIsDbWorkerReady(true)
+      }
+    }
+  }, [])
+
+  if (!locale || !isDbWorkerReady) {
     return null
   }
 
