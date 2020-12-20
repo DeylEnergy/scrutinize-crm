@@ -8,7 +8,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import {Spinner} from 'evergreen-ui'
 import Tooltip from './Tooltip'
 import CellTextWrapper from './CellTextWrapper'
-import {useLocale, useUpdate, useOneTime} from '../utilities'
+import {useLocale, useUpdate, useOneTime, getTestId} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
@@ -152,6 +152,8 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
       cellData.onDoubleClick
     : null
 
+  const cellTestProps = getTestId(cellContent?.testId)
+
   const columnLabel = columns[columnIndex].label
 
   const customCellContentStyle = isItemAvailable
@@ -172,6 +174,7 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
       style={{
         ...style,
       }}
+      {...cellTestProps}
     >
       <TableCellContent
         style={{
