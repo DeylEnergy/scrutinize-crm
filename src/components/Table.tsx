@@ -40,6 +40,7 @@ const TableCell = styled.div<{selected: boolean}>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  pointer-events: auto;
 `
 
 const TableCellContent = styled.div`
