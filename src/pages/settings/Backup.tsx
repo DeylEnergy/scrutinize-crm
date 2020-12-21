@@ -7,8 +7,9 @@ import {
   downloadObjectAsJSON,
   readJSONData,
   withErrorBoundary,
+  getTestId,
 } from '../../utilities'
-import {SPACING} from '../../constants'
+import {IS_CYPRESS_ENVIRONMENT, SPACING} from '../../constants'
 import RIGHTS from '../../constants/rights'
 
 const PAGE_WRAPPER_STYLE = {padding: `0 ${SPACING}px`}
@@ -52,6 +53,26 @@ function Backup() {
     [setActionType],
   )
 
+  const handleDummyDataImport = React.useCallback(() => {
+    return import('../../dummyData.json').then((fileContent: any) => {
+      return db
+        .importObjectStoresData(fileContent, true)
+        .then((result: any) => {
+          if (!result) {
+            return Promise.reject('Cannot import dummy data.')
+          }
+
+          toaster.success('Success', {
+            description: (
+              <span {...getTestId('re-import-success-toaster')}>
+                Re-import success.
+              </span>
+            ),
+          })
+        })
+    })
+  }, [db])
+
   const handleSelectImportFile = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const [uploadedFile]: any = e.target.files
@@ -94,11 +115,22 @@ function Backup() {
 
         setIsProcessing(false)
       })
+    } else if (actionType === OPTION_IMPORT_DATA && IS_CYPRESS_ENVIRONMENT) {
+      handleDummyDataImport()
     } else if (actionType === OPTION_IMPORT_DATA && fileInputRef.current) {
       const clickEvent = new MouseEvent('click')
       fileInputRef.current.dispatchEvent(clickEvent)
     }
-  }, [actionType, db, setIsProcessing, STRING_FORMAT, TOASTER])
+  }, [
+    actionType,
+    db,
+    setIsProcessing,
+    handleDummyDataImport,
+    STRING_FORMAT,
+    TOASTER,
+  ])
+
+  const applyButtonTestProps = getTestId('apply-backup-button')
 
   return (
     <Pane style={PAGE_WRAPPER_STYLE}>
@@ -126,6 +158,7 @@ function Backup() {
         isLoading={isProcessing}
         width="auto"
         onClick={handleSave}
+        {...applyButtonTestProps}
       >
         {CONTROLS.APPLY_BUTTON_TITLE}
       </Button>
