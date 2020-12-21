@@ -13,7 +13,7 @@ import {
   SearchIcon,
 } from 'evergreen-ui'
 import Popover from './Popover'
-import {debounce} from '../utilities'
+import {debounce, getTestId} from '../utilities'
 
 function getEmptyView(close: any, emptyView: any) {
   if (typeof emptyView === 'function') {
@@ -100,6 +100,7 @@ function Header({
             height={32}
             placeholder={filterPlaceholder}
             icon={filterIcon}
+            {...getTestId('select-menu-search-input')}
           />
         </TableHead>
       )}
@@ -139,6 +140,7 @@ function SelectMenu({
       },
       onFilterChange: onFilterChangeHandler,
       selected: arrify(selected),
+      ...getTestId('select-menu-options-list'),
     }),
     [onFilterChangeHandler, selected, onSelectHandler, onDeselectHandler],
   )
