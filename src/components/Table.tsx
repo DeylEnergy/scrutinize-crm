@@ -626,7 +626,7 @@ function Table({
               {({onItemsRendered, ref}: any) => {
                 return (
                   <Grid
-                    // @ts-ignore
+                    className="virtual-table-parent"
                     rowCount={itemCount}
                     columnCount={adjustedColumns.length}
                     columnWidth={columnIndex =>
