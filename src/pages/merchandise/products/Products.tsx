@@ -27,6 +27,7 @@ import {
   useLocalStorage,
   useCancellablePromise,
   getLocaleTimeString,
+  clipLongId,
 } from '../../../utilities'
 
 interface Supplier {
@@ -138,6 +139,15 @@ function Products() {
         })
       }
 
+      const shortProductId = clipLongId(item.id)
+
+      const [name, model] = item.nameModel
+
+      const nameCell = {
+        value: name,
+        testId: `product-name-cell_${shortProductId}`,
+      }
+
       const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
 
       const realPriceCell = Number(item.realPrice).toLocaleString(STRING_FORMAT)
@@ -155,8 +165,8 @@ function Products() {
         id: item.id,
         isDisabled: item.inStockCount <= 0,
         cells: [
-          item.nameModel[0],
-          item.nameModel[1],
+          nameCell,
+          model,
           realPriceCell,
           salePriceCell,
           item.inStockCount,
@@ -164,7 +174,7 @@ function Products() {
           lastSoldTimeCell,
           new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
           item.lowestBoundCount,
-          item.id.split('-')[0],
+          shortProductId,
         ],
         onDoubleClick: (canEditProducts && editSideSheet) || null,
         optionsMenu: canEditProducts && (

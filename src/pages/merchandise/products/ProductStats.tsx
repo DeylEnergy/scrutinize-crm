@@ -7,6 +7,7 @@ import {
   useDatabase,
   useCancellablePromise,
   reversePeriodView,
+  getTestId,
   withErrorBoundary,
 } from '../../../utilities'
 import {PageWrapper} from '../../../layouts'
@@ -22,6 +23,8 @@ const LOADED_ITEMS_DEFAULT = {
   items: [],
   lastKey: null,
 }
+
+const CELL_TEST_ID_PREFIX = 'product-stats'
 
 function ProductStats({productId}: any) {
   const [locale] = useLocale()
@@ -48,25 +51,55 @@ function ProductStats({productId}: any) {
   const serializeItem = React.useCallback(
     item => {
       const [, period] = item.productIdPeriod
+      const reversedPeriod = reversePeriodView(period)
 
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const soldCountCell = {
+        value: item.soldCount,
+        testId: `${CELL_TEST_ID_PREFIX}-sold-count_${reversedPeriod}`,
+      }
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const acquiredCountCell = {
+        value: item.acquiredCount,
+        testId: `${CELL_TEST_ID_PREFIX}-acquired-count_${reversedPeriod}`,
+      }
 
-      const spentSumCell =
+      const returnedCountCell = {
+        value: item.returnedCount,
+        testId: `${CELL_TEST_ID_PREFIX}-returned-count_${reversedPeriod}`,
+      }
+
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-sold-sum_${reversedPeriod}`,
+      }
+
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-income-sum_${reversedPeriod}`,
+      }
+
+      const spentSum =
         item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+      const spentSumCell = {
+        value: spentSum,
+        testId: `${CELL_TEST_ID_PREFIX}-spent-sum_${reversedPeriod}`,
+      }
 
-      const returnedSumCell =
+      const returnedSum =
         item.returnedSum &&
         Number(item.returnedSum).toLocaleString(STRING_FORMAT)
+      const returnedSumCell = {
+        value: returnedSum,
+        testId: `product-stats-returned-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
         cells: [
-          reversePeriodView(period),
-          item.soldCount,
-          item.acquiredCount,
-          item.returnedCount,
+          reversedPeriod,
+          soldCountCell,
+          acquiredCountCell,
+          returnedCountCell,
           soldSumCell,
           incomeSumCell,
           spentSumCell || '',

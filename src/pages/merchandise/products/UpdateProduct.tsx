@@ -2,7 +2,7 @@ import React from 'react'
 import {Pane, Heading} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
-import {useLocale, useDatabase} from '../../../utilities'
+import {useLocale, useDatabase, getTestId} from '../../../utilities'
 import {PUT_PRODUCT} from '../../../constants/events'
 import ProductStats from './ProductStats'
 import {SPACING} from '../../../constants'
@@ -214,6 +214,7 @@ function UpdateProduct({
       onCloseComplete={onCloseComplete}
       onOpenComplete={handleStatsDisplay}
       canSave={canSave(input)}
+      containerProps={getTestId('update-product-sidesheet')}
     >
       <TextInputField
         name="name"
