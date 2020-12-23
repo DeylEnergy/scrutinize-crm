@@ -6,7 +6,12 @@ import {
   toaster,
   Button,
 } from 'evergreen-ui'
-import {useLocale, useTasksAfterUpdate} from '../../../utilities'
+import {
+  useLocale,
+  useTasksAfterUpdate,
+  getTestId,
+  clipLongId,
+} from '../../../utilities'
 import Table from '../../../components/Table'
 import ModalPopover from '../../../components/ModalPopover'
 import EditableCellInput from '../../../components/EditableCellInput'
@@ -117,6 +122,10 @@ function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
         )
       }
 
+      const acquisitionShortIdCell = {
+        value: clipLongId(item._acquisitionId),
+      }
+
       const countCell = {
         value: item.count,
         onDoubleClick: handleCellDblClick.bind(
@@ -125,6 +134,7 @@ function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
           item.count,
           'number',
         ),
+        testId: 'acquisition-count-cell',
       }
 
       const deleteCell = {
@@ -144,7 +154,7 @@ function SelectedAcquisitions({selectedAcquisitions, latestData}: any) {
 
       return {
         id: item._acquisitionId,
-        cells: [item._acquisitionId.split('-')[0], countCell, deleteCell],
+        cells: [acquisitionShortIdCell, countCell, deleteCell],
       }
     },
     [TABLE, addTask, latestData],
@@ -204,6 +214,7 @@ function SelectProductCount({
   updateSelectedAcquisitions,
   gridOuterRef,
   children,
+  dropdownTestId,
 }: any) {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.COMMON.SELECT_PRODUCT_COUNT
@@ -240,6 +251,7 @@ function SelectProductCount({
         onOpen: handleOpen,
         onCloseComplete: handleCloseComplete,
       }}
+      closeBtnTestId="close-product-count-popover"
     >
       <Button
         height={28}
@@ -247,6 +259,7 @@ function SelectProductCount({
         justifyContent="space-around"
         iconAfter={CaretDownIcon}
         width={'100%'}
+        {...getTestId(dropdownTestId)}
       >
         {children}
       </Button>

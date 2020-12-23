@@ -1,9 +1,11 @@
 import React from 'react'
-import {ArrowLeftIcon, Button} from 'evergreen-ui'
+import {ArrowLeftIcon, Button, Pane} from 'evergreen-ui'
 import {
   useLocale,
   useDatabase,
   getLocaleTimeString,
+  clipLongId,
+  getTestId,
   withErrorBoundary,
 } from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
@@ -50,6 +52,13 @@ function PickAcquisition({
 
   const serializeItem = React.useCallback(
     (item: any) => {
+      const acquisitionShortId = clipLongId(item.id)
+
+      const acquisitionShortIdCell = {
+        value: acquisitionShortId,
+        testId: `acquisition-short-id-cell_${acquisitionShortId}`,
+      }
+
       const dateTime = getLocaleTimeString(item.datetime[0], STRING_FORMAT)
       const acquisitionDateCell = {
         value: dateTime && `${dateTime.date}`,
@@ -63,7 +72,7 @@ function PickAcquisition({
           })
         },
         id: item.id,
-        cells: [item.id.split('-')[0], item.inStockCount, acquisitionDateCell],
+        cells: [acquisitionShortIdCell, item.inStockCount, acquisitionDateCell],
         style: CELL_STYLE,
       }
     },
@@ -115,20 +124,22 @@ function PickAcquisition({
         onClick={handleReturnBack}
         iconBefore={ArrowLeftIcon}
         style={RETURN_BACK_BUTTON_STYLE}
+        {...getTestId('return-back-btn')}
       >
         {PAGE_CONST.RETURN_BACK_BUTTON.TITLE}
       </Button>
-
-      <Table
-        columns={columns}
-        rows={loadedItems.items}
-        rowHeight={32}
-        isHeaderShown={false}
-        hasNextPage={loadedItems.hasNextPage}
-        isItemLoaded={isItemLoaded}
-        loadMoreItems={fetchAcquisitions}
-        isRowNumberShown={false}
-      />
+      <Pane flexGrow={1}>
+        <Table
+          columns={columns}
+          rows={loadedItems.items}
+          rowHeight={32}
+          isHeaderShown={false}
+          hasNextPage={loadedItems.hasNextPage}
+          isItemLoaded={isItemLoaded}
+          loadMoreItems={fetchAcquisitions}
+          isRowNumberShown={false}
+        />
+      </Pane>
     </PageWrapper>
   )
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, AddIcon} from 'evergreen-ui'
-import {useLocale, withErrorBoundary} from '../../../utilities'
+import {useLocale, getTestId, withErrorBoundary} from '../../../utilities'
 import ModalPopover from '../../../components/ModalPopover'
 import PickProduct from './PickProduct'
 import PickAcquisition from './PickAcquisition'
@@ -71,6 +71,8 @@ function SelectProduct({handleSelectedProduct}: any) {
   return (
     <ModalPopover
       title={PAGE_CONST.MODAL_TITLE}
+      testId="select-cart-product-popover"
+      closeBtnTestId="close-select-product"
       popoverProps={{
         onOpenComplete: handleOpenComplete,
         onCloseComplete: handleCloseComplete,
@@ -83,6 +85,7 @@ function SelectProduct({handleSelectedProduct}: any) {
         appearance="primary"
         intent="success"
         iconBefore={AddIcon}
+        {...getTestId('select-cart-product')}
       >
         {PAGE_CONST.ADD_BUTTON.TITLE}
       </Button>

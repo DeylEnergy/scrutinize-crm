@@ -13,6 +13,7 @@ import {
   useDatabase,
   useUpdate,
   debounce,
+  clipLongId,
 } from '../../../utilities'
 
 const FETCH_ITEM_LIMIT = 20
@@ -49,11 +50,18 @@ function PickProduct({handleProductSelect}: any) {
 
   const serializeItem = React.useCallback(
     item => {
+      const productShortId = clipLongId(item.id)
+
+      const nameModelCell = {
+        value: item.nameModel.join(' '),
+        testId: `name-model-cell_${productShortId}`,
+      }
+
       const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
 
       return {
         id: item.id,
-        cells: [item.nameModel.join(' '), salePriceCell],
+        cells: [nameModelCell, salePriceCell],
         onClick: () => handleProductSelect(item.id),
         style: CELL_STYLE,
       }
