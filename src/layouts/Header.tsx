@@ -67,35 +67,35 @@ export default function Header() {
         {canSeeMerchandise && (
           <Link to="/merchandise">
             <Tooltip content={PAGES.MERCHANDISE.TITLE}>
-              <IconButton icon={<FaDatabase />} />
+              <IconButton icon={<FaDatabase />} testId="merchandise-icon" />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
           <Link to="/sales">
             <Tooltip content={PAGES.SALES.TITLE}>
-              <IconButton icon={<FaList />} />
+              <IconButton icon={<FaList />} testId="sales-icon" />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
           <Link to="/stats">
             <Tooltip content={PAGES.STATS.TITLE}>
-              <IconButton icon={<FaChartBar />} />
+              <IconButton icon={<FaChartBar />} testId="stats-icon" />
             </Tooltip>
           </Link>
         )}
         {canSeeUsersControl && (
           <Link to="/persons-control">
             <Tooltip content={PAGES.PERSONS_CONTROL.TITLE}>
-              <IconButton icon={<FaUserCog />} />
+              <IconButton icon={<FaUserCog />} testId="persons-control-icon" />
             </Tooltip>
           </Link>
         )}
         {canSeeSettings && (
           <Link to="/settings">
             <Tooltip content={PAGES.SETTINGS.TITLE}>
-              <IconButton icon={<FaCog />} />
+              <IconButton icon={<FaCog />} testId="settings-icon" />
             </Tooltip>
           </Link>
         )}
