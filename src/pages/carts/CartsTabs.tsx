@@ -8,6 +8,7 @@ import {
   useDatabase,
   useAccount,
   useCancellablePromise,
+  getTestId,
 } from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../constants'
 import {ADD_CART} from '../../constants/events'
@@ -153,7 +154,11 @@ export default function CartsTabs({
             ))}
           </HorizontallyScrollable>
           <ControlButtonsWrapper>
-            <Tab onSelect={handleNewCart} marginLeft={0}>
+            <Tab
+              onSelect={handleNewCart}
+              marginLeft={0}
+              {...getTestId('add-new-cart')}
+            >
               <AddIcon color="green" marginRight={SPACING / 2} />{' '}
               {ADD_NEW_CART.TITLE}
             </Tab>

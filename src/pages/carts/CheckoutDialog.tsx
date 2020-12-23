@@ -1,7 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Dialog, Pane, Tablist, Tab, Alert} from 'evergreen-ui'
-import {useLocale, useDatabase, useAccount, useDelay} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useAccount,
+  useDelay,
+  getTestId,
+} from '../../utilities'
 import {PROCESS_SALE, PROCESS_RETURN_ITEMS} from '../../constants/events'
 import TextInputField from '../../components/TextInputField'
 import {SPACING} from '../../constants'
@@ -19,12 +25,14 @@ function Sale({handlePaidSumChange, paidSum, changeSum}: any) {
         onChange={handlePaidSumChange}
         label={INPUTS.PAID}
         placeholder="0"
+        {...getTestId('cart-checkout-paid-input')}
       />
       <TextInputField
         readOnly
         label={changeSum > 0 ? INPUTS.CHANGE : INPUTS.NEED}
         value={Math.abs(changeSum)}
         isInvalid={changeSum < 0}
+        {...getTestId('cart-checkout-change-input')}
       />
     </>
   )
@@ -172,6 +180,8 @@ export default function CheckoutDialog({
       onConfirm={handleConfirm}
       hasCancel={false}
       contentContainerProps={CONTENT_CONTAINER_STYLE}
+      // @ts-ignore
+      overlayProps={{...getTestId('cart-checkout-dialog')}}
     >
       <Pane height="100%" display="flex" flexDirection="column">
         <Tablist marginBottom={8}>

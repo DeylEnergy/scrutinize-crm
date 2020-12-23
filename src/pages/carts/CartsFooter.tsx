@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Pane} from 'evergreen-ui'
 import CartParticipants from './CartParticipants'
 import QrScannerPopover from '../../components/QrScannerPopover'
-import {useLocale, useGlobalScanner} from '../../utilities'
+import {useLocale, useGlobalScanner, getTestId} from '../../utilities'
 import {SPACING} from '../../constants'
 
 const FOOTER_SUM_STYLE = {
@@ -46,7 +46,7 @@ function CartsFooter({
           )}
         </Pane>
 
-        <Pane>
+        <Pane {...getTestId('cart-total-sum')}>
           {Boolean(tabs.length) && currentCartSum > 0 && (
             <span style={FOOTER_SUM_STYLE}>
               <b>{CONTROLS.TOTAL_SUM.TITLE}:</b>{' '}
@@ -65,6 +65,7 @@ function CartsFooter({
             marginLeft={8}
             appearance="primary"
             onClick={handleCheckoutOpen}
+            {...getTestId('cart-confirm-btn')}
           >
             {CONTROLS.CONFIRM.BUTTON_TITLE}
           </Button>

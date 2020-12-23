@@ -13,6 +13,7 @@ import {
   useCancellablePromise,
   useTasksAfterUpdate,
   useScannerListener,
+  clipLongId,
   withErrorBoundary,
 } from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
@@ -170,6 +171,8 @@ function Cart({
         })
       }
 
+      const shortProductId = clipLongId(item._productId)
+
       const doneCell = {
         value: (
           <CellCheckbox
@@ -214,6 +217,7 @@ function Cart({
             {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
+        testId: `cart-item-price_${shortProductId}`,
       }
 
       const sumCell = {
@@ -224,6 +228,7 @@ function Cart({
             {Number(item.income).toLocaleString(STRING_FORMAT)}
           </>
         ),
+        testId: `cart-item-sum_${shortProductId}`,
       }
 
       const noteCell = {
@@ -233,6 +238,21 @@ function Cart({
           'note',
           item.note,
           'string',
+        ),
+      }
+
+      const countCellTestId = `count-dropdown_${clipLongId(item._productId)}`
+
+      const countCell = {
+        value: (
+          <SelectProductCount
+            selectedAcquisitions={item.selectedAcquisitions}
+            updateSelectedAcquisitions={updateItem}
+            gridOuterRef={gridOuterRef}
+            dropdownTestId={countCellTestId}
+          >
+            {item.count}
+          </SelectProductCount>
         ),
       }
 
@@ -266,19 +286,9 @@ function Cart({
           nameCell,
           modelCell,
           salePriceCell,
-          {
-            value: (
-              <SelectProductCount
-                selectedAcquisitions={item.selectedAcquisitions}
-                updateSelectedAcquisitions={updateItem}
-                gridOuterRef={gridOuterRef}
-              >
-                {item.count}
-              </SelectProductCount>
-            ),
-          },
+          countCell,
           sumCell,
-          item._productId.split('-')[0],
+          shortProductId,
           noteCell,
         ],
         optionsMenu,

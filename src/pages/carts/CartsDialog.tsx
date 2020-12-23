@@ -1,7 +1,12 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
-import {useLocale, useDatabase, useCancellablePromise} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  getTestId,
+} from '../../utilities'
 import {SPACING, STORE_NAME as SN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
@@ -98,6 +103,8 @@ export default function CartsDialog({isShown, setIsShown}: any) {
           />
         }
         contentContainerProps={{paddingTop: SPACING * 1.5}}
+        // @ts-ignore
+        overlayProps={{...getTestId('carts-dialog')}}
       >
         <CartsTabs
           state={state}

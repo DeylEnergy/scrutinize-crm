@@ -6,6 +6,7 @@ import {
   useDatabase,
   useCancellablePromise,
   handleAsync,
+  getTestId,
 } from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import SelectCustomer from './SelectCustomer'
@@ -98,6 +99,7 @@ function CartParticipants({selectedCartId}: any) {
         appearance="minimal"
         style={{marginRight: 8}}
         iconBefore={FollowerIcon}
+        {...getTestId('select-cart-salesperson')}
       >
         {cartParticipants?._userName || CONTROLS.SALESPERSON.BUTTON_TITLE}
       </Button>
@@ -106,7 +108,12 @@ function CartParticipants({selectedCartId}: any) {
 
   const customerButton = React.useMemo(() => {
     return (
-      <Button appearance="minimal" iconBefore={FollowingIcon} intent="warning">
+      <Button
+        appearance="minimal"
+        iconBefore={FollowingIcon}
+        intent="warning"
+        {...getTestId('select-cart-customer')}
+      >
         {cartParticipants?._customerName || CONTROLS.CUSTOMER.BUTTON_TITLE}
       </Button>
     )
