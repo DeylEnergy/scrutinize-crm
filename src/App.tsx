@@ -17,6 +17,7 @@ import GlobalScannerContext from './contexts/globalScannerContext'
 import ScannerListenerContext from './contexts/scannerListenerContext'
 // @ts-ignore
 import createDbWorker from 'workerize-loader!./database' // eslint-disable-line import/no-webpack-loader-syntax
+import {IS_CYPRESS_ENVIRONMENT} from './constants'
 import RIGHTS from './constants/rights'
 import {useSetup, useAccount, useLocalStorage} from './utilities'
 import GlobalQRScanner from './pages/global-qr-scanner'
@@ -141,34 +142,45 @@ const App = () => {
   )
 }
 
-const ACCOUNT_MOCK = {
-  // user: {
-  //   name: 'Joe Doe',
-  // },
-  // permissions: [
-  //   'canSeeUsers',
-  //   'canSeeUserGroups',
-  //   'canSeeSales',
-  //   'canSeeProducts',
-  //   'canEditProducts',
-  //   'canSeeToBuyList',
-  //   'canSeeAcquisitions',
-  //   'canEditItemsInToBuyItems',
-  //   'canAddItemToBuyList',
-  //   'canPrintToBuyList',
-  //   'canCompleteToBuyList',
-  //   'canSeeUserProfile',
-  //   'canSeeCarts',
-  //   'canSeeStickersManager',
-  //   'canSeeStats',
-  //   'canSeeCashbox',
-  //   'canPerformCashboxOperations',
-  //   'canExportData',
-  //   'canImportData',
-  //   'canReturnSalesItems',
-  // ],
-  // groupName: 'Administrator',
-}
+const ACCOUNT_MOCK = IS_CYPRESS_ENVIRONMENT
+  ? {
+      user: {
+        id: 'bb502852-b6e7-44d7-bba0-e41e318f0bf8',
+        name: 'Deyl',
+        phone: '776-690-8361',
+        avatar: '',
+        _groupId: '654d3121-c5cb-48ea-88af-1b4a7bb90dc7',
+      },
+      permissions: [
+        'canSeeProducts',
+        'canEditProducts',
+        'canSeeToBuyList',
+        'canEditItemsInToBuyItems',
+        'canAddItemToBuyList',
+        'canPrintToBuyList',
+        'canCompleteToBuyList',
+        'canSeeAcquisitions',
+        'canEditAcquisitionInStockCount',
+        'canSeeSales',
+        'canReturnSalesItems',
+        'canSeeUsers',
+        'canSeeUserGroups',
+        'canSeeUserProfile',
+        'canSeeOtherUserSecretKeys',
+        'canSeeSuppliers',
+        'canSeeCustomers',
+        'canSeeCarts',
+        'canSeeStickersManager',
+        'canSeeStats',
+        'canSeeCashbox',
+        'canPerformCashboxOperations',
+        'canExportData',
+        'canImportData',
+      ],
+      groupName: 'Owner',
+      groupId: '654d3121-c5cb-48ea-88af-1b4a7bb90dc7',
+    }
+  : {}
 
 const LOCALE_DEFAULT = 'en'
 
