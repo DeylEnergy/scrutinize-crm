@@ -23,3 +23,19 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+export default function injectCommands(path) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const module = require(`${path}`)
+  Object.keys(module).forEach(fnName =>
+    Cypress.Commands.add(fnName, module[fnName]),
+  )
+}
+
+Cypress.Commands.add('getByTestId', query => {
+  return cy.get(`[data-cy="${query}"]`)
+})
+
+injectCommands('./general')
+injectCommands('./carts')
+injectCommands('./products')
