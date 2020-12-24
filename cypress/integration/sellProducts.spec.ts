@@ -84,7 +84,7 @@ context('SELL PRODUCTS', () => {
     })
 
     it('Has correct total sum', () => {
-      cy.getByTestId('cart-total-sum').contains('11,250')
+      cy.getByTestId('cart-total-sum').contains(currentMonthStats.soldSum)
     })
   })
 
@@ -95,10 +95,10 @@ context('SELL PRODUCTS', () => {
 
     it('Gets correct change sum', () => {
       cy.getByTestId('cart-checkout-paid-input')
-        .type('11500')
-        .should('has.value', '11500')
+        .type('22000')
+        .should('has.value', '22000')
 
-      cy.getByTestId('cart-checkout-change-input').should('has.value', '250')
+      cy.getByTestId('cart-checkout-change-input').should('has.value', '70')
     })
 
     it('Should finish correctly', () => {
