@@ -4,14 +4,12 @@ export function checkProductNumbers({
   soldCount,
   currentMonth,
 }) {
-  cy.wait(3000)
-    .getByTestId(`product-name-cell_${shortProductId}`)
+  cy.getByTestId(`product-name-cell_${shortProductId}`)
     .dblclick()
     .get('input[name=inStockCount]')
     .should('has.value', inStockCount)
     .get('input[name=soldCount]')
     .should('has.value', soldCount)
-    .wait(3000)
     .getByTestId(`product-stats-sold-count_${currentMonth.value}`)
     .contains(currentMonth.soldCount)
     .getByTestId(`product-stats-acquired-count_${currentMonth.value}`)

@@ -138,4 +138,7 @@ const productsMap = {
 
 const productKeys = Object.keys(productsMap)
 
-export {productsMap, productKeys}
+const salespersonName = 'Leonie'
+const customerName = 'Daphne'
+
+export {productsMap, productKeys, salespersonName, customerName}

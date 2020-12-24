@@ -39,3 +39,4 @@ Cypress.Commands.add('getByTestId', query => {
 injectCommands('./general')
 injectCommands('./carts')
 injectCommands('./products')
+injectCommands('./sales')

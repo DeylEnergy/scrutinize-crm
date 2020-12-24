@@ -68,8 +68,7 @@ export function scrollCartProductSelect(
 }
 
 export function changeCartItemCount({shortProductId, count}) {
-  cy.wait(2000)
-    .getByTestId(`count-dropdown_${shortProductId}`)
+  cy.getByTestId(`count-dropdown_${shortProductId}`)
     .should('be.visible')
     .click()
     .getByTestId('acquisition-count-cell')

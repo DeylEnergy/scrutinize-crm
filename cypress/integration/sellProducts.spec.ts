@@ -1,9 +1,16 @@
 /// <reference types="cypress" />
-import {productsMap, productKeys} from '../fixtures/sellProducts'
+import {
+  productsMap,
+  productKeys,
+  salespersonName,
+  customerName,
+} from '../fixtures/sellProducts'
 
 context('SELL PRODUCTS', () => {
-  before(() => {
-    cy.reImportDb()
+  describe('Setup db', () => {
+    it('Reimports IndexedDB stores', () => {
+      cy.reImportDb()
+    })
   })
 
   describe('Opens carts and create one', () => {
@@ -17,11 +24,11 @@ context('SELL PRODUCTS', () => {
 
   describe('Sets cart participants', () => {
     it('Sets "Leonie" as the salesperson', () => {
-      cy.setCartSalesperson('Leonie')
+      cy.setCartSalesperson(salespersonName)
     })
 
     it('Sets "Daphne" as the customer', () => {
-      cy.setCartCustomer('Daphne')
+      cy.setCartCustomer(customerName)
     })
   })
 
@@ -110,7 +117,7 @@ context('SELL PRODUCTS', () => {
 
   describe('Checks products page after update', () => {
     it('Goes to products page', () => {
-      cy.wait(3000).visit('/merchandise/products')
+      cy.visit('/merchandise/products')
     })
 
     productKeys.forEach(key => {
@@ -118,6 +125,25 @@ context('SELL PRODUCTS', () => {
 
       it(`Checks ${label}`, () => {
         cy.checkProductNumbers({shortProductId, ...finalProduct})
+      })
+    })
+  })
+
+  describe('Checks sales page after update', () => {
+    it('Goes to sales page', () => {
+      cy.visit('/sales')
+    })
+
+    productKeys.forEach(key => {
+      const {label, shortProductId, ...product} = productsMap[key]
+      const finalShape = product.finalCart
+      it(label, () => {
+        cy.checkSaleItemCount({
+          shortProductId,
+          salespersonName,
+          customerName,
+          ...finalShape,
+        })
       })
     })
   })
