@@ -163,6 +163,7 @@ export {
   productKeys,
   salespersonName,
   customerName,
+  currentMonthStats,
   userStats,
   customerStats,
 }

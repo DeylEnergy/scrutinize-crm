@@ -4,6 +4,7 @@ import {
   productKeys,
   salespersonName,
   customerName,
+  currentMonthStats,
   userStats,
   customerStats,
 } from '../fixtures/sellProducts'
@@ -147,6 +148,16 @@ context('SELL PRODUCTS', () => {
           ...finalShape,
         })
       })
+    })
+  })
+
+  describe('Checks stats after update', () => {
+    it('Goes to stats page', () => {
+      cy.visit('/stats')
+    })
+
+    it(`Checks ${currentMonthStats.value}`, () => {
+      cy.checkStats(currentMonthStats)
     })
   })
 

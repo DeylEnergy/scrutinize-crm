@@ -40,20 +40,31 @@ function Stats() {
 
   const serializeItem = React.useCallback(
     item => {
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const reversedPeriod = reversePeriodView(item.period)
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `stats-sold-sum_${reversedPeriod}`,
+      }
 
-      const spentSumCell =
-        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `stats-income-sum_${reversedPeriod}`,
+      }
+
+      const spentSumCell = {
+        value:
+          item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT),
+        testId: `stats-spent-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
         cells: [
-          reversePeriodView(item.period),
+          reversedPeriod,
           soldSumCell,
           incomeSumCell,
-          spentSumCell || '',
+          spentSumCell || '0',
         ],
       }
     },
