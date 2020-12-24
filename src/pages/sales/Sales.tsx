@@ -10,6 +10,7 @@ import {
   useUpdate,
   useCancellablePromise,
   withErrorBoundary,
+  clipLongId,
 } from '../../utilities'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
@@ -64,9 +65,32 @@ function Sales() {
         )} ${saleTime.toLocaleTimeString(STRING_FORMAT)}`,
       }
 
-      const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+      const shortProductId = clipLongId(item._productId)
 
-      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+      const countCell = {
+        value: item.count,
+        testId: `sale-item-count_${shortProductId}`,
+      }
+
+      const priceCell = {
+        value: Number(item.salePrice).toLocaleString(STRING_FORMAT),
+        testId: `sale-item-price_${shortProductId}`,
+      }
+
+      const sumCell = {
+        value: Number(item.sum).toLocaleString(STRING_FORMAT),
+        testId: `sale-item-sum_${shortProductId}`,
+      }
+
+      const salespersonNameCell = {
+        value: item?._user?.name,
+        testId: `sale-item-salesperson_${shortProductId}`,
+      }
+
+      const customerNameCell = {
+        value: item?._customer?.name,
+        testId: `sale-item-customer_${shortProductId}`,
+      }
 
       return {
         id: item.id,
@@ -75,11 +99,11 @@ function Sales() {
           saleTimeCell,
           item._product.nameModel[0],
           item._product.nameModel[1],
-          salePriceCell,
-          item.count,
+          priceCell,
+          countCell,
           sumCell,
-          item?._user?.name,
-          item?._customer?.name,
+          salespersonNameCell,
+          customerNameCell,
           item.note,
         ],
       }
