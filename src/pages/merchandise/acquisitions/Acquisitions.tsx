@@ -12,6 +12,7 @@ import {
   useCancellablePromise,
   useUpdate,
   withErrorBoundary,
+  clipLongId,
 } from '../../../utilities'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
@@ -81,6 +82,8 @@ function Acquisitions() {
         })
       }
 
+      const shortAcquisitionId = clipLongId(item.id)
+
       const acquiredDate = new Date(item.datetime[0])
       const acquiredDateCell = {
         value: acquiredDate.toLocaleDateString(STRING_FORMAT),
@@ -93,17 +96,15 @@ function Acquisitions() {
 
       const countCell = {
         value: item.count,
-        tooltipContent: (
-          <>
-            <b>{PAGE_CONST.TABLE.TOOLTIP.IN_STOCK_COUNT}:</b>{' '}
-            {item.inStockCount || 0}
-          </>
-        ),
+        testId: `acquisition-count_${shortAcquisitionId}`,
+      }
+
+      const inStockCountCell = {
+        value: item.inStockCount ?? 0,
+        testId: `acquisition-in-stock-count_${shortAcquisitionId}`,
       }
 
       const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
-
-      const aqIdCell = item.id.split('-')[0]
 
       return {
         id: item.id,
@@ -114,10 +115,11 @@ function Acquisitions() {
           priceCell,
           countCell,
           sumCell,
+          inStockCountCell,
           item._supplier?.name,
           item._user?.name,
           item?._productId?.split('-')[0],
-          aqIdCell,
+          shortAcquisitionId,
         ],
         optionsMenu: permissions.includes(
           RIGHTS.CAN_EDIT_ACQUISITION_IN_STOCK_COUNT,
@@ -254,6 +256,10 @@ function Acquisitions() {
       {label: COLUMNS.PRICE.TITLE, width: COLUMNS.PRICE.WIDTH},
       {label: COLUMNS.COUNT.TITLE, width: COLUMNS.COUNT.WIDTH},
       {label: COLUMNS.SUM.TITLE, width: COLUMNS.SUM.WIDTH},
+      {
+        label: COLUMNS.IN_STOCK_COUNT.TITLE,
+        width: COLUMNS.IN_STOCK_COUNT.WIDTH,
+      },
       {label: COLUMNS.SUPPLIER.TITLE, width: COLUMNS.SUPPLIER.WIDTH},
       {label: COLUMNS.EXECUTOR.TITLE, width: COLUMNS.EXECUTOR.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},

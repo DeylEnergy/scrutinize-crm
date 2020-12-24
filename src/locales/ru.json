@@ -267,6 +267,10 @@
             "TITLE": "Сумма",
             "WIDTH": 90
           },
+          "IN_STOCK_COUNT": {
+            "TITLE": "В наличии",
+            "WIDTH": 95
+          },
           "SUPPLIER": {
             "TITLE": "Поставщик",
             "WIDTH": 150
@@ -286,9 +290,6 @@
         },
         "OPTIONS": {
           "EDIT_IN_STOCK_COUNT": "Редактировать наличие"
-        },
-        "TOOLTIP": {
-          "IN_STOCK_COUNT":"В наличии"
         }
       },
       "DRAWER": {

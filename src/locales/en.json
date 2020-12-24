@@ -267,6 +267,10 @@
             "TITLE": "Sum",
             "WIDTH": 90
           },
+          "IN_STOCK_COUNT": {
+            "TITLE": "In Stock",
+            "WIDTH": 80
+          },
           "SUPPLIER": {
             "TITLE": "Supplier",
             "WIDTH": 150
@@ -286,10 +290,7 @@
         },
         "OPTIONS": {
           "EDIT_IN_STOCK_COUNT": "Edit In Stock Count"
-        },
-        "TOOLTIP": {
-          "IN_STOCK_COUNT":"In Stock Count"
-        }
+        }      
       },
       "DRAWER": {
         "TITLE": "Edit In Stock Count",
