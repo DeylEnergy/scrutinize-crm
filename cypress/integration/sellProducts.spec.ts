@@ -147,6 +147,22 @@ context('SELL PRODUCTS', () => {
     })
   })
 
+  describe('Checks acquisitions page after update', () => {
+    it('Goes to acquisitions page', () => {
+      cy.visit('/merchandise/acquisitions')
+    })
+
+    productKeys.forEach(key => {
+      const {label, shortAcquisitionId, finalProduct} = productsMap[key]
+
+      it(`Checks ${label}`, () => {
+        cy.getByTestId(
+          `acquisition-in-stock-count_${shortAcquisitionId}`,
+        ).contains(finalProduct.inStockCount)
+      })
+    })
+  })
+
   describe('Checks sales page after update', () => {
     it('Goes to sales page', () => {
       cy.visit('/sales')
