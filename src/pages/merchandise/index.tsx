@@ -16,8 +16,7 @@ import {MERCHANDISE_ROUTE} from '../../constants/routes'
 import RIGHTS from '../../constants/rights'
 
 const PRODUCTS_PATH = `/${MERCHANDISE_ROUTE}/products`
-const TO_BUY_LIST_PATH = `/${MERCHANDISE_ROUTE}/
-to-buy-list`
+const TO_BUY_LIST_PATH = `/${MERCHANDISE_ROUTE}/to-buy-list`
 const ACQUISITIONS_PATH = `/${MERCHANDISE_ROUTE}/acquisitions`
 
 export default function Merchandise() {
