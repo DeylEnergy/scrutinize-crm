@@ -4,6 +4,7 @@ import {
   productKeys,
   salespersonName,
   customerName,
+  toBuyListProducts,
   currentMonthStats,
   userStats,
   customerStats,
@@ -128,6 +129,20 @@ context('SELL PRODUCTS', () => {
 
       it(`Checks ${label}`, () => {
         cy.checkProductNumbers({shortProductId, ...finalProduct})
+      })
+    })
+  })
+
+  describe('Checks to buy list page after update', () => {
+    it('Should add two products in to buy list', () => {
+      cy.visit('/merchandise/to-buy-list')
+        .get(`[data-cy*="to-buy-item-name"]`)
+        .should('have.length', 2)
+    })
+
+    toBuyListProducts.forEach(({label, shortProductId}) => {
+      it(`Includes "${label}"`, () => {
+        cy.getByTestId(`to-buy-item-name_${shortProductId}`)
       })
     })
   })

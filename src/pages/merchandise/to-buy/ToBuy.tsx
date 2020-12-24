@@ -4,6 +4,7 @@ import {
   useTasksAfterUpdate,
   useLocalStorage,
   useUpdate,
+  clipLongId,
 } from '../../../utilities'
 import {
   Button,
@@ -245,6 +246,8 @@ function ToBuy() {
         ),
       }
 
+      const shortProductId = item._productId ? clipLongId(item._productId) : '-'
+
       const nameModel =
         item?._product?.nameModel || item?._legacyProductNameModel
 
@@ -257,6 +260,7 @@ function ToBuy() {
             <b>{TOOLTIP.NAME_BEFORE}:</b> {item._product.nameModel[0]}
           </>
         ),
+        testId: `to-buy-item-name_${shortProductId}`,
       }
 
       const model = item.model || nameModel[1]
@@ -446,7 +450,7 @@ function ToBuy() {
           executorCell,
           frozenCell,
           new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
-          item._productId?.split('-')[0] || '-',
+          shortProductId,
         ],
         optionsMenu,
       }

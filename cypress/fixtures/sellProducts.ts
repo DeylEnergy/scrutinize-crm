@@ -143,6 +143,8 @@ const productKeys = Object.keys(productsMap)
 const salespersonName = 'Leonie'
 const customerName = 'Daphne Larkin'
 
+const toBuyListProducts = [charger, satReceiver]
+
 const currentMonthStats = {
   value: currentPeriod,
   soldSum: '21,930',
@@ -165,6 +167,7 @@ export {
   productKeys,
   salespersonName,
   customerName,
+  toBuyListProducts,
   currentMonthStats,
   userStats,
   customerStats,
