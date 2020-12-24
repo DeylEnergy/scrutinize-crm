@@ -49,21 +49,27 @@ function UserStats({userId}: any) {
     item => {
       const [, period] = item.userIdPeriod
 
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const reversedPeriod = reversePeriodView(period)
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `user-stats-sold-sum_${reversedPeriod}`,
+      }
 
-      const spentSumCell =
-        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `user-stats-income-sum_${reversedPeriod}`,
+      }
+
+      const spentSumCell = {
+        value:
+          item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT),
+        testId: `user-stats-spent-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
-        cells: [
-          reversePeriodView(period),
-          soldSumCell,
-          incomeSumCell,
-          spentSumCell || '',
-        ],
+        cells: [reversedPeriod, soldSumCell, incomeSumCell, spentSumCell || ''],
       }
     },
     [STRING_FORMAT],

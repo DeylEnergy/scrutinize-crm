@@ -85,10 +85,15 @@ function Users() {
       },
     }
 
+    const nameCell = {
+      value: item.name,
+      testId: `user-name-cell_${item.name}`,
+    }
+
     return {
       id: item.id,
       isDisabled: Boolean(item.returned),
-      cells: [avatarCell, item.name, item?._group?.name, item.phone, item.note],
+      cells: [avatarCell, nameCell, item?._group?.name, item.phone, item.note],
       onDoubleClick: editSideSheet,
       optionsMenu: (
         <Popover

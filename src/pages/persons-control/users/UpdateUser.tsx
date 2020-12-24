@@ -15,7 +15,7 @@ import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
 import SeeSecretKeyPopover from '../../../components/SeeSecretKeyPopover'
-import {useLocale, useAccount, useDatabase} from '../../../utilities'
+import {useLocale, useAccount, useDatabase, getTestId} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
 import UserStats from './UserStats'
 
@@ -155,6 +155,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
       onOpenComplete={handleStatsDisplay}
       onCloseComplete={onCloseComplete}
       canSave={canBeSaved}
+      containerProps={getTestId('update-user-sidesheet')}
     >
       <input
         ref={avatarUploadRef}
