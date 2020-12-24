@@ -5,6 +5,7 @@ import {
   salespersonName,
   customerName,
   userStats,
+  customerStats,
 } from '../fixtures/sellProducts'
 
 context('SELL PRODUCTS', () => {
@@ -156,6 +157,16 @@ context('SELL PRODUCTS', () => {
 
     it(`Checks ${userStats.name}`, () => {
       cy.checkUserStats(userStats)
+    })
+  })
+
+  describe('Checks customer stats after update', () => {
+    it('Goes to customer page', () => {
+      cy.visit('/persons-control/customers')
+    })
+
+    it(`Checks ${customerStats.name}`, () => {
+      cy.checkCustomerStats(customerStats)
     })
   })
 })

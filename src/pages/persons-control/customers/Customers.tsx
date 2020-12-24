@@ -84,10 +84,15 @@ function Customers() {
       },
     }
 
+    const nameCell = {
+      value: item.name,
+      testId: `customer-name-cell_${item.name}`,
+    }
+
     return {
       id: item.id,
       isDisabled: Boolean(item.returned),
-      cells: [avatarCell, item.name, item.phone, item.note],
+      cells: [avatarCell, nameCell, item.phone, item.note],
       onDoubleClick: editSideSheet,
       optionsMenu: (
         <Popover

@@ -49,21 +49,32 @@ function CustomerStats({customerId}: any) {
     item => {
       const [, period] = item.customerIdPeriod
 
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const reversedPeriod = reversePeriodView(period)
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `customer-stats-sold-sum_${reversedPeriod}`,
+      }
 
-      const returnedSumCell =
-        item.returnedSum &&
-        Number(item.returnedSum).toLocaleString(STRING_FORMAT)
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `customer-stats-income-sum_${reversedPeriod}`,
+      }
+
+      const returnedSumCell = {
+        value:
+          item.returnedSum &&
+          Number(item.returnedSum).toLocaleString(STRING_FORMAT),
+        testId: `customer-stats-returned-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
         cells: [
-          reversePeriodView(period),
+          reversedPeriod,
           soldSumCell,
           incomeSumCell,
-          returnedSumCell || '',
+          returnedSumCell || '0',
         ],
       }
     },

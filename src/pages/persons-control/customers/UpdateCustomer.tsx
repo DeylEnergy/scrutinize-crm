@@ -3,7 +3,7 @@ import {TextareaField, Pane, Avatar, Heading} from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {SPACING} from '../../../constants'
-import {useLocale} from '../../../utilities'
+import {useLocale, getTestId} from '../../../utilities'
 import CustomerStats from './CustomerStats'
 
 const NOTE_INPUT_STYLE = {
@@ -101,6 +101,7 @@ function UpdateCustomer({
       onOpenComplete={handleStatsDisplay}
       onCloseComplete={onCloseComplete}
       canSave={canBeSaved}
+      containerProps={getTestId('update-customer-sidesheet')}
     >
       <input
         ref={avatarUploadRef}

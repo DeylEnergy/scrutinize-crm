@@ -139,7 +139,7 @@ const productsMap = {
 const productKeys = Object.keys(productsMap)
 
 const salespersonName = 'Leonie'
-const customerName = 'Daphne'
+const customerName = 'Daphne Larkin'
 
 const currentMonthStats = {
   value: currentPeriod,
@@ -153,4 +153,16 @@ const userStats = {
   currentMonth: currentMonthStats,
 }
 
-export {productsMap, productKeys, salespersonName, customerName, userStats}
+const customerStats = {
+  name: customerName,
+  currentMonth: {...currentMonthStats, returnedSum: 0},
+}
+
+export {
+  productsMap,
+  productKeys,
+  salespersonName,
+  customerName,
+  userStats,
+  customerStats,
+}
