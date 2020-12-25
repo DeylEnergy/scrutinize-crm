@@ -22,7 +22,11 @@ declare namespace Cypress {
       count?: number
     }): Chainable<Element>
 
-    scrollCartProductSelect(position?: Cypress.PositionType): Chainable<Element>
+    scrollCartProductSelect(params: {
+      x?: number
+      y?: number
+      position?: Cypress.PositionType
+    }): Chainable<Element>
 
     changeCartItemCount({
       shortProductId,

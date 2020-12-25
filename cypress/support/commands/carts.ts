@@ -59,11 +59,19 @@ export function addItemToCart({shortProductId, shortAcquisitionId, count = 1}) {
   cy.getByTestId('return-back-btn').click()
 }
 
-export function scrollCartProductSelect(
-  position: Cypress.PositionType = 'bottom',
-) {
+export function scrollCartProductSelect({
+  x,
+  y,
+  position,
+}: {
+  x?: number
+  y?: number
+  position?: Cypress.PositionType
+}) {
   cy.getByTestId('select-cart-product-popover').within(() => {
-    cy.get('.virtual-table-parent').scrollTo(position)
+    const coordinates = position ? [position] : [x, y]
+    // @ts-ignore
+    cy.get('.virtual-table-parent').scrollTo(...coordinates)
   })
 }
 
