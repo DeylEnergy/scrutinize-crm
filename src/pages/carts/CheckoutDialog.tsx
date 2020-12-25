@@ -194,6 +194,7 @@ export default function CheckoutDialog({
                 setSelectedAction(action)
               }}
               aria-controls={`panel-${label}`}
+              {...getTestId(`cart-checkout-tab_${label}`)}
             >
               {label}
             </Tab>
