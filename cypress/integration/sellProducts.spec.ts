@@ -7,6 +7,7 @@ import {
   toBuyListProducts,
   currentMonthStats,
   userStats,
+  suppliersStats,
   customerStats,
 } from '../fixtures/sellProducts'
 
@@ -199,6 +200,18 @@ context('SELL PRODUCTS', () => {
 
     it(`Checks ${userStats.name}`, () => {
       cy.checkUserStats(userStats)
+    })
+  })
+
+  describe('Checks suppliers after update', () => {
+    it('Goes to suppliers page', () => {
+      cy.visit('/persons-control/suppliers')
+    })
+
+    suppliersStats.forEach(supplierStats => {
+      it(`Checks ${supplierStats.name}`, () => {
+        cy.checkSupplierStats(supplierStats)
+      })
     })
   })
 

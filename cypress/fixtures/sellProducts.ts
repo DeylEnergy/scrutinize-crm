@@ -162,6 +162,33 @@ const customerStats = {
   currentMonth: {...currentMonthStats, returnedSum: 0},
 }
 
+const suppliersStats = [
+  {
+    name: 'Dejon Zboncak',
+    currentMonth: {
+      ...currentMonthStats,
+      soldSum: '4,740',
+      incomeSum: 810,
+    },
+  },
+  {
+    name: 'Kailey',
+    currentMonth: {
+      ...currentMonthStats,
+      soldSum: '2,790',
+      incomeSum: 450,
+    },
+  },
+  {
+    name: 'Wilburn Langworth',
+    currentMonth: {
+      ...currentMonthStats,
+      soldSum: '14,400',
+      incomeSum: '2,400',
+    },
+  },
+]
+
 export {
   productsMap,
   productKeys,
@@ -170,5 +197,6 @@ export {
   toBuyListProducts,
   currentMonthStats,
   userStats,
+  suppliersStats,
   customerStats,
 }

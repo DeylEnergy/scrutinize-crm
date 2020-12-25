@@ -84,10 +84,15 @@ function Suppliers() {
       },
     }
 
+    const nameCell = {
+      value: item.name,
+      testId: `supplier-name-cell_${item.name}`,
+    }
+
     return {
       id: item.id,
       isDisabled: Boolean(item.returned),
-      cells: [avatarCell, item.name, item.phone, item.address, item.note],
+      cells: [avatarCell, nameCell, item.phone, item.address, item.note],
       onDoubleClick: editSideSheet,
       optionsMenu: (
         <Popover
