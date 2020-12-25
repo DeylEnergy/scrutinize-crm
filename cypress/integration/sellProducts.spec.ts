@@ -12,27 +12,27 @@ import {
 } from '../fixtures/sellProducts'
 
 context('SELL PRODUCTS', () => {
-  describe('Setup db', () => {
+  describe('Sets up db', () => {
     it('Reimports IndexedDB stores', () => {
       cy.reImportDb()
     })
   })
 
   describe('Opens carts and create one', () => {
-    it('Open carts', () => {
+    it('Opens carts', () => {
       cy.openCartsDialog()
     })
-    it('Add new cart', () => {
+    it('Adds new cart', () => {
       cy.addNewCart()
     })
   })
 
-  describe('Sets cart participants', () => {
-    it('Sets "Leonie" as the salesperson', () => {
+  describe('Selects cart participants', () => {
+    it(`Sets "${salespersonName}" as the salesperson`, () => {
       cy.setCartSalesperson(salespersonName)
     })
 
-    it('Sets "Daphne" as the customer', () => {
+    it(`Sets "${customerName}" as the customer`, () => {
       cy.setCartCustomer(customerName)
     })
   })
@@ -45,7 +45,7 @@ context('SELL PRODUCTS', () => {
     productKeys.forEach(key => {
       const {label, ...product} = productsMap[key]
 
-      it(`Adds "${label}"`, () => {
+      it(`Selects "${label}"`, () => {
         if (key === 'satReceiver') {
           cy.scrollCartProductSelect('bottom')
         }
@@ -80,7 +80,7 @@ context('SELL PRODUCTS', () => {
     productKeys.forEach(key => {
       const {label, shortProductId, ...product} = productsMap[key]
       const finalShape = product.finalCart
-      it(label, () => {
+      it(`Verifies ${label}`, () => {
         cy.checkCartItemCount({shortProductId, ...finalShape})
       })
     })
@@ -91,7 +91,7 @@ context('SELL PRODUCTS', () => {
   })
 
   describe('Checkout', () => {
-    it('Open checkout dialog', () => {
+    it('Opens checkout dialog', () => {
       cy.openCartCheckoutDialog()
     })
 
@@ -110,7 +110,7 @@ context('SELL PRODUCTS', () => {
     })
   })
 
-  describe('Finish cart side', () => {
+  describe('Finishes cart side', () => {
     it('Checks if "Confirm" button is disabled', () => {
       cy.getByTestId('cart-confirm-btn').should('has.disabled', 'true')
     })
@@ -120,7 +120,7 @@ context('SELL PRODUCTS', () => {
     })
   })
 
-  describe('Checks products page after update', () => {
+  describe('Checks products page', () => {
     it('Goes to products page', () => {
       cy.visit('/merchandise/products')
     })
@@ -128,13 +128,13 @@ context('SELL PRODUCTS', () => {
     productKeys.forEach(key => {
       const {label, shortProductId, finalProduct} = productsMap[key]
 
-      it(`Checks ${label}`, () => {
+      it(`Inspects ${label}`, () => {
         cy.checkProductNumbers({shortProductId, ...finalProduct})
       })
     })
   })
 
-  describe('Checks to buy list page after update', () => {
+  describe('Checks to buy list page', () => {
     it('Should add two products in to buy list', () => {
       cy.visit('/merchandise/to-buy-list')
         .get(`[data-cy*="to-buy-item-name"]`)
@@ -148,7 +148,7 @@ context('SELL PRODUCTS', () => {
     })
   })
 
-  describe('Checks acquisitions page after update', () => {
+  describe('Checks acquisitions page', () => {
     it('Goes to acquisitions page', () => {
       cy.visit('/merchandise/acquisitions')
     })
@@ -156,7 +156,7 @@ context('SELL PRODUCTS', () => {
     productKeys.forEach(key => {
       const {label, shortAcquisitionId, finalProduct} = productsMap[key]
 
-      it(`Checks ${label}`, () => {
+      it(`Inspects ${label}`, () => {
         cy.getByTestId(
           `acquisition-in-stock-count_${shortAcquisitionId}`,
         ).contains(finalProduct.inStockCount)
@@ -164,7 +164,7 @@ context('SELL PRODUCTS', () => {
     })
   })
 
-  describe('Checks sales page after update', () => {
+  describe('Checks sales page', () => {
     it('Goes to sales page', () => {
       cy.visit('/sales')
     })
@@ -172,7 +172,7 @@ context('SELL PRODUCTS', () => {
     productKeys.forEach(key => {
       const {label, shortProductId, ...product} = productsMap[key]
       const finalShape = product.finalCart
-      it(label, () => {
+      it(`Inspects ${label}`, () => {
         cy.checkSaleItemCount({
           shortProductId,
           salespersonName,
@@ -183,44 +183,44 @@ context('SELL PRODUCTS', () => {
     })
   })
 
-  describe('Checks stats after update', () => {
+  describe('Checks stats', () => {
     it('Goes to stats page', () => {
       cy.visit('/stats')
     })
 
-    it(`Checks ${currentMonthStats.value}`, () => {
+    it(`Inspects ${currentMonthStats.value}`, () => {
       cy.checkStats(currentMonthStats)
     })
   })
 
-  describe('Checks user stats after update', () => {
+  describe('Checks user stats', () => {
     it('Goes to users page', () => {
       cy.visit('/persons-control/users')
     })
 
-    it(`Checks ${userStats.name}`, () => {
+    it(`Inspects ${userStats.name}`, () => {
       cy.checkUserStats(userStats)
     })
   })
 
-  describe('Checks suppliers after update', () => {
+  describe('Checks suppliers', () => {
     it('Goes to suppliers page', () => {
       cy.visit('/persons-control/suppliers')
     })
 
     suppliersStats.forEach(supplierStats => {
-      it(`Checks ${supplierStats.name}`, () => {
+      it(`Inspects ${supplierStats.name}`, () => {
         cy.checkSupplierStats(supplierStats)
       })
     })
   })
 
-  describe('Checks customer stats after update', () => {
+  describe('Checks customer stats', () => {
     it('Goes to customer page', () => {
       cy.visit('/persons-control/customers')
     })
 
-    it(`Checks ${customerStats.name}`, () => {
+    it(`Inspects ${customerStats.name}`, () => {
       cy.checkCustomerStats(customerStats)
     })
   })
