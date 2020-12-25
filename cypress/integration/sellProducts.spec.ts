@@ -47,7 +47,7 @@ context('SELL PRODUCTS', () => {
 
       it(`Selects "${label}"`, () => {
         if (key === 'satReceiver') {
-          cy.scrollCartProductSelect('bottom')
+          cy.scrollCartProductSelect({position: 'bottom'})
         }
         cy.addItemToCart(product)
       })
