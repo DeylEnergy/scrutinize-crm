@@ -24,7 +24,6 @@ function getProductShapeAfterReturn(cartItem: any) {
 
   const {count} = cartItem
   product.inStockCount = product.inStockCount + count
-  product.soldCount = product.soldCount - count
 
   return product
 }

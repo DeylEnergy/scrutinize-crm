@@ -43,7 +43,6 @@ export default async function putProductStats({
       foundPeriod.soldSum += sum
       foundPeriod.incomeSum += payload.income
     } else if (parentEvent === PROCESS_RETURN_ITEMS) {
-      foundPeriod.soldCount -= payload.count
       foundPeriod.returnedCount += payload.count
       foundPeriod.soldSum -= sum
       foundPeriod.incomeSum -= payload.income
