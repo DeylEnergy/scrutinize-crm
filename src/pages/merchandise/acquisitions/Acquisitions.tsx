@@ -35,6 +35,8 @@ const SIDE_SHEET_DEFAULT = {
 const PERIOD_START_DEFAULT = [-Infinity]
 const PERIOD_STOP_DEFAULT = [Infinity]
 
+const CELL_TEST_ID_PREFIX = 'acquisition'
+
 function Acquisitions() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -96,12 +98,12 @@ function Acquisitions() {
 
       const countCell = {
         value: item.count,
-        testId: `acquisition-count_${shortAcquisitionId}`,
+        testId: `${CELL_TEST_ID_PREFIX}-count_${shortAcquisitionId}`,
       }
 
       const inStockCountCell = {
         value: item.inStockCount ?? 0,
-        testId: `acquisition-in-stock-count_${shortAcquisitionId}`,
+        testId: `${CELL_TEST_ID_PREFIX}-in-stock-count_${shortAcquisitionId}`,
       }
 
       const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)

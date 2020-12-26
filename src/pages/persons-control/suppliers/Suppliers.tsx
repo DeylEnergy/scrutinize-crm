@@ -42,6 +42,8 @@ const NEW_SUPPLIER_VALUE = {
   name: '',
 }
 
+const CELL_TEST_ID_PREFIX = 'supplier'
+
 function Suppliers() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.SUPPLIERS
@@ -86,7 +88,7 @@ function Suppliers() {
 
     const nameCell = {
       value: item.name,
-      testId: `supplier-name-cell_${item.name}`,
+      testId: `${CELL_TEST_ID_PREFIX}-name-cell_${item.name}`,
     }
 
     return {

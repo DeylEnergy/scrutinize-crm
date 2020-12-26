@@ -57,6 +57,8 @@ const SELECT_MENU_STYLE = {
   display: 'block',
 }
 
+const CELL_TEST_ID_PREFIX = 'to-buy-item'
+
 function ToBuy() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -260,7 +262,7 @@ function ToBuy() {
             <b>{TOOLTIP.NAME_BEFORE}:</b> {item._product.nameModel[0]}
           </>
         ),
-        testId: `to-buy-item-name_${shortProductId}`,
+        testId: `${CELL_TEST_ID_PREFIX}-name_${shortProductId}`,
       }
 
       const model = item.model || nameModel[1]

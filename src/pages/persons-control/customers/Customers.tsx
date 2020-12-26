@@ -42,6 +42,8 @@ const NEW_CUSTOMER_VALUE = {
   name: '',
 }
 
+const CELL_TEST_ID_PREFIX = 'customer'
+
 function Customers() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.CUSTOMERS
@@ -86,7 +88,7 @@ function Customers() {
 
     const nameCell = {
       value: item.name,
-      testId: `customer-name-cell_${item.name}`,
+      testId: `${CELL_TEST_ID_PREFIX}-name-cell_${item.name}`,
     }
 
     return {

@@ -43,6 +43,8 @@ const NEW_USER_VALUE = {
   permissions: [],
 }
 
+const CELL_TEST_ID_PREFIX = 'user'
+
 function Users() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.USERS
@@ -87,7 +89,7 @@ function Users() {
 
     const nameCell = {
       value: item.name,
-      testId: `user-name-cell_${item.name}`,
+      testId: `${CELL_TEST_ID_PREFIX}-name-cell_${item.name}`,
     }
 
     return {

@@ -23,6 +23,8 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
+const CELL_TEST_ID_PREFIX = 'customer-stats'
+
 function CustomerStats({customerId}: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -53,19 +55,19 @@ function CustomerStats({customerId}: any) {
 
       const soldSumCell = {
         value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
-        testId: `customer-stats-sold-sum_${reversedPeriod}`,
+        testId: `${CELL_TEST_ID_PREFIX}-sold-sum_${reversedPeriod}`,
       }
 
       const incomeSumCell = {
         value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
-        testId: `customer-stats-income-sum_${reversedPeriod}`,
+        testId: `${CELL_TEST_ID_PREFIX}-income-sum_${reversedPeriod}`,
       }
 
       const returnedSumCell = {
         value:
           item.returnedSum &&
           Number(item.returnedSum).toLocaleString(STRING_FORMAT),
-        testId: `customer-stats-returned-sum_${reversedPeriod}`,
+        testId: `${CELL_TEST_ID_PREFIX}-returned-sum_${reversedPeriod}`,
       }
 
       return {

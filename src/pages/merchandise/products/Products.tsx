@@ -94,6 +94,8 @@ const SIDE_SHEET_DEFAULT = {
   isShown: false,
 }
 
+const CELL_TEST_ID_PREFIX = 'product'
+
 function Products() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.PRODUCTS
@@ -145,7 +147,7 @@ function Products() {
 
       const nameCell = {
         value: name,
-        testId: `product-name-cell_${shortProductId}`,
+        testId: `${CELL_TEST_ID_PREFIX}-name-cell_${shortProductId}`,
       }
 
       const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)

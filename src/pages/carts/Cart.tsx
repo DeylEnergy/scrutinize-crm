@@ -41,6 +41,8 @@ interface CartProps {
   setControlPanel: (comp: React.ReactNode) => void
 }
 
+const CELL_TEST_ID_PREFIX = 'cart-item'
+
 function Cart({
   cartId,
   fetchComputedCartSum,
@@ -228,7 +230,7 @@ function Cart({
             {Number(item.income).toLocaleString(STRING_FORMAT)}
           </>
         ),
-        testId: `cart-item-sum_${shortProductId}`,
+        testId: `${CELL_TEST_ID_PREFIX}-sum_${shortProductId}`,
       }
 
       const noteCell = {
