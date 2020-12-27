@@ -60,6 +60,7 @@ export default function SideSheetComponent({
             appearance="primary"
             onClick={onSaveButtonClick}
             disabled={!canSave}
+            {...getTestId('sidesheet-save-btn')}
           >
             Save
           </Button>
