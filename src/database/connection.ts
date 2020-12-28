@@ -15,6 +15,12 @@ dbReq.onupgradeneeded = () => {
       .createIndex(IN.NAME_MODEL, IN.NAME_MODEL)
   }
 
+  if (!objectStores.contains(SN.PRODUCTS_STATS)) {
+    db.current.createObjectStore(SN.PRODUCTS_STATS, {
+      keyPath: 'productIdPeriod',
+    })
+  }
+
   if (!objectStores.contains(SN.SALES)) {
     const sales = db.current.createObjectStore(SN.SALES, keyPath)
     sales.createIndex(IN.DATETIME, IN.DATETIME)
@@ -36,7 +42,15 @@ dbReq.onupgradeneeded = () => {
   }
 
   if (!objectStores.contains(SN.CUSTOMERS)) {
-    db.current.createObjectStore(SN.CUSTOMERS, keyPath)
+    db.current
+      .createObjectStore(SN.CUSTOMERS, keyPath)
+      .createIndex(IN.NAME, IN.NAME)
+  }
+
+  if (!objectStores.contains(SN.CUSTOMERS_STATS)) {
+    db.current.createObjectStore(SN.CUSTOMERS_STATS, {
+      keyPath: 'customerIdPeriod',
+    })
   }
 
   if (!objectStores.contains(SN.USERS)) {
@@ -79,6 +93,12 @@ dbReq.onupgradeneeded = () => {
       .createIndex(IN.DATETIME, IN.DATETIME)
   }
 
+  if (!objectStores.contains(SN.STICKERS)) {
+    db.current
+      .createObjectStore(SN.STICKERS, keyPath)
+      .createIndex(IN.STICKERS_SELECTION_ID, IN.STICKERS_SELECTION_ID)
+  }
+
   if (!objectStores.contains(SN.EVENTS)) {
     db.current
       .createObjectStore(SN.EVENTS, keyPath)
@@ -95,6 +115,11 @@ dbReq.onupgradeneeded = () => {
 dbReq.onsuccess = () => {
   if (!db.current) {
     db.current = dbReq.result
+
+    /* eslint-disable */
+    // @ts-ignore
+    self.postMessage('ready')
+    /* eslint-enable */
   }
 }
 dbReq.onerror = () => console.error('db connection error', dbReq.error)

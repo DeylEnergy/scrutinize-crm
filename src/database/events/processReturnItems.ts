@@ -1,12 +1,15 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore, getRowFromIndexStore} from '../queries'
+import {getAllRows, getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
   PUT_SALE,
   PUT_STAT,
+  PUT_PRODUCT_STATS,
   PUT_USER_STATS,
+  PUT_CUSTOMER_STATS,
   PUT_SUPPLIER_STATS,
+  PUT_BUDGET,
   PROCESS_RETURN_ITEMS,
   DELETE_TO_BUY_ITEM,
   DELETE_SALE_ITEM,
@@ -21,7 +24,6 @@ function getProductShapeAfterReturn(cartItem: any) {
 
   const {count} = cartItem
   product.inStockCount = product.inStockCount + count
-  product.soldCount = product.soldCount - count
 
   return product
 }
@@ -42,8 +44,15 @@ function getSaleShapeAfterReturn(
   return soldItem
 }
 
+function getReturnTotalSum(cartProducts: any) {
+  return cartProducts.reduce(
+    (total: number, current: any) => total + current.sum,
+    0,
+  )
+}
+
 export default async function processReturnItems({payload}: any) {
-  const cartProducts = await getFullIndexStore({
+  const cartProducts = await getAllRows({
     storeName: SN.SALES,
     indexName: IN.__CART_ID__,
     direction: 'prev',
@@ -67,6 +76,21 @@ export default async function processReturnItems({payload}: any) {
         send({
           type: PUT_PRODUCT,
           payload: productShapeAfterReturn,
+          store,
+          emitEvent: false,
+        }),
+    })
+
+    events.push({
+      storeName: SN.PRODUCTS_STATS,
+      cb: ({store}: any) =>
+        send({
+          type: PUT_PRODUCT_STATS,
+          payload: {
+            ...cartItem,
+            currentDate,
+          },
+          parentEvent: PROCESS_RETURN_ITEMS,
           store,
           emitEvent: false,
         }),
@@ -111,7 +135,7 @@ export default async function processReturnItems({payload}: any) {
         }),
     })
 
-    const cartParticipants: any = await getRowFromIndexStore({
+    const cartParticipants: any = await getRow({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: cartItem.__cartId__,
@@ -127,6 +151,24 @@ export default async function processReturnItems({payload}: any) {
               payload: {
                 ...cartItem,
                 _userId: cartParticipants._userId,
+                currentDate,
+              },
+              parentEvent: PROCESS_RETURN_ITEMS,
+              store,
+              emitEvent: false,
+            }),
+        })
+      }
+
+      if (cartParticipants._customerId) {
+        events.push({
+          storeName: SN.CUSTOMERS_STATS,
+          cb: ({store}: any) =>
+            send({
+              type: PUT_CUSTOMER_STATS,
+              payload: {
+                ...cartItem,
+                _customerId: cartParticipants._customerId,
                 currentDate,
               },
               parentEvent: PROCESS_RETURN_ITEMS,
@@ -168,7 +210,7 @@ export default async function processReturnItems({payload}: any) {
       productShapeAfterReturn.lowestBoundCount
     ) {
       const [theProductInBuyList] = await handleAsync(
-        getFullIndexStore({
+        getAllRows({
           storeName: SN.ACQUISITIONS,
           indexName: IN.NEEDED_SINCE_DATETIME,
           dataCollecting: false,
@@ -195,7 +237,21 @@ export default async function processReturnItems({payload}: any) {
     }
   }
 
-  const selectedActiveCart: any = await getRowFromIndexStore({
+  const returnTotalSum = getReturnTotalSum(cartProducts)
+
+  events.push({
+    storeName: SN.BUDGET,
+    cb: ({store}: any) =>
+      send({
+        type: PUT_BUDGET,
+        payload: {returnTotalSum},
+        store,
+        parentEvent: PROCESS_RETURN_ITEMS,
+        emitEvent: false,
+      }),
+  })
+
+  const selectedActiveCart: any = await getRow({
     storeName: SN.SALES,
     indexName: IN.ACTIVE_CART_ID,
     key: payload.cartId,

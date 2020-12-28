@@ -8,7 +8,7 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import {Spinner} from 'evergreen-ui'
 import Tooltip from './Tooltip'
 import CellTextWrapper from './CellTextWrapper'
-import {useUpdate, useOneTime} from '../utilities'
+import {useLocale, useUpdate, useOneTime, getTestId} from '../utilities'
 
 const ROW_HEIGHT = 40
 const STICKY_COLUMN_WIDTH = 50
@@ -40,6 +40,7 @@ const TableCell = styled.div<{selected: boolean}>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  pointer-events: auto;
 `
 
 const TableCellContent = styled.div`
@@ -152,6 +153,8 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
       cellData.onDoubleClick
     : null
 
+  const cellTestProps = getTestId(cellContent?.testId)
+
   const columnLabel = columns[columnIndex].label
 
   const customCellContentStyle = isItemAvailable
@@ -172,6 +175,7 @@ function Cell({data, columnIndex, rowIndex, style}: GridChildComponentProps) {
       style={{
         ...style,
       }}
+      {...cellTestProps}
     >
       <TableCellContent
         style={{
@@ -473,6 +477,8 @@ interface TableProps {
   onFirstFetchComplete?: (rows: any) => void
 
   gridOuterRef?: any
+
+  loaderRef?: any
 }
 
 function Table({
@@ -486,7 +492,11 @@ function Table({
   loadMoreItems,
   onFirstFetchComplete = noop,
   gridOuterRef,
+  loaderRef,
 }: TableProps) {
+  const [locale] = useLocale()
+  const COMPONENT_CONST = locale.vars.GENERAL.COMPONENTS.TABLE
+
   const [adjustedColumns, setAdjustedColumns] = React.useState(columns)
   const [selectedRow, setSelectedRow] = React.useState<any>({
     rows,
@@ -500,52 +510,56 @@ function Table({
 
   const outerRef = React.useRef<any>()
 
+  const infiniteLoaderRef = React.useRef<any>()
+
   const stretchColumns = React.useCallback(() => {
-    if (isFirstFetched) {
-      return
-    }
+    requestAnimationFrame(() => {
+      if (isFirstFetched) {
+        return
+      }
 
-    const gridEl = outerRef.current
-    if (gridEl) {
-      const gridDimensions = gridEl.getBoundingClientRect()
-      const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
-      const gridWidth = gridDimensions.width - gridScrollWidth
+      const gridEl = outerRef.current
+      if (gridEl) {
+        const gridDimensions = gridEl.getBoundingClientRect()
+        const gridScrollWidth = gridEl?.offsetWidth - gridEl?.clientWidth
+        const gridWidth = gridDimensions.width - gridScrollWidth
 
-      const columnsTotalWidth = columns.reduce(
-        (a, b) => a + b.width,
-        isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
-      )
-
-      if (gridWidth > columnsTotalWidth) {
-        let totalExtraWidth = gridWidth - columnsTotalWidth
-
-        const growableColumnsCount = columns.reduce(
-          (a, b) => (b.canGrow ? a + 1 : a),
-          0,
+        const columnsTotalWidth = columns.reduce(
+          (a, b) => a + b.width,
+          isRowNumberShown ? STICKY_COLUMN_WIDTH : 0,
         )
 
-        const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+        if (gridWidth > columnsTotalWidth) {
+          let totalExtraWidth = gridWidth - columnsTotalWidth
 
-        const columnsUpdate = JSON.parse(JSON.stringify(columns))
-        for (const column of columnsUpdate) {
-          if (column.canGrow) {
-            let extraWidthForThisColumn = extraWidthForEachColumn
-            if (totalExtraWidth < extraWidthForEachColumn) {
-              extraWidthForThisColumn = totalExtraWidth
+          const growableColumnsCount = columns.reduce(
+            (a, b) => (b.canGrow ? a + 1 : a),
+            0,
+          )
+
+          const extraWidthForEachColumn = totalExtraWidth / growableColumnsCount
+
+          const columnsUpdate = JSON.parse(JSON.stringify(columns))
+          for (const column of columnsUpdate) {
+            if (column.canGrow) {
+              let extraWidthForThisColumn = extraWidthForEachColumn
+              if (totalExtraWidth < extraWidthForEachColumn) {
+                extraWidthForThisColumn = totalExtraWidth
+              }
+              column.width += extraWidthForThisColumn
+              totalExtraWidth -= extraWidthForThisColumn
             }
-            column.width += extraWidthForThisColumn
-            totalExtraWidth -= extraWidthForThisColumn
           }
-        }
 
-        setAdjustedColumns(columnsUpdate)
-        setTimeout(() => {
-          if (gridComponentRef.current) {
-            gridComponentRef.current.resetAfterColumnIndex(0)
-          }
-        })
+          setAdjustedColumns(columnsUpdate)
+          requestAnimationFrame(() => {
+            if (gridComponentRef.current) {
+              gridComponentRef.current.resetAfterColumnIndex(0)
+            }
+          })
+        }
       }
-    }
+    })
   }, [isFirstFetched, columns, isRowNumberShown])
 
   useUpdate(() => {
@@ -580,6 +594,13 @@ function Table({
     gridOuterRef.current = outerRef.current
   }
 
+  if (
+    loaderRef?.hasOwnProperty('current') &&
+    loaderRef.current !== infiniteLoaderRef.current
+  ) {
+    loaderRef.current = infiniteLoaderRef.current
+  }
+
   const innerElementType = innerElementTypeRender(
     adjustedColumns,
     rows,
@@ -600,12 +621,12 @@ function Table({
               isItemLoaded={isItemLoaded}
               itemCount={itemCount}
               loadMoreItems={loadMoreItems}
-              // minimumBatchSize={20}
+              ref={infiniteLoaderRef}
             >
               {({onItemsRendered, ref}: any) => {
                 return (
                   <Grid
-                    // @ts-ignore
+                    className="virtual-table-parent"
                     rowCount={itemCount}
                     columnCount={adjustedColumns.length}
                     columnWidth={columnIndex =>
@@ -658,7 +679,9 @@ function Table({
             <Spinner size={32} />
           </FlashBlock>
         )}
-        {isFirstFetched && !rows.length && <FlashBlock>No data.</FlashBlock>}
+        {isFirstFetched && !rows.length && (
+          <FlashBlock>{COMPONENT_CONST.NO_DATA}</FlashBlock>
+        )}
       </>
     </TableContext.Provider>
   )

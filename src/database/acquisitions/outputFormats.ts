@@ -27,7 +27,6 @@ export function processToBuyList(acquisitions: any[]) {
   let stickersTotal = 0
 
   for (const product of acquisitions) {
-    console.log(product.id, '->', product.toPrintStickersCount)
     stickersTotal += Number(product.toPrintStickersCount) || 0
   }
 

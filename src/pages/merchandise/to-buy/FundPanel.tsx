@@ -48,7 +48,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       {
         icon: <BankAccountIcon color="orange" marginRight={4} />,
         label: FUND_PANEL.BUDGET,
-        value: budget && (
+        value: (
           <EditablePopoverInput
             value={budget}
             inputType="number"
@@ -76,7 +76,7 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
       {Boolean(fundPanelItems.length) &&
         fundPanelItems.map(
           ({icon, label, value}: any, id: number) =>
-            Boolean(value) && (
+            (label === FUND_PANEL.BUDGET || Boolean(value)) && (
               <Tooltip content={label} key={id} showDelay={500}>
                 <FundPanelItemWrapper>
                   {icon} {value}

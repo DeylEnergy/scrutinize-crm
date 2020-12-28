@@ -17,82 +17,49 @@ async function getFilter(
   return filtersParent[filterName]
 }
 
-export function getRowFromStore(
-  storeName: string,
-  id: any,
-  store?: IDBObjectStore | null,
-  tx?: IDBTransaction,
-) {
-  return new Promise(resolve => {
-    if (!tx) {
-      tx = setupTransaction(storeName, 'readonly')
-    }
-
-    if (!store) {
-      // @ts-ignore
-      store = tx?.objectStore(storeName)
-    }
-
-    // @ts-ignore
-    store.get(id).onsuccess = function(event: any) {
-      resolve(event.target.result)
-    }
-  })
-}
-
-export function getRowFromIndexStore(params: any) {
-  const {
-    storeName,
-    indexName,
-    key,
-  }: {
-    storeName: string
-    indexName: string
-    key: any
-  } = params
+export function getRow({
+  store,
+  tx,
+  storeName,
+  indexName,
+  key,
+}: {
+  store?: any
+  tx?: IDBTransaction
+  storeName?: string
+  indexName?: string
+  key: string | number | any[]
+}) {
   return new Promise((resolve, reject) => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
+    let selectedStore = store
+    let activeTransaction = tx
 
-    const indexStore = objectStore.index(indexName)
-
-    if (!indexStore) {
-      return reject('No index found')
+    if (!activeTransaction && !selectedStore && storeName) {
+      activeTransaction = setupTransaction(storeName)
     }
 
-    indexStore.get(key).onsuccess = async (event: any) => {
+    if (!selectedStore && storeName) {
+      selectedStore = activeTransaction?.objectStore(storeName)
+    }
+
+    if (indexName) {
+      selectedStore = selectedStore.index(indexName)
+    }
+
+    const req = selectedStore.get(key)
+
+    req.onsuccess = (event: any) => {
       resolve(event.target.result)
     }
-  })
-}
 
-export function getFullStore(storeName: string) {
-  return new Promise(resolve => {
-    const {objectStore} = setupTransaction(storeName, 'readonly', true)
-
-    objectStore.getAll().onsuccess = function(event: any) {
-      resolve(event.target.result)
+    req.onerror = (error: any) => {
+      reject(error)
     }
   })
 }
 
 function withoutFilter(includeAll = true) {
   return includeAll
-}
-
-async function aggregate({rows, params}: any) {
-  const {storeName} = params
-
-  const [aggregateFn, noAggregator] = await handleAsync(
-    import(`./${storeName}/aggregate`),
-  )
-
-  if (noAggregator) {
-    return rows
-  }
-
-  if (aggregateFn.default) {
-    return aggregateFn.default({rows, params})
-  }
 }
 
 function getCustomKeyRange(keyRange: any) {
@@ -217,9 +184,9 @@ async function setupQuery(params: any) {
     outputFormatFn,
   }
 }
-// TODO: Rename with more generic name
-export function getAllFromIndexStore(params: any): any {
-  const {indexName, limit, lastKey, customKeyRange, direction = 'next'} = params
+
+export function getRows(params: any): any {
+  const {limit, lastKey, customKeyRange, direction = 'next'} = params
 
   return new Promise(async (resolve, reject) => {
     const [querySetup, querySetupError] = await handleAsync(setupQuery(params))
@@ -267,8 +234,8 @@ export function getAllFromIndexStore(params: any): any {
     }
   })
 }
-// TODO: Rename with more generic name
-export function getFullIndexStore(params: any): any {
+
+export function getAllRows(params: any): any {
   const {
     direction = 'next',
     filterBy,
@@ -311,14 +278,6 @@ export function getFullIndexStore(params: any): any {
         }
       }
 
-      if (filterBy) {
-        rows = rows.filter(filterFn)
-      }
-
-      if (sortFn) {
-        rows = sortFn(rows)
-      }
-
       const matchProps: any[] = Object.entries(matchProperties)
 
       // match properties
@@ -332,6 +291,14 @@ export function getFullIndexStore(params: any): any {
 
           return true
         })
+      }
+
+      if (filterBy) {
+        rows = rows.filter(filterFn)
+      }
+
+      if (sortFn) {
+        rows = sortFn(rows)
       }
 
       if (outputFormatFn) {

@@ -1,15 +1,26 @@
 import React from 'react'
 import {Button, FollowerIcon, FollowingIcon} from 'evergreen-ui'
 import AsyncSelectMenu from '../../components/AsyncSelectMenu'
-import {useLocale, useDatabase, handleAsync} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  handleAsync,
+  getTestId,
+} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
+import SelectCustomer from './SelectCustomer'
 
 function CartParticipants({selectedCartId}: any) {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {CONTROLS} = PAGE_CONST
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const [hasLoaded, setHasLoaded] = React.useState(false)
+
   const [cartParticipants, setCartParticipants] = React.useReducer(
     // @ts-ignore
     (s, v) => ({
@@ -20,11 +31,15 @@ function CartParticipants({selectedCartId}: any) {
   )
 
   React.useEffect(() => {
-    db.perform({
-      storeName: SN.SALES,
-      action: 'getCartParticipants',
-      params: {cartId: selectedCartId},
-    }).then(({_user, _userId, _customer, _customerId}: any) => {
+    const performedFetch = makeCancellablePromise(
+      db.perform({
+        storeName: SN.SALES,
+        action: 'getCartParticipants',
+        params: {cartId: selectedCartId},
+      }),
+    )
+
+    performedFetch.then(({_user, _userId, _customer, _customerId}: any) => {
       setHasLoaded(true)
       setCartParticipants({
         _userName: _user?.name,
@@ -84,6 +99,7 @@ function CartParticipants({selectedCartId}: any) {
         appearance="minimal"
         style={{marginRight: 8}}
         iconBefore={FollowerIcon}
+        {...getTestId('select-cart-salesperson')}
       >
         {cartParticipants?._userName || CONTROLS.SALESPERSON.BUTTON_TITLE}
       </Button>
@@ -92,7 +108,12 @@ function CartParticipants({selectedCartId}: any) {
 
   const customerButton = React.useMemo(() => {
     return (
-      <Button appearance="minimal" iconBefore={FollowingIcon} intent="warning">
+      <Button
+        appearance="minimal"
+        iconBefore={FollowingIcon}
+        intent="warning"
+        {...getTestId('select-cart-customer')}
+      >
         {cartParticipants?._customerName || CONTROLS.CUSTOMER.BUTTON_TITLE}
       </Button>
     )
@@ -112,14 +133,13 @@ function CartParticipants({selectedCartId}: any) {
       >
         {salespersonButton}
       </AsyncSelectMenu>
-      <AsyncSelectMenu
-        selected={cartParticipants._customerId}
-        title={CONTROLS.CUSTOMER.POPOVER_TITLE}
-        onSelect={handleCustomerSelect}
+      <SelectCustomer
+        customerId={cartParticipants._customerId}
+        handleCustomerSelect={handleCustomerSelect}
         storeName={SN.CUSTOMERS}
       >
         {customerButton}
-      </AsyncSelectMenu>
+      </SelectCustomer>
     </>
   )
 }

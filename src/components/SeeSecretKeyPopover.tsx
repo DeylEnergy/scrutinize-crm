@@ -1,14 +1,10 @@
 import React from 'react'
-import {Popover, Pane, Position, Button, EyeOpenIcon} from 'evergreen-ui'
-import {SPACING} from '../../../constants'
-import CODE_PREFIXES from '../../../constants/codePrefixes'
+import {Popover, Pane, Position} from 'evergreen-ui'
+import {SPACING} from '../constants'
+import CODE_PREFIXES from '../constants/codePrefixes'
 import QRCode from 'qrcode'
-import {useLocale} from '../../../utilities'
 
-function SeeSecretKeyPopover({userId, secretKey, disabled}: any) {
-  const [locale] = useLocale()
-  const {DRAWER} = locale.vars.PAGES.USERS
-
+function SeeSecretKeyPopover({userId, secretKey, disabled, children}: any) {
   const [authKey, setAuthKey] = React.useState<any>('')
   React.useEffect(() => {
     if (disabled) {
@@ -40,15 +36,7 @@ function SeeSecretKeyPopover({userId, secretKey, disabled}: any) {
       }
       position={Position.TOP}
     >
-      <Button
-        intent="success"
-        iconBefore={EyeOpenIcon}
-        justifyContent="center"
-        width="49%"
-        disabled={disabled}
-      >
-        {DRAWER.BUTTONS.SEE_AUTHORIZATION_KEY}
-      </Button>
+      {children}
     </Popover>
   )
 }

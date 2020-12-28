@@ -1,11 +1,12 @@
 import {handleAsync} from '../../utilities'
-import {getFullIndexStore} from '../queries'
+import {getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {
   PUT_PRODUCT,
-  COMPLETE_ACQUISITION,
+  PUT_ACQUISITION,
   RECOMPUTE_BUDGET,
   PUT_STAT,
+  PUT_PRODUCT_STATS,
   PUT_USER_STATS,
   PUT_SUPPLIER_STATS,
   PROCESS_ACQUISITIONS,
@@ -15,8 +16,31 @@ import send from './index'
 
 import pushEvents from '../pushEvents'
 
+function getAcquisitionShape({bought, currentDatetime, currentOrder}: any) {
+  const {
+    /* eslint-disable */
+    _product,
+    _user,
+    _supplier,
+    toPrintStickersCount,
+    neededSinceDatetime,
+    name,
+    model,
+    /* eslint-enable */
+    futureProductId,
+    ...acquisition
+  } = bought
+
+  acquisition._productId = acquisition._productId ?? futureProductId
+  acquisition.inStockCount = acquisition.count
+  acquisition.datetime = [currentDatetime, currentOrder]
+  acquisition.lastChangeDatetime.currentDatetime
+
+  return acquisition
+}
+
 export default async function processAcquisitions() {
-  const boughtProducts = await getFullIndexStore({
+  const boughtProducts = await getAllRows({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
     filterBy: 'bought',
@@ -30,7 +54,8 @@ export default async function processAcquisitions() {
             ...total,
             {
               count: cur.toPrintStickersCount,
-              id: cur._productId || cur.futureProductId,
+              acquisitionId: cur.id,
+              productId: cur._productId || cur.futureProductId,
               code: `${codePrefixes[SN.ACQUISITIONS]}::${cur.id}`,
               nameModel: cur?._product?.nameModel || [cur.name, cur.model],
             },
@@ -39,23 +64,45 @@ export default async function processAcquisitions() {
     [],
   )
 
-  let successCount = 0
+  let currentOrder = 0
 
   const currentDate = new Date()
+  const currentDatetime = currentDate.getTime()
+
+  let events: any[] = []
 
   for (const bought of boughtProducts.reverse()) {
-    const events = [
+    const itemEvents = [
       {
         storeName: SN.PRODUCTS,
         cb: ({store}: any) =>
           send({type: PUT_PRODUCT, payload: bought, store, emitEvent: false}),
       },
       {
+        storeName: SN.PRODUCTS_STATS,
+        cb: ({store}: any) =>
+          send({
+            type: PUT_PRODUCT_STATS,
+            payload: {
+              ...bought,
+              _productId: bought._productId || bought.futureProductId,
+              currentDate,
+            },
+            parentEvent: PROCESS_ACQUISITIONS,
+            store,
+            emitEvent: false,
+          }),
+      },
+      {
         storeName: SN.ACQUISITIONS,
         cb: ({store, eventsResults}: any) =>
           send({
-            type: COMPLETE_ACQUISITION,
-            payload: bought,
+            type: PUT_ACQUISITION,
+            payload: getAcquisitionShape({
+              bought,
+              currentDatetime,
+              currentOrder: currentOrder++,
+            }),
             store,
             emitEvent: false,
             eventsResults,
@@ -120,12 +167,14 @@ export default async function processAcquisitions() {
       })
     }
 
-    const [wasProcessed] = await handleAsync(pushEvents(events))
-
-    if (wasProcessed) {
-      successCount += 1
-    }
+    events = [...events, ...itemEvents]
   }
 
-  return {successCount, stickersToPrint}
+  const [, error] = await handleAsync(pushEvents(events))
+
+  if (error) {
+    return Promise.reject(`Error on acquisitions processing. ${error}`)
+  }
+
+  return {stickersToPrint}
 }

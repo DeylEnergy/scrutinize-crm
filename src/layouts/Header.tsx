@@ -7,6 +7,7 @@ import IconButton from '../components/IconButton'
 import Carts from '../pages/carts'
 import {useLocale, useAccount} from '../utilities'
 import RIGHTS from '../constants/rights'
+import StickersManager from '../pages/stickers-manager'
 import Cashbox from '../pages/cashbox'
 import UserProfile from '../pages/user-profile'
 
@@ -58,55 +59,53 @@ export default function Header() {
     permissions?.includes(RIGHTS.CAN_EXPORT_DATA) ||
     permissions?.includes(RIGHTS.CAN_IMPORT_DATA)
 
+  const isElectronApp = process.env.REACT_APP_WRAPPER === 'electron'
+
   return (
     <Stripe>
       <ActionsContainer>
         {canSeeMerchandise && (
           <Link to="/merchandise">
             <Tooltip content={PAGES.MERCHANDISE.TITLE}>
-              <IconButton icon={<FaDatabase />} />
+              <IconButton icon={<FaDatabase />} testId="merchandise-icon" />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_SALES) && (
           <Link to="/sales">
             <Tooltip content={PAGES.SALES.TITLE}>
-              <IconButton icon={<FaList />} />
+              <IconButton icon={<FaList />} testId="sales-icon" />
             </Tooltip>
           </Link>
         )}
         {permissions?.includes(RIGHTS.CAN_SEE_STATS) && (
           <Link to="/stats">
             <Tooltip content={PAGES.STATS.TITLE}>
-              <IconButton icon={<FaChartBar />} />
+              <IconButton icon={<FaChartBar />} testId="stats-icon" />
             </Tooltip>
           </Link>
         )}
         {canSeeUsersControl && (
           <Link to="/persons-control">
             <Tooltip content={PAGES.PERSONS_CONTROL.TITLE}>
-              <IconButton icon={<FaUserCog />} />
+              <IconButton icon={<FaUserCog />} testId="persons-control-icon" />
             </Tooltip>
           </Link>
         )}
         {canSeeSettings && (
           <Link to="/settings">
             <Tooltip content={PAGES.SETTINGS.TITLE}>
-              <IconButton icon={<FaCog />} />
+              <IconButton icon={<FaCog />} testId="settings-icon" />
             </Tooltip>
           </Link>
         )}
-        {/* No manual stickers for the first version. */}
-        {/* {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
-          <Link to="/">
-            <Tooltip content="Stickers manager">
-              <IconButton icon={<FaQrcode />} />
-            </Tooltip>
-          </Link>
-        )} */}
       </ActionsContainer>
-      <Logo>Scrutinize</Logo>
+      <Logo>{!isElectronApp && 'Scrutinize'}</Logo>
+
       <ActionsContainer last>
+        {permissions?.includes(RIGHTS.CAN_SEE_STICKERS_MANAGER) && (
+          <StickersManager />
+        )}
         {permissions?.includes(RIGHTS.CAN_SEE_CASHBOX) && <Cashbox />}
         {permissions?.includes(RIGHTS.CAN_SEE_CARTS) && <Carts />}
         {permissions?.includes(RIGHTS.CAN_SEE_USER_PROFILE) && <UserProfile />}

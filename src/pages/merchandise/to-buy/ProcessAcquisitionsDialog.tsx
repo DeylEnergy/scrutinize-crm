@@ -9,10 +9,14 @@ import {
   toaster,
 } from 'evergreen-ui'
 import styled from 'styled-components'
-import {useLocale, useDatabase, handleAsync} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  handleAsync,
+  createStickers,
+} from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
-import createStickers from './createStickers'
 
 const ProcessIndicatorWrapper = styled.span`
   position: relative;

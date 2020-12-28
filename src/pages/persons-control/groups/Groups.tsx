@@ -16,6 +16,7 @@ import {
   useLocale,
   useAccount,
   useDatabase,
+  useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
@@ -46,6 +47,9 @@ function Groups() {
   const PAGE_CONST = locale.vars.PAGES.USER_GROUPS
   const [account, setAccount] = useAccount()
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -82,7 +86,7 @@ function Groups() {
             content={
               <Menu>
                 <Menu.Group>
-                  <Menu.Item onSelect={() => {}} icon={EditIcon}>
+                  <Menu.Item onSelect={editSideSheet} icon={EditIcon}>
                     {PAGE_CONST.TABLE.OPTIONS.EDIT}
                   </Menu.Item>
                 </Menu.Group>
@@ -106,10 +110,14 @@ function Groups() {
   )
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.GROUPS,
-      limit: FETCH_ITEM_LIMIT,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.GROUPS,
+        limit: FETCH_ITEM_LIMIT,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -121,7 +129,7 @@ function Groups() {
         lastKey: newItems.length && newItems[newItems.length - 1].id,
       })
     })
-  }, [loadedItems.items, db, serializeItem])
+  }, [makeCancellablePromise, loadedItems.items, db, serializeItem])
 
   const handleNewGroupClick = React.useCallback(
     () => setSideSheet({isShown: true, value: NEW_GROUP_VALUE}),
@@ -144,10 +152,11 @@ function Groups() {
         }
 
         if (updatedGroup.id === account.groupId) {
-          setAccount({
+          setAccount((prev: any) => ({
+            ...prev,
             groupName: updatedGroup.name,
             permissions: updatedGroup.permissions,
-          })
+          }))
         }
 
         const items = itemsRef.current

@@ -1,14 +1,16 @@
 import React from 'react'
-import {ArrowLeftIcon, Button} from 'evergreen-ui'
+import {ArrowLeftIcon, Button, Pane} from 'evergreen-ui'
 import {
   useLocale,
   useDatabase,
   getLocaleTimeString,
+  clipLongId,
+  getTestId,
   withErrorBoundary,
-} from '../../utilities'
-import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import Table from '../../components/Table'
-import {PageWrapper} from '../../layouts'
+} from '../../../utilities'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
+import Table from '../../../components/Table'
+import {PageWrapper} from '../../../layouts'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -30,14 +32,14 @@ const CELL_STYLE = {
   cursor: 'pointer',
 }
 
-function SelectAcquisition({
+function PickAcquisition({
   productId,
   handleAcquisitionSelect,
   handleReturnBack,
 }: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.SELECT_ACQUISITION
+  const PAGE_CONST = locale.vars.PAGES.COMMON.PICK_ACQUISITION
   const {TABLE} = PAGE_CONST
 
   const db = useDatabase()
@@ -50,7 +52,14 @@ function SelectAcquisition({
 
   const serializeItem = React.useCallback(
     (item: any) => {
-      const dateTime = getLocaleTimeString(item.datetime, STRING_FORMAT)
+      const acquisitionShortId = clipLongId(item.id)
+
+      const acquisitionShortIdCell = {
+        value: acquisitionShortId,
+        testId: `acquisition-short-id-cell_${acquisitionShortId}`,
+      }
+
+      const dateTime = getLocaleTimeString(item.datetime[0], STRING_FORMAT)
       const acquisitionDateCell = {
         value: dateTime && `${dateTime.date}`,
       }
@@ -63,7 +72,7 @@ function SelectAcquisition({
           })
         },
         id: item.id,
-        cells: [item.id.split('-')[0], item.count, acquisitionDateCell],
+        cells: [acquisitionShortIdCell, item.inStockCount, acquisitionDateCell],
         style: CELL_STYLE,
       }
     },
@@ -115,22 +124,24 @@ function SelectAcquisition({
         onClick={handleReturnBack}
         iconBefore={ArrowLeftIcon}
         style={RETURN_BACK_BUTTON_STYLE}
+        {...getTestId('return-back-btn')}
       >
         {PAGE_CONST.RETURN_BACK_BUTTON.TITLE}
       </Button>
-
-      <Table
-        columns={columns}
-        rows={loadedItems.items}
-        rowHeight={32}
-        isHeaderShown={false}
-        hasNextPage={loadedItems.hasNextPage}
-        isItemLoaded={isItemLoaded}
-        loadMoreItems={fetchAcquisitions}
-        isRowNumberShown={false}
-      />
+      <Pane flexGrow={1}>
+        <Table
+          columns={columns}
+          rows={loadedItems.items}
+          rowHeight={32}
+          isHeaderShown={false}
+          hasNextPage={loadedItems.hasNextPage}
+          isItemLoaded={isItemLoaded}
+          loadMoreItems={fetchAcquisitions}
+          isRowNumberShown={false}
+        />
+      </Pane>
     </PageWrapper>
   )
 }
 
-export default withErrorBoundary(SelectAcquisition)
+export default withErrorBoundary(PickAcquisition)

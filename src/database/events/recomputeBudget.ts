@@ -1,16 +1,11 @@
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 import sendEvent from './index'
 import {PUT_BUDGET} from '../../constants/events'
 
-export default async function recomputeBudget({
-  store = null,
-  payload,
-}: any) {
-  const [budget, budgetError] = await handleAsync(
-    getRowFromStore(SN.BUDGET, 1, store),
-  )
+export default async function recomputeBudget({store = null, payload}: any) {
+  const [budget, budgetError] = await handleAsync(getRow({store, key: 1}))
 
   if (budgetError) {
     return Promise.reject(`Error fetching budget`)

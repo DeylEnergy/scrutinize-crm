@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromIndexStore} from '../queries'
+import {getRow} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -8,12 +8,13 @@ import saveEvent from './saveEvent'
 export default async function putCartParticipants({
   type,
   payload,
+  store,
   emitEvent = true,
 }: any) {
   const {__cartId__, ...updatedValues} = payload
 
   const [cartParticipants, cartParticipantsError] = await handleAsync(
-    getRowFromIndexStore({
+    getRow({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: __cartId__,
@@ -34,7 +35,7 @@ export default async function putCartParticipants({
   }
 
   const [, isParticipantsUpdateError] = await handleAsync(
-    putRow(SN.SALES, updatedCartParticipants),
+    putRow(SN.SALES, updatedCartParticipants, store),
   )
 
   if (isParticipantsUpdateError) {

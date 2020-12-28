@@ -8,7 +8,7 @@ import {
   PROCESS_ACQUISITIONS,
   PROCESS_RETURN_ITEMS,
 } from '../../constants/events'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 
 function getEmptyPeriod(currentMonthYear: string) {
   return {
@@ -38,7 +38,7 @@ export default async function putStat({
     const currentPeriod = getPeriodOfDate(currentDate)
 
     let [foundPeriod] = await handleAsync(
-      getRowFromStore(SN.STATS, currentPeriod, store),
+      getRow({store, storeName: SN.STATS, key: currentPeriod}),
     )
 
     if (!foundPeriod) {

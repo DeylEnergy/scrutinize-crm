@@ -15,7 +15,12 @@ import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateUser from './UpdateUser'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PUT_USER} from '../../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 
@@ -38,10 +43,15 @@ const NEW_USER_VALUE = {
   permissions: [],
 }
 
+const CELL_TEST_ID_PREFIX = 'user'
+
 function Users() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.USERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -77,10 +87,15 @@ function Users() {
       },
     }
 
+    const nameCell = {
+      value: item.name,
+      testId: `${CELL_TEST_ID_PREFIX}-name-cell_${item.name}`,
+    }
+
     return {
       id: item.id,
       isDisabled: Boolean(item.returned),
-      cells: [avatarCell, item.name, item?._group?.name, item.phone, item.note],
+      cells: [avatarCell, nameCell, item?._group?.name, item.phone, item.note],
       onDoubleClick: editSideSheet,
       optionsMenu: (
         <Popover
@@ -110,14 +125,17 @@ function Users() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      db.getRows({
-        storeName: SN.USERS,
-        indexName: IN.NAME,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-        filterBy: 'consist',
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.USERS,
+          indexName: IN.NAME,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -130,7 +148,7 @@ function Users() {
         })
       })
     },
-    [db, serializeItem],
+    [makeCancellablePromise, db, serializeItem],
   )
 
   const {lastKey} = loadedItems

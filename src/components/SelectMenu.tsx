@@ -13,7 +13,7 @@ import {
   SearchIcon,
 } from 'evergreen-ui'
 import Popover from './Popover'
-import {debounce} from '../utilities'
+import {debounce, getTestId} from '../utilities'
 
 function getEmptyView(close: any, emptyView: any) {
   if (typeof emptyView === 'function') {
@@ -33,6 +33,7 @@ function noop() {}
 
 function Header({
   title,
+  hasFilter,
   filterIcon,
   filterPlaceholder,
   asyncSearch = noop,
@@ -89,17 +90,20 @@ function Header({
           onClick={close}
         />
       </Pane>
-      <TableHead>
-        <SearchTableHeaderCell
-          ref={searchRef}
-          value={searchValue}
-          onChange={handleChange}
-          borderRight={undefined}
-          height={32}
-          placeholder={filterPlaceholder}
-          icon={filterIcon}
-        />
-      </TableHead>
+      {hasFilter && (
+        <TableHead>
+          <SearchTableHeaderCell
+            ref={searchRef}
+            value={searchValue}
+            onChange={handleChange}
+            borderRight={undefined}
+            height={32}
+            placeholder={filterPlaceholder}
+            icon={filterIcon}
+            {...getTestId('select-menu-search-input')}
+          />
+        </TableHead>
+      )}
     </>
   )
 }
@@ -111,10 +115,11 @@ function SelectMenu({
   options,
   selected,
   position = Position.BOTTOM_LEFT,
-  hasFilter = false,
+  hasFilter = true,
   filterPlaceholder = 'Filter...',
   filterIcon = SearchIcon,
   emptyView,
+  contentView = null,
   titleView,
   isMultiSelect = false,
   closeOnSelect = false,
@@ -135,6 +140,7 @@ function SelectMenu({
       },
       onFilterChange: onFilterChangeHandler,
       selected: arrify(selected),
+      ...getTestId('select-menu-options-list'),
     }),
     [onFilterChangeHandler, selected, onSelectHandler, onDeselectHandler],
   )
@@ -148,6 +154,7 @@ function SelectMenu({
         <Pane display="flex" flexDirection="column">
           <Header
             title={title}
+            hasFilter={hasFilter}
             filterIcon={filterIcon}
             filterPlaceholder={filterPlaceholder}
             onFilterChangeHandler={onFilterChangeHandler}
@@ -155,23 +162,26 @@ function SelectMenu({
             asyncSearchDebounceTimeMs={asyncSearchDebounceTimeMs}
             close={close}
           />
-          <SelectMenuContent
-            width={width}
-            height={height}
-            options={options}
-            title={title}
-            hasFilter={hasFilter}
-            filterPlaceholder={filterPlaceholder}
-            filterIcon={filterIcon}
-            hasTitle={false}
-            isMultiSelect={isMultiSelect}
-            titleView={titleView}
-            listProps={listProps}
-            close={close}
-            {...getEmptyView(close, emptyView)}
-            // @ts-ignore
-            closeOnSelect={closeOnSelect}
-          />
+
+          {contentView || (
+            <SelectMenuContent
+              width={width}
+              height={height}
+              options={options}
+              title={title}
+              hasFilter={false}
+              filterPlaceholder={filterPlaceholder}
+              filterIcon={filterIcon}
+              hasTitle={false}
+              isMultiSelect={isMultiSelect}
+              titleView={titleView}
+              listProps={listProps}
+              close={close}
+              {...getEmptyView(close, emptyView)}
+              // @ts-ignore
+              closeOnSelect={closeOnSelect}
+            />
+          )}
         </Pane>
       )}
       {...popoverProps}

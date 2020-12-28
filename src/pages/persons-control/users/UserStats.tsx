@@ -2,7 +2,13 @@ import React from 'react'
 import {Pane} from 'evergreen-ui'
 import Table from '../../../components/Table'
 import {STORE_NAME as SN} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  reversePeriodView,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PageWrapper} from '../../../layouts'
 
 const TABLE_HEIGHT = 250
@@ -17,11 +23,16 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
+const CELL_TEST_ID_PREFIX = 'user-stats'
+
 function UserStats({userId}: any) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const {DRAWER} = locale.vars.PAGES.USERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>([])
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -40,16 +51,27 @@ function UserStats({userId}: any) {
     item => {
       const [, period] = item.userIdPeriod
 
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const reversedPeriod = reversePeriodView(period)
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-sold-sum_${reversedPeriod}`,
+      }
 
-      const spentSumCell =
-        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-income-sum_${reversedPeriod}`,
+      }
+
+      const spentSumCell = {
+        value:
+          item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-spent-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
-        cells: [period, soldSumCell, incomeSumCell, spentSumCell || ''],
+        cells: [reversedPeriod, soldSumCell, incomeSumCell, spentSumCell || ''],
       }
     },
     [STRING_FORMAT],
@@ -65,14 +87,18 @@ function UserStats({userId}: any) {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.USERS_STATS,
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      filterBy: 'userId',
-      filterParams: {_userId: userId},
-      lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.USERS_STATS,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        filterBy: 'userId',
+        filterParams: {_userId: userId},
+        lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -81,11 +107,10 @@ function UserStats({userId}: any) {
       setLoadedItems({
         hasNextPage: FETCH_ITEM_LIMIT === newItems.length,
         items: [...itemsRef.current, ...newItemsSerialized],
-        lastKey:
-          newItems.length && newItems[newItems.length - 1].userIdDatetime,
+        lastKey: newItems.length && newItems[newItems.length - 1].userIdPeriod,
       })
     })
-  }, [db, lastKey, serializeItem, userId])
+  }, [makeCancellablePromise, db, lastKey, serializeItem, userId])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = DRAWER.TABLE

@@ -1,10 +1,10 @@
-import {getRowFromStore, getRowFromIndexStore} from '../../queries'
+import {getRow} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {handleAsync} from '../../../utilities'
 
-export default async function computeCartSum({cartId}: {cartId: string}) {
-  const [participants, error] = await handleAsync(
-    getRowFromIndexStore({
+export default async function getCartParticipants({cartId}: {cartId: string}) {
+  const [participants] = await handleAsync(
+    getRow({
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: cartId,
@@ -16,8 +16,8 @@ export default async function computeCartSum({cartId}: {cartId: string}) {
   }
 
   if (participants._userId) {
-    const [userData, userError] = await handleAsync(
-      getRowFromStore(SN.USERS, participants._userId),
+    const [userData] = await handleAsync(
+      getRow({storeName: SN.USERS, key: participants._userId}),
     )
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,8 +27,8 @@ export default async function computeCartSum({cartId}: {cartId: string}) {
   }
 
   if (participants._customerId) {
-    const [_customer, customerError] = await handleAsync(
-      getRowFromStore(SN.CUSTOMERS, participants._customerId),
+    const [_customer] = await handleAsync(
+      getRow({storeName: SN.CUSTOMERS, key: participants._customerId}),
     )
 
     participants._customer = _customer

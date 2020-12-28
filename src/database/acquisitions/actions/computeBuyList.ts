@@ -1,13 +1,14 @@
-import {getFullIndexStore, getRowFromStore} from '../../queries'
+import {getAllRows, getRow} from '../../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 export default async function computeBuyList() {
-  const buyList = await getFullIndexStore({
+  const buyList = await getAllRows({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
+    filterBy: 'active',
   })
 
-  let budget: any = await getRowFromStore(SN.BUDGET, 1)
+  let budget: any = await getRow({storeName: SN.BUDGET, key: 1})
 
   if (!budget) {
     return {}
@@ -17,7 +18,6 @@ export default async function computeBuyList() {
 
   let needed = 0
   let spent = 0
-  let remains = budget
 
   for (const item of buyList) {
     const {sum, isDone} = item
@@ -25,9 +25,10 @@ export default async function computeBuyList() {
 
     if (isDone && sum) {
       spent += sum
-      remains -= sum
     }
   }
+
+  const remains = spent ? budget - spent : 0
 
   return {
     budget,

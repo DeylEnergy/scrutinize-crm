@@ -16,8 +16,7 @@ import {MERCHANDISE_ROUTE} from '../../constants/routes'
 import RIGHTS from '../../constants/rights'
 
 const PRODUCTS_PATH = `/${MERCHANDISE_ROUTE}/products`
-const TO_BUY_LIST_PATH = `/${MERCHANDISE_ROUTE}/
-to-buy-list`
+const TO_BUY_LIST_PATH = `/${MERCHANDISE_ROUTE}/to-buy-list`
 const ACQUISITIONS_PATH = `/${MERCHANDISE_ROUTE}/acquisitions`
 
 export default function Merchandise() {
@@ -86,9 +85,11 @@ export default function Merchandise() {
         </Tablist>
         <Pane role="tabpanel" height="100%">
           <Switch>
-            <Route path={PRODUCTS_PATH}>
-              {permissions.includes(RIGHTS.CAN_SEE_PRODUCTS) && <Products />}
-            </Route>
+            {permissions.includes(RIGHTS.CAN_SEE_PRODUCTS) && (
+              <Route path={PRODUCTS_PATH}>
+                <Products />
+              </Route>
+            )}
             {permissions.includes(RIGHTS.CAN_SEE_TO_BUY_LIST) && (
               <Route path={TO_BUY_LIST_PATH}>
                 <ToBuy />

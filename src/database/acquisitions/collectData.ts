@@ -36,7 +36,7 @@ export default async function collectData(
     supplier = await handleIdbRequest(
       suppliersObjectStore.get(value._supplierId),
     )
-    suppliersCache[value._supplierId] = cache
+    suppliersCache[value._supplierId] = supplier
   }
   supplier && (value._supplier = supplier)
 

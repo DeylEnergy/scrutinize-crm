@@ -1,8 +1,13 @@
 import React from 'react'
 import {Dialog} from 'evergreen-ui'
 import CartsTabs from './CartsTabs'
-import {useLocale, useDatabase} from '../../utilities'
-import {STORE_NAME as SN} from '../../constants'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  getTestId,
+} from '../../utilities'
+import {SPACING, STORE_NAME as SN} from '../../constants'
 import CheckoutDialog from './CheckoutDialog'
 import CartsFooter from './CartsFooter'
 
@@ -17,6 +22,9 @@ export default function CartsDialog({isShown, setIsShown}: any) {
   const {DIALOG} = PAGE_CONST
 
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   // @ts-ignore
   const [state, setState] = React.useReducer((s, v) => ({...s, ...v}), TABS)
 
@@ -43,7 +51,12 @@ export default function CartsDialog({isShown, setIsShown}: any) {
     setIsCheckoutDialogShown(true)
   }, [])
 
-  const handleCheckoutCompleteClose = React.useCallback(() => {
+  const handleCheckoutClose = React.useCallback(() => {
+    setIsCheckoutDialogShown(false)
+    setState({currentCartSum: 0})
+  }, [])
+
+  const handleDialogTabSwitch = React.useCallback(() => {
     setState({
       selectedCartId: tabs?.[0]?.cartId,
     })
@@ -54,16 +67,23 @@ export default function CartsDialog({isShown, setIsShown}: any) {
     setState({
       tabs: updatedCarts,
     })
-    setIsCheckoutDialogShown(false)
-  }, [selectedCartId, tabs])
+    handleCheckoutClose()
+  }, [selectedCartId, tabs, handleCheckoutClose])
 
   const fetchComputedCartSum = React.useCallback(() => {
-    db.perform({
-      storeName: SN.SALES,
-      action: 'computeCartSum',
-      params: {__cartId__: selectedCartId},
-    }).then((cartSum: number) => setState({currentCartSum: cartSum}))
-  }, [db, selectedCartId])
+    const performedFetch = makeCancellablePromise(
+      db.perform({
+        storeName: SN.SALES,
+        action: 'computeCartSum',
+        params: {__cartId__: selectedCartId},
+      }),
+    )
+
+    // @ts-ignore
+    performedFetch.then((cartSum: number) =>
+      setState({currentCartSum: cartSum}),
+    )
+  }, [makeCancellablePromise, db, selectedCartId])
 
   return (
     <>
@@ -82,6 +102,9 @@ export default function CartsDialog({isShown, setIsShown}: any) {
             handleCheckoutOpen={handleCheckoutOpen}
           />
         }
+        contentContainerProps={{paddingTop: SPACING * 1.5}}
+        // @ts-ignore
+        overlayProps={{...getTestId('carts-dialog')}}
       >
         <CartsTabs
           state={state}
@@ -93,7 +116,8 @@ export default function CartsDialog({isShown, setIsShown}: any) {
       <CheckoutDialog
         key={selectedCartId}
         isShown={isCheckoutDialogShown}
-        handleCheckoutCompleteClose={handleCheckoutCompleteClose}
+        handleCheckoutClose={handleCheckoutClose}
+        handleDialogTabSwitch={handleDialogTabSwitch}
         handleCheckoutSuccess={handleCheckoutSuccess}
         totalSum={currentCartSum}
         cartId={selectedCartId}

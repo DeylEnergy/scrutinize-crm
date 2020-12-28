@@ -7,9 +7,9 @@ import _exportObjectStoresData from './exportObjectStoresData'
 import _importObjectStoresData from './importObjectStoresData'
 
 export function getRows(params: any) {
-  let fetcher = queries.getFullIndexStore
+  let fetcher = queries.getAllRows
   if (params.lastKey || params.limit) {
-    fetcher = queries.getAllFromIndexStore
+    fetcher = queries.getRows
   }
 
   return fetcher(params)
@@ -20,9 +20,7 @@ export function getRow(params: {
   indexName?: string
   key: string
 }) {
-  return params.indexName
-    ? queries.getRowFromIndexStore(params)
-    : queries.getRowFromStore(params.storeName, params.key)
+  return queries.getRow(params)
 }
 
 export async function search({storeName, ...params}: any) {

@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import {STORE_NAME as SN, CASHBOX_OPERATION} from '../../constants'
 import {PUT_BUDGET, PUT_CASHBOX_OPERATION} from '../../constants/events'
 import send from './index'
@@ -26,7 +26,7 @@ export default async function updateCashbox({payload}: any) {
     return Promise.reject('Update cashbox action is incorrectly specified.')
   }
 
-  const budget: any = await getRowFromStore(SN.BUDGET, 1)
+  const budget: any = await getRow({storeName: SN.BUDGET, key: 1})
 
   const currentDate = new Date()
   const datetime = currentDate.getTime()

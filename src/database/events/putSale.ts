@@ -1,12 +1,12 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore, getFullIndexStore} from '../queries'
+import {getRow, getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 
 async function getAcquisitionData(id: string) {
-  const aq: any = await getRowFromStore(SN.ACQUISITIONS, id)
+  const aq: any = await getRow({storeName: SN.ACQUISITIONS, key: id})
 
   return aq
 }
@@ -21,7 +21,7 @@ export default async function putSale({
   // in case sale item was scanned outside from particular cart give it the latest one
   if (!payload.__cartId__ && !payload.cartId) {
     const [saleItem] = await handleAsync(
-      getFullIndexStore({
+      getAllRows({
         storeName: SN.SALES,
         indexName: IN.__CART_ID__,
         direction: 'prev',
@@ -34,14 +34,15 @@ export default async function putSale({
     } else {
       const datetime = Date.now()
       const uId = uuidv4()
-      payload.__cartId__ = `${datetime}_${uId}`
+      const newCartId = `${datetime}_${uId}`
+      payload.__cartId__ = payload.activeCartId = newCartId
     }
   }
 
   // if _acquisitionId is provided it will manipulate count
   if (payload.__cartId__ && payload._productId && payload._acquisitionId) {
     const [saleItems] = await handleAsync(
-      getFullIndexStore({
+      getAllRows({
         storeName: SN.SALES,
         indexName: IN.__CART_ID__,
         direction: 'prev',
@@ -108,10 +109,10 @@ export default async function putSale({
   if (!payload.id) {
     payload.id = uuidv4()
     if (payload._productId) {
-      const _product: any = await getRowFromStore(
-        SN.PRODUCTS,
-        payload._productId,
-      )
+      const _product: any = await getRow({
+        storeName: SN.PRODUCTS,
+        key: payload._productId,
+      })
 
       payload.salePrice = _product.salePrice
 

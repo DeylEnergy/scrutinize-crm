@@ -4,6 +4,9 @@
     "COMPONENTS": {
       "FILTERS_POPOVER": {
         "BUTTON_TITLE": "Filters"
+      },
+      "TABLE": {
+        "NO_DATA": "No data."
       }
     }
   },
@@ -41,7 +44,7 @@
           },
           "LAST_SOLD": {
             "TITLE": "Last Sold",
-            "WIDTH": 130
+            "WIDTH": 170
           },
           "LAST_ACQUIRED": {
             "TITLE": "Last Acquired",
@@ -74,6 +77,45 @@
         "INPUTS": {
           "EXPECTED_COST": "Expected cost",
           "COUNT": "Count"
+        },
+        "LABELS": {
+          "PRODUCT_STATS": "Stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_COUNT": {
+              "TITLE": "Sold Count",
+              "WIDTH": 100
+            },
+            "ACQUIRED_COUNT": {
+              "TITLE": "Acquired Count",
+              "WIDTH": 120
+            },
+            "RETURNED_COUNT": {
+              "TITLE": "Returned Count",
+              "WIDTH": 120
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Spent Sum",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Returned Sum",
+              "WIDTH": 120
+            }
+          }
         }
       }
     },
@@ -153,6 +195,11 @@
           "MODEL_BEFORE": "After",
           "PREVIOUS_PRICE": "Previous",
           "IN_STOCK": "In stock"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove",
+          "FREEZE": "Freeze",
+          "UNFREEZE": "Unfreeze"
         }
       },
       "CONTROLS": {
@@ -220,6 +267,10 @@
             "TITLE": "Sum",
             "WIDTH": 90
           },
+          "IN_STOCK_COUNT": {
+            "TITLE": "In Stock",
+            "WIDTH": 80
+          },
           "SUPPLIER": {
             "TITLE": "Supplier",
             "WIDTH": 150
@@ -236,7 +287,19 @@
             "TITLE": "AQID",
             "WIDTH": 95
           }
+        },
+        "OPTIONS": {
+          "EDIT_IN_STOCK_COUNT": "Edit In Stock Count"
+        }      
+      },
+      "DRAWER": {
+        "TITLE": "Edit In Stock Count",
+        "INPUTS": {
+          "IN_STOCK_COUNT": "In Stock Count"
         }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, Model, Participant..."
       }
     },
     "SALES": {
@@ -245,7 +308,7 @@
         "COLUMNS": {
           "TIME": {
             "TITLE": "Date",
-            "WIDTH": 160
+            "WIDTH": 170
           },
           "NAME": {
             "TITLE": "Name",
@@ -282,13 +345,7 @@
         }
       },
       "CONTROLS": {
-        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter...",
-        "FILTERS": {
-          "PERIOD": {
-            "TITLE": "Period",
-            "OPTION_ALL_TIME": "All time"
-          }
-        }
+        "SEARCH_PLACEHOLDER": "Name or Model and tap Enter..."
       }
     },
     "STATS": {
@@ -311,6 +368,13 @@
             "TITLE": "Spent Sum",
             "WIDTH": 100
           }
+        }
+      },
+      "CONTROLS": {
+        "PRODUCTS_OUTLINE_PANEL": {
+          "PRODUCTS_NUMBER": "Products number",
+          "POTENTIAL_INCOME_SUM":"Potential income sum",
+          "POTENTIAL_SALE_SUM": "Potential sale sum"
         }
       }
     },
@@ -354,7 +418,7 @@
         },
         "LABELS": {
           "CREDENTIALS": "Credentials",
-          "USER_STATS": "User stats"
+          "USER_STATS": "Stats"
         },
         "TOASTER": {
           "NEW_SECRET_KEY_GENERATION_SUCCESS": "New secret key was created. Don't forget to click 'Save' button"
@@ -406,7 +470,8 @@
             "CAN_COMPLETE_TO_BUY_LIST": "Can process to buy list"
           },
           "ACQUISITIONS": {
-            "CAN_SEE_ACQUISITIONS": "Can see acquisitions"
+            "CAN_SEE_ACQUISITIONS": "Can see acquisitions",
+            "CAN_EDIT_ACQUISITION_IN_STOCK_COUNT": "Can edit acquisition's in stock count"
           },
           "SALES": {
             "CAN_SEE_SALES": "Can see sales",
@@ -420,8 +485,17 @@
           "USER_GROUPS": {
             "CAN_SEE_USER_GROUPS": "Can see user groups"
           },
+          "SUPPLIERS": {
+            "CAN_SEE_SUPPLIERS": "Can see suppliers"
+          },
+          "CUSTOMERS": {
+            "CAN_SEE_CUSTOMERS": "Can see customers"
+          },
           "STATS": {
             "CAN_SEE_STATS": "Can see stats"
+          },
+          "STICKERS_MANAGER": {
+            "CAN_SEE_STICKERS_MANAGER": "Can see stickers manager"
           },
           "CARTS": {
             "CAN_SEE_CARTS": "Can see carts"
@@ -493,7 +567,62 @@
         }
       }
     },
+    "CUSTOMERS": {
+      "TITLE": "Customers",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Phone Number",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Note",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Name, phone, or note and tap Enter...",
+        "ADD_CUSTOMER": {
+          "BUTTON_TITLE": "Customer"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_CUSTOMER": "Add customer",
+        "TITLE_EDIT_CUSTOMER": "Edit customer",
+        "LABELS": {
+          "CUSTOMER_STATS": "Stats"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Period",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Sold Sum",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Income Sum",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Returned Sum",
+              "WIDTH": 100
+            }
+          }
+        }
+      }
+    },
     "USER_PROFILE": {
+      "TOOLTIP": {
+        "ICON_TITLE": "Profile"
+      },
       "LOGOUT_BUTTON": "Log Out"
     },
     "SIGN_IN": {
@@ -502,6 +631,66 @@
         "PLEASE": "Please",
         "SCAN": "scan",
         "YOUR_AUTH_KEY": "your authorization key to work with the app."
+      }
+    },
+    "STICKERS_MANAGER": {
+      "TITLE": "Stickers Manager",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Name",
+            "WIDTH": 200
+          },
+          "MODEL": {
+            "TITLE": "Model",
+            "WIDTH": 230
+          },
+          "COUNT": {
+            "TITLE": "Count",
+            "WIDTH": 70
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITIONS_IDS": {
+            "TITLE": "AQIDs",
+            "WIDTH": 250
+          }
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "In Stock"
+        },
+        "OPTIONS": {
+          "REMOVE": "Remove"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Stickers Manager"
+      },
+      "CONTROLS": {
+        "STICKERS_SELECTIONS_LIST": {
+          "TAB_TITLE": "Selection"
+        },
+        "ADD_STICKERS_SELECTION": {
+          "TITLE": "Add Selection"
+        },
+        "DELETE_STICKERS_SELECTION": {
+          "BUTTON_TITLE": "Selection",
+          "DIALOG": {
+            "TITLE": "Delete Selection",
+            "CANCEL_LABEL": "Cancel",
+            "CONFIRM_LABEL": "Delete",
+            "WARNING_TEXT": "Are you sure you want to delete the stickers selection?"
+          }
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Confirm"
+        }
       }
     },
     "CARTS": {
@@ -548,28 +737,6 @@
         },
         "OPTIONS": {
           "REMOVE": "Remove"
-        },
-        "CELLS": {
-          "SELECT_COUNT": {
-            "MODAL_TITLE": "Edit Count",
-            "TABLE": {
-              "COLUMNS": {
-                "ACQUISITION_ID": {
-                  "WIDTH": 100
-                },
-                "COUNT": {
-                  "WIDTH": 60
-                },
-                "DELETE": {
-                  "WIDTH": 40
-                }
-              },
-              "TOOLTIP": {
-                "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
-                "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the cart."
-              }
-            }
-          }
         }
       },
       "DIALOG": {
@@ -598,6 +765,9 @@
         "CARTS_LIST": {
           "CART_TITLE": "Cart"
         },
+        "ADD_NEW_CART": {
+          "TITLE": "Add Cart"
+        },
         "DELETE_CART": {
           "BUTTON_TITLE": "Cart",
           "DIALOG": {
@@ -607,50 +777,26 @@
             "WARNING_TEXT": "Are you sure you want to delete the cart?"
           }
         },
-        "ADD_PRODUCT": {
-          "MODAL_TITLE": "Select Product",
-          "ADD_BUTTON": {
-            "TITLE": "Product"
-          }
-        },
-        "SELECT_PRODUCT": {
-          "SEARCH_PLACEHOLDER": "Product name or model...",
-          "TABLE": {
-            "COLUMNS": {
-              "NAME_MODEL": {
-                "WIDTH": 200
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              }
-            }
-          }
-        },
-        "SELECT_ACQUISITION": {
-          "RETURN_BACK_BUTTON": {
-            "TITLE": "Return back"
-          },
-          "TABLE": {
-            "COLUMNS": {
-              "ACQUISITION_ID": {
-                "WIDTH": 100
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              },
-              "DATE": {
-                "WIDTH": 100
-              }
-            }
-          }
-        },
         "SALESPERSON": {
           "POPOVER_TITLE": "Select Salesperson",
           "BUTTON_TITLE": "Salesperson"
         },
         "CUSTOMER": {
           "POPOVER_TITLE": "Select Customer",
-          "BUTTON_TITLE": "Customer"
+          "BUTTON_TITLE": "Customer",
+          "NO_CUSTOMERS_VIEW": {
+            "BUTTON_TITLE": "Add new customer"
+          },
+          "NEW_CUSTOMER_VIEW": {
+            "POPOVER_TITLE": "Create new customer",
+            "INPUTS": {
+              "NAME": "Name",
+              "PHONE_NUMBER": "Phone Number",
+              "NOTE": "Note"
+            },
+            "SAVE_BUTTON_TITLE": "Save",
+            "RETURN_BUTTON_TITLE": "Return back"
+          }
         },
         "TOTAL_SUM": {
           "TITLE": "Total Sum"
@@ -663,7 +809,8 @@
         }
       },
       "TOASTER": {
-        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+        "UNKNOWN_QR_CODE": "Unknown type of QR code.",
+        "UNKNOWN_ACQUISITION": "Acquisition was not found."
       }
     },
     "CASHBOX": {
@@ -705,7 +852,8 @@
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "was added.",
         "SUCCESSFULLY_AUTHORIZED": "successfully authorized.",
-        "UNKNOWN_QR_CODE": "Unknown type of QR code."
+        "UNKNOWN_QR_CODE": "Unknown type of QR code.",
+        "UNKNOWN_ACQUISITION": "Acquisition was not found."
       }
     },
     "SETTINGS": {
@@ -714,7 +862,8 @@
     "GENERAL_SETTINGS": {
       "TITLE": "General",
       "INPUTS": {
-        "LANGUAGE": "Language"
+        "LANGUAGE": "Language",
+        "CAMERA": "Camera"
       },
       "CONTROLS": {
         "SAVE_BUTTON_TITLE": "Save"
@@ -742,20 +891,96 @@
       "TITLE": "Setup",
       "INPUTS": {
         "LANGUAGE": "Language",
+        "OWNER_NAME": "Owner name",
+        "SAVED_SECRET_KEY":"I saved the secret key",
         "GENERATE_DUMMY_DATA": "Generate dummy data"
       },
       "CONTROLS": {
         "FINISH_BUTTON_TITLE": "Finish installation"
       },
       "TOASTER": {
-        "CHANGES_SAVED": "Changes saved."
+        "CHANGES_SAVED": "Changes saved.",
+        "IMPORT_SUCCESS":"Dummy data was created.",
+        "IMPORT_FAIL":"Cannot create dummy data. Try again. Otherwise uncheck 'Generate dummy data' checkbox.",
+        "REGISTER_OWNER_FAIL": "Cannot register owner user.",
+        "BUDGET_STORE_FAIL": "Cannot create default budget values."
       },
       "ALERTS": {
         "WELCOME": {
           "TITLE": "Welcome to ScrutinizeCRM",
           "FIRST_ITEM": "In order to start working with the app please fill out forms below.",
-          "SECOND_ITEM": "If you want to just try the app better check \"Generate dummy data\""
+          "SECOND_ITEM": "Don't forget to capture/screenshot the secret key.",
+          "THIRD_ITEM": "If you want to just try the app better check \"Generate dummy data\""
         }
+      },
+      "TOOLTIP": {
+        "SEE_SECRET_KEY": "See secret key"
+      },
+      "MISC": {
+        "OWNER_GROUP_NAME": "Owner" 
+      }
+    },
+    "COMMON": {
+      "SELECT_PRODUCT": {
+        "MODAL_TITLE": "Select Product",
+        "ADD_BUTTON": {
+          "TITLE": "Product"
+        }
+      },
+      "PICK_PRODUCT": {
+        "SEARCH_PLACEHOLDER": "Product name or model...",
+        "TABLE": {
+          "COLUMNS": {
+            "NAME_MODEL": {
+              "WIDTH": 200
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            }
+          }
+        }
+      },
+      "PICK_ACQUISITION": {
+        "RETURN_BACK_BUTTON": {
+          "TITLE": "Return back"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            },
+            "DATE": {
+              "WIDTH": 100
+            }
+          }
+        }
+      },
+      "SELECT_PRODUCT_COUNT": {
+        "MODAL_TITLE": "Edit Count",
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "COUNT": {
+              "WIDTH": 60
+            },
+            "DELETE": {
+              "WIDTH": 40
+            }
+          },
+          "TOOLTIP": {
+            "COUNT_CANNOT_BE_ZERO": "Count cannot be 0.",
+            "SINGLE_ITEM_DELETE_ERROR": "Single item cannot be deleted. Delete the item manually in the table."
+          }
+        }
+      },
+      "PICK_PERIOD": {
+        "TITLE": "Period",
+        "OPTION_ALL_TIME": "All time"
       }
     }
   }

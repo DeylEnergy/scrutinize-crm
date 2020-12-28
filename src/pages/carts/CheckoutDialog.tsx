@@ -1,7 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Dialog, Pane, Tablist, Tab, Alert} from 'evergreen-ui'
-import {useLocale, useDatabase, useAccount} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useAccount,
+  useDelay,
+  getTestId,
+} from '../../utilities'
 import {PROCESS_SALE, PROCESS_RETURN_ITEMS} from '../../constants/events'
 import TextInputField from '../../components/TextInputField'
 import {SPACING} from '../../constants'
@@ -19,12 +25,14 @@ function Sale({handlePaidSumChange, paidSum, changeSum}: any) {
         onChange={handlePaidSumChange}
         label={INPUTS.PAID}
         placeholder="0"
+        {...getTestId('cart-checkout-paid-input')}
       />
       <TextInputField
         readOnly
         label={changeSum > 0 ? INPUTS.CHANGE : INPUTS.NEED}
         value={Math.abs(changeSum)}
         isInvalid={changeSum < 0}
+        {...getTestId('cart-checkout-change-input')}
       />
     </>
   )
@@ -70,9 +78,12 @@ const CONTENT_CONTAINER_STYLE = {
   height: 190,
 }
 
+const MIN_CONFIRM_DELAY_MS = 1000
+
 export default function CheckoutDialog({
   isShown,
-  handleCheckoutCompleteClose,
+  handleCheckoutClose,
+  handleDialogTabSwitch,
   handleCheckoutSuccess,
   cartId,
   totalSum,
@@ -83,6 +94,13 @@ export default function CheckoutDialog({
   const [{permissions}] = useAccount()
 
   const db = useDatabase()
+
+  const [isConfirmLoading, {handleDelay}] = useDelay(
+    false,
+    MIN_CONFIRM_DELAY_MS,
+  )
+
+  const [isCartCompleted, setIsCartCompleted] = React.useState(false)
 
   const [selectedAction, setSelectedAction] = React.useState(PROCESS_SALE)
 
@@ -116,19 +134,45 @@ export default function CheckoutDialog({
   }, [CHECKOUT, permissions])
 
   const handleConfirm = React.useCallback(() => {
-    db.sendEvent({type: selectedAction, payload: {cartId}}).then(
-      handleCheckoutSuccess,
-    )
-  }, [cartId, db, handleCheckoutSuccess, selectedAction])
+    handleDelay({isProgressing: true})
+    db.sendEvent({type: selectedAction, payload: {cartId}}).then(() => {
+      const handleSuccess = () => {
+        setIsCartCompleted(true)
+        handleCheckoutSuccess()
+      }
+      handleDelay({isProgressing: false, cb: handleSuccess})
+    })
+  }, [cartId, db, handleCheckoutSuccess, handleDelay, selectedAction])
+
+  const handleCompleteClose = React.useCallback(() => {
+    if (isCartCompleted) {
+      handleDialogTabSwitch()
+    } else {
+      handleCheckoutClose()
+    }
+  }, [isCartCompleted, handleDialogTabSwitch, handleCheckoutClose])
+
+  const handleCancel = React.useCallback(
+    (close: () => void) => {
+      if (isConfirmLoading) {
+        return
+      }
+
+      close()
+    },
+    [isConfirmLoading],
+  )
 
   return (
     <Dialog
       shouldCloseOnOverlayClick={false}
       isShown={isShown}
       title={CHECKOUT.TITLE}
-      onCloseComplete={handleCheckoutCompleteClose}
+      onCloseComplete={handleCompleteClose}
+      onCancel={handleCancel}
       width={300}
       topOffset="auto"
+      isConfirmLoading={isConfirmLoading}
       isConfirmDisabled={
         selectedAction === PROCESS_SALE && totalSum > 0 && changeSum < 0
       }
@@ -136,6 +180,8 @@ export default function CheckoutDialog({
       onConfirm={handleConfirm}
       hasCancel={false}
       contentContainerProps={CONTENT_CONTAINER_STYLE}
+      // @ts-ignore
+      overlayProps={{...getTestId('cart-checkout-dialog')}}
     >
       <Pane height="100%" display="flex" flexDirection="column">
         <Tablist marginBottom={8}>
@@ -148,6 +194,7 @@ export default function CheckoutDialog({
                 setSelectedAction(action)
               }}
               aria-controls={`panel-${label}`}
+              {...getTestId(`cart-checkout-tab_${label}`)}
             >
               {label}
             </Tab>

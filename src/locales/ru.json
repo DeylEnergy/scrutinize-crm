@@ -4,6 +4,9 @@
     "COMPONENTS": {
       "FILTERS_POPOVER": {
         "BUTTON_TITLE": "Фильтры"
+      },
+      "TABLE": {
+        "NO_DATA": "Нет данных."
       }
     }
   },
@@ -74,6 +77,45 @@
         "INPUTS": {
           "EXPECTED_COST": "Примерная цена",
           "COUNT": "Кол-во"
+        },
+        "LABELS": {
+          "PRODUCT_STATS": "Статистика"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Период",
+              "WIDTH": 80
+            },
+            "SOLD_COUNT": {
+              "TITLE": "Продано",
+              "WIDTH": 80
+            },
+            "ACQUIRED_COUNT": {
+              "TITLE": "Привезено, кол-во",
+              "WIDTH": 135
+            },
+            "RETURNED_COUNT": {
+              "TITLE": "Возвращено, кол-во",
+              "WIDTH": 150
+            },
+            "SOLD_SUM": {
+              "TITLE": "Продано, сумма",
+              "WIDTH": 125
+            },
+            "INCOME_SUM": {
+              "TITLE": "Прибыль",
+              "WIDTH": 100
+            },
+            "SPENT_SUM": {
+              "TITLE": "Потрачено",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Возвращено, сумма",
+              "WIDTH": 145
+            }
+          }
         }
       }
     },
@@ -153,6 +195,11 @@
           "MODEL_BEFORE": "До",
           "PREVIOUS_PRICE": "Раньше",
           "IN_STOCK": "В наличии"
+        },
+        "OPTIONS": {
+          "REMOVE": "Удалить",
+          "FREEZE": "Заморозить",
+          "UNFREEZE": "Разморозить"
         }
       },
       "CONTROLS": {
@@ -220,6 +267,10 @@
             "TITLE": "Сумма",
             "WIDTH": 90
           },
+          "IN_STOCK_COUNT": {
+            "TITLE": "В наличии",
+            "WIDTH": 95
+          },
           "SUPPLIER": {
             "TITLE": "Поставщик",
             "WIDTH": 150
@@ -236,7 +287,19 @@
             "TITLE": "AQID",
             "WIDTH": 95
           }
+        },
+        "OPTIONS": {
+          "EDIT_IN_STOCK_COUNT": "Редактировать наличие"
         }
+      },
+      "DRAWER": {
+        "TITLE": "Редактировать наличие",
+        "INPUTS": {
+          "IN_STOCK_COUNT": "В наличии"
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Название, модель, участник..."
       }
     },
     "SALES": {
@@ -285,13 +348,7 @@
         }
       },
       "CONTROLS": {
-        "SEARCH_PLACEHOLDER": "Название или Модель...",
-        "FILTERS": {
-          "PERIOD": {
-            "TITLE": "Период",
-            "OPTION_ALL_TIME": "Все время"
-          }
-        }
+        "SEARCH_PLACEHOLDER": "Название или Модель..."
       }
     },
     "STATS": {
@@ -314,6 +371,13 @@
             "TITLE": "Потрачено",
             "WIDTH": 100
           }
+        }
+      },
+      "CONTROLS": {
+        "PRODUCTS_OUTLINE_PANEL": {
+          "PRODUCTS_NUMBER": "Ассортимент товаров",
+          "POTENTIAL_INCOME_SUM":"Чистая прибыль(потенциально)",
+          "POTENTIAL_SALE_SUM": "Доход(потенциально)"
         }
       }
     },
@@ -357,7 +421,7 @@
         },
         "LABELS": {
           "CREDENTIALS": "Авторизация",
-          "USER_STATS": "Статистика пользователя"
+          "USER_STATS": "Статистика"
         },
         "TOASTER": {
           "NEW_SECRET_KEY_GENERATION_SUCCESS": "Новый ключ был создан. Не забудьте нажать кнопку 'Сохранить'."
@@ -409,7 +473,8 @@
             "CAN_COMPLETE_TO_BUY_LIST": "Может завершить список закупок"
           },
           "ACQUISITIONS": {
-            "CAN_SEE_ACQUISITIONS": "Может видеть приобретения"
+            "CAN_SEE_ACQUISITIONS": "Может видеть приобретения",
+            "CAN_EDIT_ACQUISITION_IN_STOCK_COUNT": "Может редактировать наличие приобретений"
           },
           "SALES": {
             "CAN_SEE_SALES": "Может видеть продажи",
@@ -423,8 +488,17 @@
           "USER_GROUPS": {
             "CAN_SEE_USER_GROUPS": "Может видеть группы"
           },
+          "SUPPLIERS": {
+            "CAN_SEE_SUPPLIERS": "Может видеть поставщиков"
+          },
+          "CUSTOMERS": {
+            "CAN_SEE_CUSTOMERS": "Может видеть покупателей"
+          },
           "STATS": {
             "CAN_SEE_STATS": "Может видеть статистику"
+          },
+          "STICKERS_MANAGER": {
+            "CAN_SEE_STICKERS_MANAGER": "Может видеть менеджер стикеров"
           },
           "CARTS": {
             "CAN_SEE_CARTS": "Может видеть корзины"
@@ -472,7 +546,7 @@
         "TITLE_NEW_SUPPLIER": "Добавить поставщика",
         "TITLE_EDIT_SUPPLIER": "Редактировать поставщика",
         "LABELS": {
-          "SUPPLIER_STATS": "Статистика поставщика"
+          "SUPPLIER_STATS": "Статистика"
         },
         "TABLE": {
           "COLUMNS": {
@@ -496,7 +570,62 @@
         }
       }
     },
+    "CUSTOMERS": {
+      "TITLE": "Покупатели",
+      "TABLE": {
+        "COLUMNS": {
+          "NAME": {
+            "TITLE": "Имя",
+            "WIDTH": 200
+          },
+          "PHONE_NUMBER": {
+            "TITLE": "Номер телефона",
+            "WIDTH": 150
+          },
+          "NOTE": {
+            "TITLE": "Заметка",
+            "WIDTH": 170
+          }
+        }
+      },
+      "CONTROLS": {
+        "SEARCH_PLACEHOLDER": "Имя, номер телефона, заметка...",
+        "ADD_CUSTOMER": {
+          "BUTTON_TITLE": "Покупатель"
+        }
+      },
+      "DRAWER": {
+        "TITLE_NEW_CUSTOMER": "Добавить покупателя",
+        "TITLE_EDIT_CUSTOMER": "Редактировать покупателя",
+        "LABELS": {
+          "CUSTOMER_STATS": "Статистика"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "PERIOD": {
+              "TITLE": "Период",
+              "WIDTH": 80
+            },
+            "SOLD_SUM": {
+              "TITLE": "Купил",
+              "WIDTH": 100
+            },
+            "INCOME_SUM": {
+              "TITLE": "Прибыль",
+              "WIDTH": 100
+            },
+            "RETURNED_SUM": {
+              "TITLE": "Возвратил",
+              "WIDTH": 100
+            }
+          }
+        }
+      }
+    },
     "USER_PROFILE": {
+      "TOOLTIP": {
+        "ICON_TITLE": "Профиль"
+      },
       "LOGOUT_BUTTON": "Выйти"
     },
     "SIGN_IN": {
@@ -505,6 +634,66 @@
         "PLEASE": "Пожалуйста",
         "SCAN": "отсканируйте",
         "YOUR_AUTH_KEY": "ваш код авторизации."
+      }
+    },
+    "STICKERS_MANAGER": {
+      "TITLE": "Менеджер стикеров",
+      "TABLE": {
+        "COLUMNS": {
+          "DONE": {
+            "TITLE": "",
+            "WIDTH": 50
+          },
+          "NAME": {
+            "TITLE": "Название",
+            "WIDTH": 200
+          },
+          "MODEL": {
+            "TITLE": "Модель",
+            "WIDTH": 230
+          },
+          "COUNT": {
+            "TITLE": "Кол-во",
+            "WIDTH": 70
+          },
+          "PRODUCT_ID": {
+            "TITLE": "PRID",
+            "WIDTH": 95
+          },
+          "ACQUISITIONS_IDS": {
+            "TITLE": "AQIDs",
+            "WIDTH": 250
+          }
+        },
+        "TOOLTIP": {
+          "IN_STOCK": "В наличии"
+        },
+        "OPTIONS": {
+          "REMOVE": "Удалить"
+        }
+      },
+      "DIALOG": {
+        "TITLE": "Менеджер стикеров"
+      },
+      "CONTROLS": {
+        "STICKERS_SELECTIONS_LIST": {
+          "TAB_TITLE": "Набор"
+        },
+        "ADD_STICKERS_SELECTION": {
+          "TITLE": "Добавить набор"
+        },
+        "DELETE_STICKERS_SELECTION": {
+          "BUTTON_TITLE": "Набор",
+          "DIALOG": {
+            "TITLE": "Удаление набора",
+            "CANCEL_LABEL": "Отмена",
+            "CONFIRM_LABEL": "Удалить",
+            "WARNING_TEXT": "Вы уверены что хотите удалить набор стикеров?"
+          }
+        },
+        "CONFIRM": {
+          "BUTTON_TITLE": "Выполнить"
+        }
       }
     },
     "CARTS": {
@@ -551,28 +740,6 @@
         },
         "OPTIONS": {
           "REMOVE": "Удалить"
-        },
-        "CELLS": {
-          "SELECT_COUNT": {
-            "MODAL_TITLE": "Изменить кол-во",
-            "TABLE": {
-              "COLUMNS": {
-                "ACQUISITION_ID": {
-                  "WIDTH": 100
-                },
-                "COUNT": {
-                  "WIDTH": 60
-                },
-                "DELETE": {
-                  "WIDTH": 40
-                }
-              },
-              "TOOLTIP": {
-                "COUNT_CANNOT_BE_ZERO": "Количество не может быть 0.",
-                "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в корзине."
-              }
-            }
-          }
         }
       },
       "DIALOG": {
@@ -601,6 +768,9 @@
         "CARTS_LIST": {
           "CART_TITLE": "Корзина"
         },
+        "ADD_NEW_CART": {
+          "TITLE": "Добавить корзину"
+        },
         "DELETE_CART": {
           "BUTTON_TITLE": "Корзина",
           "DIALOG": {
@@ -610,50 +780,26 @@
             "WARNING_TEXT": "Вы уверены что хотите удалить корзину?"
           }
         },
-        "ADD_PRODUCT": {
-          "MODAL_TITLE": "Выбрать товар",
-          "ADD_BUTTON": {
-            "TITLE": "Товар"
-          }
-        },
-        "SELECT_PRODUCT": {
-          "SEARCH_PLACEHOLDER": "Название товара или модель...",
-          "TABLE": {
-            "COLUMNS": {
-              "NAME_MODEL": {
-                "WIDTH": 200
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              }
-            }
-          }
-        },
-        "SELECT_ACQUISITION": {
-          "RETURN_BACK_BUTTON": {
-            "TITLE": "Вернуться"
-          },
-          "TABLE": {
-            "COLUMNS": {
-              "ACQUISITION_ID": {
-                "WIDTH": 100
-              },
-              "IN_STOCK": {
-                "WIDTH": 70
-              },
-              "DATE": {
-                "WIDTH": 100
-              }
-            }
-          }
-        },
         "SALESPERSON": {
           "POPOVER_TITLE": "Выбор продавца",
           "BUTTON_TITLE": "Продавец"
         },
         "CUSTOMER": {
           "POPOVER_TITLE": "Выбор покупателя",
-          "BUTTON_TITLE": "Покупатель"
+          "BUTTON_TITLE": "Покупатель",
+          "NO_CUSTOMERS_VIEW": {
+            "BUTTON_TITLE": "Добавить покупателя"
+          },
+          "NEW_CUSTOMER_VIEW": {
+            "POPOVER_TITLE": "Новый покупатель",
+            "INPUTS": {
+              "NAME": "Имя",
+              "PHONE_NUMBER": "Номер телефона",
+              "NOTE": "Заметка"
+            },
+            "SAVE_BUTTON_TITLE": "Сохранить",
+            "RETURN_BUTTON_TITLE": "Назад"
+          }
         },
         "TOTAL_SUM": {
           "TITLE": "Сумма"
@@ -666,7 +812,8 @@
         }
       },
       "TOASTER": {
-        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+        "UNKNOWN_QR_CODE": "Неизвестный QR code.",
+        "UNKNOWN_ACQUISITION": "Не найден товар с такими данными."
       }
     },
     "CASHBOX": {
@@ -708,7 +855,8 @@
       "TOASTER": {
         "PRODUCT_ADDED_TO_CART": "был добавлен.",
         "SUCCESSFULLY_AUTHORIZED": "успешно авторизован.",
-        "UNKNOWN_QR_CODE": "Неизвестный QR code."
+        "UNKNOWN_QR_CODE": "Неизвестный QR code.",
+        "UNKNOWN_ACQUISITION": "Не найден товар с такими данными."
       }
     },
     "SETTINGS": {
@@ -717,7 +865,8 @@
     "GENERAL_SETTINGS": {
       "TITLE": "Общие",
       "INPUTS": {
-        "LANGUAGE": "Язык"
+        "LANGUAGE": "Язык",
+        "CAMERA": "Камера"
       },
       "CONTROLS": {
         "SAVE_BUTTON_TITLE": "Сохранить"
@@ -745,20 +894,96 @@
       "TITLE": "Установка",
       "INPUTS": {
         "LANGUAGE": "Язык",
+        "OWNER_NAME": "Имя владельца",
+        "SAVED_SECRET_KEY":"Я сохранил секретный ключ",
         "GENERATE_DUMMY_DATA": "Демо-данные"
       },
       "CONTROLS": {
         "FINISH_BUTTON_TITLE": "Завершить установку"
       },
       "TOASTER": {
-        "CHANGES_SAVED": "Изменения сохранены."
+        "CHANGES_SAVED": "Изменения сохранены.",
+        "IMPORT_SUCCESS":"Демо-данные были сгенерированы.",
+        "IMPORT_FAIL":"Ошибка создания демо-данных. Попробуйте еще раз. Иначе отключите чекбокс 'Демо-данные'.",
+        "REGISTER_OWNER_FAIL": "Ошибка регистрации владельца.",
+        "BUDGET_STORE_FAIL": "Ошибка создания бюджета и кассы."
       },
       "ALERTS": {
         "WELCOME": {
           "TITLE": "Добро пожаловать в ScrutinizeCRM",
           "FIRST_ITEM": "Для того, чтобы начать работу настройте формы ниже.",
-          "SECOND_ITEM": "Если вы просто хотите посмотреть приложение в деле отметьте \"Демо-данные\""
+          "SECOND_ITEM": "Не забудьте сохранить/сфотографировать секретный ключ.",
+          "THIRD_ITEM": "Если вы просто хотите посмотреть приложение в работе отметьте \"Демо-данные\"."
         }
+      },
+      "TOOLTIP": {
+        "SEE_SECRET_KEY": "Показать секретный ключ"
+      },
+      "MISC": {
+        "OWNER_GROUP_NAME": "Владелец" 
+      }
+    },
+    "COMMON": {
+      "SELECT_PRODUCT": {
+        "MODAL_TITLE": "Выбрать товар",
+        "ADD_BUTTON": {
+          "TITLE": "Товар"
+        }
+      },
+      "PICK_PRODUCT": {
+        "SEARCH_PLACEHOLDER": "Название товара или модель...",
+        "TABLE": {
+          "COLUMNS": {
+            "NAME_MODEL": {
+              "WIDTH": 200
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            }
+          }
+        }
+      },
+      "PICK_ACQUISITION": {
+        "RETURN_BACK_BUTTON": {
+          "TITLE": "Вернуться"
+        },
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "IN_STOCK": {
+              "WIDTH": 70
+            },
+            "DATE": {
+              "WIDTH": 100
+            }
+          }
+        }
+      },
+      "SELECT_PRODUCT_COUNT": {
+        "MODAL_TITLE": "Изменить кол-во",
+        "TABLE": {
+          "COLUMNS": {
+            "ACQUISITION_ID": {
+              "WIDTH": 100
+            },
+            "COUNT": {
+              "WIDTH": 60
+            },
+            "DELETE": {
+              "WIDTH": 40
+            }
+          },
+          "TOOLTIP": {
+            "COUNT_CANNOT_BE_ZERO": "Количество не может быть 0.",
+            "SINGLE_ITEM_DELETE_ERROR": "Единичный контент не может быть удален. Попробуйте удалить товар в таблице."
+          }
+        }
+      },
+      "PICK_PERIOD": {
+        "TITLE": "Период",
+        "OPTION_ALL_TIME": "Все время"
       }
     }
   }

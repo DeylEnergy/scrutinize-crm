@@ -4,7 +4,14 @@ import SearchInput from '../../components/SearchInput'
 import Filters, {FILTER_PARAMS_DEFAULT} from './Filters'
 import Table from '../../components/Table'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useUpdate,
+  useCancellablePromise,
+  withErrorBoundary,
+  clipLongId,
+} from '../../utilities'
 import {PageWrapper, ControlWrapper} from '../../layouts'
 
 const FETCH_ITEM_LIMIT = 20
@@ -18,13 +25,20 @@ const LOADED_ITEMS_DEFAULT = {
 const PERIOD_START_DEFAULT = [-Infinity]
 const PERIOD_STOP_DEFAULT = [Infinity]
 
+const CELL_TEST_ID_PREFIX = 'sale'
+
 function Sales() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.SALES
 
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
+
+  const loaderRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -53,9 +67,32 @@ function Sales() {
         )} ${saleTime.toLocaleTimeString(STRING_FORMAT)}`,
       }
 
-      const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
+      const shortProductId = clipLongId(item._productId)
 
-      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+      const countCell = {
+        value: item.count,
+        testId: `${CELL_TEST_ID_PREFIX}-item-count_${shortProductId}`,
+      }
+
+      const priceCell = {
+        value: Number(item.salePrice).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-item-price_${shortProductId}`,
+      }
+
+      const sumCell = {
+        value: Number(item.sum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-item-sum_${shortProductId}`,
+      }
+
+      const salespersonNameCell = {
+        value: item?._user?.name,
+        testId: `${CELL_TEST_ID_PREFIX}-item-salesperson_${shortProductId}`,
+      }
+
+      const customerNameCell = {
+        value: item?._customer?.name,
+        testId: `${CELL_TEST_ID_PREFIX}-item-customer_${shortProductId}`,
+      }
 
       return {
         id: item.id,
@@ -64,11 +101,11 @@ function Sales() {
           saleTimeCell,
           item._product.nameModel[0],
           item._product.nameModel[1],
-          salePriceCell,
-          item.count,
+          priceCell,
+          countCell,
           sumCell,
-          item?._user?.name,
-          item?._customer?.name,
+          salespersonNameCell,
+          customerNameCell,
           item.note,
         ],
       }
@@ -90,18 +127,23 @@ function Sales() {
         lastKey ?? (from && [from, Infinity]) ?? PERIOD_STOP_DEFAULT
       const includeFirstItem = Boolean(lastKey)
       const excludeLastItem = false
-      db.getRows({
-        storeName: SN.SALES,
-        indexName: IN.DATETIME,
-        direction: 'prev',
-        limit: FETCH_ITEM_LIMIT,
-        customKeyRange: {
-          method: 'bound',
-          args: [startDate, stopDate, excludeLastItem, includeFirstItem],
-        },
-        filterBy: 'consist',
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.SALES,
+          indexName: IN.DATETIME,
+          direction: 'prev',
+          limit: FETCH_ITEM_LIMIT,
+          customKeyRange: {
+            method: 'bound',
+            args: [startDate, stopDate, excludeLastItem, includeFirstItem],
+          },
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -115,7 +157,7 @@ function Sales() {
         })
       })
     },
-    [db, serializeItem],
+    [makeCancellablePromise, db, serializeItem],
   )
 
   const {from, to} = filterParams
@@ -125,8 +167,9 @@ function Sales() {
     fetchItems({from, to, searchQuery, lastKey})
   }, [fetchItems, from, to, searchQuery, lastKey])
 
-  React.useEffect(() => {
+  useUpdate(() => {
     fetchItems({from, to, searchQuery})
+    loaderRef.current?.resetloadMoreItemsCache()
   }, [from, to, searchQuery, fetchItems])
 
   const handleSearchQuery = React.useCallback(
@@ -179,6 +222,7 @@ function Sales() {
           hasNextPage={loadedItems.hasNextPage}
           isItemLoaded={isItemLoaded}
           loadMoreItems={loadMoreItems}
+          loaderRef={loaderRef}
         />
       </Pane>
     </PageWrapper>

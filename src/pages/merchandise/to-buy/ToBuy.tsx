@@ -4,15 +4,25 @@ import {
   useTasksAfterUpdate,
   useLocalStorage,
   useUpdate,
+  clipLongId,
 } from '../../../utilities'
-import {Button} from 'evergreen-ui'
+import {
+  Button,
+  Menu,
+  Position,
+  IconButton,
+  MoreIcon,
+  TrashIcon,
+  SnowflakeIcon,
+} from 'evergreen-ui'
 import {TO_BUY_FILTER_OPTIONS as FILTER_OPTIONS} from '../../../constants'
 import RIGHTS from '../../../constants/rights'
-import {PUT_ACQUISITION} from '../../../constants/events'
+import {PUT_ACQUISITION, DELETE_TO_BUY_ITEM} from '../../../constants/events'
 import Table from '../../../components/Table'
 import CellCheckbox from '../../../components/CellCheckbox'
 import EditableCellInput from '../../../components/EditableCellInput'
 import AsyncSelectMenu from '../../../components/AsyncSelectMenu'
+import Popover from '../../../components/Popover'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 import FundPanel from './FundPanel'
 import AddProduct from './AddProduct'
@@ -23,8 +33,10 @@ import {
   useLocale,
   useAccount,
   useDatabase,
+  useCancellablePromise,
   withErrorBoundary,
 } from '../../../utilities'
+import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -45,6 +57,8 @@ const SELECT_MENU_STYLE = {
   display: 'block',
 }
 
+const CELL_TEST_ID_PREFIX = 'to-buy-item'
+
 function ToBuy() {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
@@ -52,6 +66,9 @@ function ToBuy() {
   const {TABLE} = PAGE_CONST
   const [{permissions}] = useAccount()
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -84,15 +101,34 @@ function ToBuy() {
   const [addTask] = useTasksAfterUpdate([], [loadedItems.items])
 
   const fetchComputedOfToBuyList = React.useCallback(() => {
-    db.perform({storeName: 'acquisitions', action: 'computeBuyList'}).then(
-      setComputedBuyList,
+    const performedFetch = makeCancellablePromise(
+      db.perform({storeName: SN.ACQUISITIONS, action: 'computeBuyList'}),
     )
-  }, [db])
+
+    performedFetch.then(setComputedBuyList)
+  }, [makeCancellablePromise, db])
 
   React.useEffect(() => {
     // fetch computation of buy list
     fetchComputedOfToBuyList()
   }, [db, fetchComputedOfToBuyList])
+
+  const handleItemDelete = React.useCallback(
+    (aqId: string) => {
+      db.sendEvent({type: DELETE_TO_BUY_ITEM, payload: {id: aqId}}).then(
+        (result: any) => {
+          if (!result) {
+            return
+          }
+
+          setLoadedItems({
+            items: itemsRef.current.filter((x: any) => x.id !== aqId),
+          })
+        },
+      )
+    },
+    [db],
+  )
 
   const serializeItem = React.useCallback(
     (item: any) => {
@@ -212,7 +248,12 @@ function ToBuy() {
         ),
       }
 
-      const name = item.name || item._product.nameModel[0]
+      const shortProductId = item._productId ? clipLongId(item._productId) : '-'
+
+      const nameModel =
+        item?._product?.nameModel || item?._legacyProductNameModel
+
+      const name = item.name || nameModel[0]
       const nameCell = {
         value: name,
         onDoubleClick: handleCellDblClick.bind(null, 'name', name, 'string'),
@@ -221,9 +262,10 @@ function ToBuy() {
             <b>{TOOLTIP.NAME_BEFORE}:</b> {item._product.nameModel[0]}
           </>
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-name_${shortProductId}`,
       }
 
-      const model = item.model || item._product.nameModel[1]
+      const model = item.model || nameModel[1]
       const modelCell = {
         value: model,
         onDoubleClick: handleCellDblClick.bind(null, 'model', model, 'string'),
@@ -298,11 +340,7 @@ function ToBuy() {
       const supplierCell = {
         value: (
           <AsyncSelectMenu
-            selected={
-              item._supplier
-                ? {value: item._supplierId, label: item._supplier.name}
-                : {value: null, label: null}
-            }
+            selected={item._supplierId}
             title={CELLS.SUPPLIER.POPOVER_TITLE}
             onSelect={handleSupplierPick}
             storeName="suppliers"
@@ -321,11 +359,7 @@ function ToBuy() {
       const executorCell = {
         value: (
           <AsyncSelectMenu
-            selected={
-              item._supplier
-                ? {value: item._supplierId, label: item._supplier.name}
-                : {value: null, label: null}
-            }
+            selected={item._userId}
             title={CELLS.EXECUTOR.POPOVER_TITLE}
             onSelect={handleExecutorPick}
             storeName="users"
@@ -350,6 +384,58 @@ function ToBuy() {
         ),
       }
 
+      const toggleFrozen = () => {
+        updateItem({isFrozen: !item.isFrozen})
+      }
+
+      const optionsMenu = (
+        <Popover
+          content={({close}: any) => (
+            <Menu>
+              <Menu.Group>
+                {!item.isFrozen && item._productId && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      toggleFrozen()
+                    }}
+                    icon={SnowflakeIcon}
+                  >
+                    {TABLE.OPTIONS.FREEZE}
+                  </Menu.Item>
+                )}
+                {item.isFrozen && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      toggleFrozen()
+                    }}
+                    icon={SnowflakeIcon}
+                  >
+                    {TABLE.OPTIONS.UNFREEZE}
+                  </Menu.Item>
+                )}
+                {!item._productId && (
+                  <Menu.Item
+                    onSelect={() => {
+                      close()
+                      handleItemDelete(item.id)
+                    }}
+                    icon={TrashIcon}
+                    intent="danger"
+                  >
+                    {TABLE.OPTIONS.REMOVE}
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </Menu>
+          )}
+          position={Position.BOTTOM_RIGHT}
+        >
+          <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+        </Popover>
+      )
+
       return {
         id: item.id,
         cells: [
@@ -366,8 +452,9 @@ function ToBuy() {
           executorCell,
           frozenCell,
           new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
-          item._productId?.split('-')[0] || '-',
+          shortProductId,
         ],
+        optionsMenu,
       }
     },
     [
@@ -378,6 +465,7 @@ function ToBuy() {
       filterBy,
       addTask,
       fetchComputedOfToBuyList,
+      handleItemDelete,
     ],
   )
 
@@ -389,13 +477,17 @@ function ToBuy() {
   )
 
   const fetchAcquisitions = React.useCallback(() => {
-    db.getRows({
-      storeName: 'acquisitions',
-      indexName: 'neededSinceDatetime',
-      direction: 'prev',
-      sort: 'asc',
-      filterBy,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.ACQUISITIONS,
+        indexName: IN.NEEDED_SINCE_DATETIME,
+        direction: 'prev',
+        sort: 'asc',
+        filterBy,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
@@ -406,7 +498,7 @@ function ToBuy() {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [db, filterBy, serializeItem, loadedItems])
+  }, [makeCancellablePromise, db, filterBy, serializeItem, loadedItems])
 
   const handleSlideSheetCloseComplete = React.useCallback(() => {
     setSideSheet(SIDE_SHEET_DEFAULT)
@@ -500,6 +592,7 @@ function ToBuy() {
       {label: COLUMNS.FROZEN.TITLE, width: COLUMNS.FROZEN.WIDTH},
       {label: COLUMNS.DATE.TITLE, width: COLUMNS.DATE.WIDTH},
       {label: COLUMNS.PRODUCT_ID.TITLE, width: COLUMNS.PRODUCT_ID.WIDTH},
+      {label: 'OPTIONS', width: 50},
     ]
   }, [PAGE_CONST])
 

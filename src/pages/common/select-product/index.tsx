@@ -1,26 +1,30 @@
 import React from 'react'
 import {Button, AddIcon} from 'evergreen-ui'
-import {useLocale, withErrorBoundary} from '../../utilities'
-import ModalPopover from '../../components/ModalPopover'
-import SelectProduct from './SelectProduct'
-import SelectAcquisition from './SelectAcquisition'
+import {useLocale, getTestId, withErrorBoundary} from '../../../utilities'
+import ModalPopover from '../../../components/ModalPopover'
+import PickProduct from './PickProduct'
+import PickAcquisition from './PickAcquisition'
 
 const MODAL_POPOVER_SIZE = {
   width: 290,
   height: 300,
 }
 
-function AddProduct({handleSelectedProduct}: any) {
+function SelectProduct({handleSelectedProduct}: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.ADD_PRODUCT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.SELECT_PRODUCT
 
   const [currentScreen, setCurrentScreen] = React.useState({})
 
   const [resetScreen, setResetScreen] = React.useState<number>(0)
 
+  const [isPopoverOpenCompleted, setIsPopoverOpenCompleted] = React.useState(
+    false,
+  )
+
   const handleResetScreen = React.useCallback(() => {
     setResetScreen(Date.now())
-  }, [setResetScreen])
+  }, [])
 
   const handleAcquisitionSelect = React.useCallback(
     (payload: any) => {
@@ -33,7 +37,7 @@ function AddProduct({handleSelectedProduct}: any) {
     (productId: string) => {
       setCurrentScreen({
         component: (
-          <SelectAcquisition
+          <PickAcquisition
             productId={productId}
             handleAcquisitionSelect={handleAcquisitionSelect}
             handleReturnBack={handleResetScreen}
@@ -44,18 +48,34 @@ function AddProduct({handleSelectedProduct}: any) {
     [handleResetScreen, handleAcquisitionSelect],
   )
 
+  const handleOpenComplete = React.useCallback(() => {
+    setIsPopoverOpenCompleted(true)
+  }, [])
+
+  const handleCloseComplete = React.useCallback(() => {
+    setIsPopoverOpenCompleted(false)
+    handleResetScreen()
+  }, [handleResetScreen])
+
   React.useEffect(() => {
-    setCurrentScreen({
-      component: <SelectProduct handleProductSelect={handleProductSelect} />,
-    })
+    if (isPopoverOpenCompleted) {
+      setCurrentScreen({
+        component: <PickProduct handleProductSelect={handleProductSelect} />,
+      })
+    } else {
+      setCurrentScreen({component: null})
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetScreen])
+  }, [resetScreen, isPopoverOpenCompleted])
 
   return (
     <ModalPopover
       title={PAGE_CONST.MODAL_TITLE}
+      testId="select-cart-product-popover"
+      closeBtnTestId="close-select-product"
       popoverProps={{
-        onCloseComplete: handleResetScreen,
+        onOpenComplete: handleOpenComplete,
+        onCloseComplete: handleCloseComplete,
       }}
       {...MODAL_POPOVER_SIZE}
       {...currentScreen}
@@ -65,6 +85,7 @@ function AddProduct({handleSelectedProduct}: any) {
         appearance="primary"
         intent="success"
         iconBefore={AddIcon}
+        {...getTestId('select-cart-product')}
       >
         {PAGE_CONST.ADD_BUTTON.TITLE}
       </Button>
@@ -72,4 +93,4 @@ function AddProduct({handleSelectedProduct}: any) {
   )
 }
 
-export default withErrorBoundary(AddProduct)
+export default withErrorBoundary(SelectProduct)

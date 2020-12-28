@@ -7,6 +7,7 @@ import {
   Position,
   Avatar,
   Button,
+  Tooltip,
   LogOutIcon,
 } from 'evergreen-ui'
 import IconButton from '../../components/IconButton'
@@ -69,7 +70,9 @@ function UserProfilePopover() {
       }
       position={Position.BOTTOM_RIGHT}
     >
-      <IconButton icon={<FaUser />} />
+      <Tooltip content={USER_PROFILE.TOOLTIP.ICON_TITLE}>
+        <IconButton icon={<FaUser />} />
+      </Tooltip>
     </Popover>
   )
 }

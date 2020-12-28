@@ -2,7 +2,25 @@ import db from './connection'
 import {handleAsync} from '../utilities'
 import handleIdbRequest from './handleIdbRequest'
 
-export default function importObjectStoresData(fileContent: any) {
+async function clearAllStores(tx: IDBTransaction) {
+  for (const storeName of Array.from(tx.objectStoreNames)) {
+    const store = tx.objectStore(storeName)
+
+    const [, reqError] = await handleAsync(handleIdbRequest(store.clear()))
+
+    if (reqError) {
+      tx.abort()
+      return Promise.reject('Clear stores error.')
+    }
+  }
+
+  return true
+}
+
+export default function importObjectStoresData(
+  fileContent: any,
+  shouldClearOld: boolean,
+) {
   return new Promise(async (resolve, reject) => {
     if (!db.current) {
       return reject('No db connection.')
@@ -21,6 +39,14 @@ export default function importObjectStoresData(fileContent: any) {
     }
 
     const tx = db.current.transaction(storeNames, 'readwrite')
+
+    if (shouldClearOld) {
+      const [, clearOldError] = await handleAsync(clearAllStores(tx))
+
+      if (clearOldError) {
+        return Promise.reject(clearOldError)
+      }
+    }
 
     const resultOutline: any = {}
 

@@ -15,7 +15,12 @@ import SearchInput from '../../../components/SearchInput'
 import Table from '../../../components/Table'
 import UpdateSupplier from './UpdateSupplier'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  withErrorBoundary,
+} from '../../../utilities'
 import {PUT_SUPPLIER} from '../../../constants/events'
 import {PageWrapper, ControlWrapper} from '../../../layouts'
 
@@ -37,10 +42,15 @@ const NEW_SUPPLIER_VALUE = {
   name: '',
 }
 
+const CELL_TEST_ID_PREFIX = 'supplier'
+
 function Suppliers() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.SUPPLIERS
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -76,10 +86,15 @@ function Suppliers() {
       },
     }
 
+    const nameCell = {
+      value: item.name,
+      testId: `${CELL_TEST_ID_PREFIX}-name-cell_${item.name}`,
+    }
+
     return {
       id: item.id,
       isDisabled: Boolean(item.returned),
-      cells: [avatarCell, item.name, item.phone, item.address, item.note],
+      cells: [avatarCell, nameCell, item.phone, item.address, item.note],
       onDoubleClick: editSideSheet,
       optionsMenu: (
         <Popover
@@ -109,14 +124,18 @@ function Suppliers() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      db.getRows({
-        storeName: SN.SUPPLIERS,
-        indexName: IN.NAME,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-        filterBy: 'consist',
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.SUPPLIERS,
+          indexName: IN.NAME,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy: 'consist',
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -129,7 +148,7 @@ function Suppliers() {
         })
       })
     },
-    [db, serializeItem],
+    [makeCancellablePromise, db, serializeItem],
   )
 
   const {lastKey} = loadedItems

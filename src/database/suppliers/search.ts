@@ -1,4 +1,4 @@
-import {getFullStore} from '../queries'
+import {getAllRows} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 
 const store: any = {}
@@ -11,7 +11,7 @@ export default async function searchInSuppliers({
   query: string
 }) {
   if (type === 'init') {
-    const suppliers: any = await getFullStore(SN.SUPPLIERS)
+    const suppliers: any = await getAllRows({storeName: SN.SUPPLIERS})
 
     const keys = []
     for (const supplier of suppliers) {

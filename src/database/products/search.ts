@@ -1,4 +1,4 @@
-import {getFullIndexStore} from '../queries'
+import {getAllRows} from '../queries'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 
 const store: any = {}
@@ -15,7 +15,7 @@ export default async function searchInProducts({
   fullResult: boolean
 }) {
   if (type === 'init') {
-    const products = await getFullIndexStore({
+    const products = await getAllRows({
       storeName: SN.PRODUCTS,
       indexName: IN.NAME_MODEL,
     })
@@ -23,7 +23,7 @@ export default async function searchInProducts({
     const filtersStore: any = {}
 
     if (filterFor === 'toBuyList') {
-      filtersStore.toBuyList = await getFullIndexStore({
+      filtersStore.toBuyList = await getAllRows({
         storeName: SN.ACQUISITIONS,
         indexName: IN.NEEDED_SINCE_DATETIME,
       })

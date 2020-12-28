@@ -1,19 +1,20 @@
 import React from 'react'
-import {TableHead, SearchTableHeaderCell, SearchIcon} from 'evergreen-ui'
-import {PageWrapper} from '../../layouts'
-import Table from '../../components/Table'
+import {TableHead, SearchTableHeaderCell, SearchIcon, Pane} from 'evergreen-ui'
+import {PageWrapper} from '../../../layouts'
+import Table from '../../../components/Table'
 import {
   STORE_NAME as SN,
   INDEX_NAME as IN,
   PRODUCTS_FILTER_OPTIONS as FILTER_OPTIONS,
-} from '../../constants'
+} from '../../../constants'
 import {
   withErrorBoundary,
   useLocale,
   useDatabase,
   useUpdate,
   debounce,
-} from '../../utilities'
+  clipLongId,
+} from '../../../utilities'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -25,9 +26,9 @@ const LOADED_ITEMS_DEFAULT = {
 
 const CELL_STYLE = {cursor: 'pointer'}
 
-function SelectProduct({handleProductSelect}: any) {
+function PickProduct({handleProductSelect}: any) {
   const [locale] = useLocale()
-  const PAGE_CONST = locale.vars.PAGES.CARTS.CONTROLS.SELECT_PRODUCT
+  const PAGE_CONST = locale.vars.PAGES.COMMON.PICK_PRODUCT
   const {TABLE} = PAGE_CONST
   const {STRING_FORMAT} = locale.vars.GENERAL
 
@@ -49,11 +50,18 @@ function SelectProduct({handleProductSelect}: any) {
 
   const serializeItem = React.useCallback(
     item => {
+      const productShortId = clipLongId(item.id)
+
+      const nameModelCell = {
+        value: item.nameModel.join(' '),
+        testId: `name-model-cell_${productShortId}`,
+      }
+
       const salePriceCell = Number(item.salePrice).toLocaleString(STRING_FORMAT)
 
       return {
         id: item.id,
-        cells: [item.nameModel.join(' '), salePriceCell],
+        cells: [nameModelCell, salePriceCell],
         onClick: () => handleProductSelect(item.id),
         style: CELL_STYLE,
       }
@@ -127,18 +135,20 @@ function SelectProduct({handleProductSelect}: any) {
           icon={SearchIcon}
         />
       </TableHead>
-      <Table
-        columns={columns}
-        rows={loadedItems.items}
-        rowHeight={32}
-        isHeaderShown={false}
-        isRowNumberShown={false}
-        hasNextPage={loadedItems.hasNextPage}
-        isItemLoaded={isItemLoaded}
-        loadMoreItems={loadMoreItems}
-      />
+      <Pane flexGrow={1}>
+        <Table
+          columns={columns}
+          rows={loadedItems.items}
+          rowHeight={32}
+          isHeaderShown={false}
+          isRowNumberShown={false}
+          hasNextPage={loadedItems.hasNextPage}
+          isItemLoaded={isItemLoaded}
+          loadMoreItems={loadMoreItems}
+        />
+      </Pane>
     </PageWrapper>
   )
 }
 
-export default withErrorBoundary(SelectProduct)
+export default withErrorBoundary(PickProduct)

@@ -1,18 +1,24 @@
+export const IS_CYPRESS_ENVIRONMENT =
+  process.env.REACT_APP_WRAPPER === 'cypress'
+
 export const SPACING = 8
 
 export const STORE_NAME = {
   PRODUCTS: 'products',
+  PRODUCTS_STATS: 'productsStats',
   SALES: 'sales',
   ACQUISITIONS: 'acquisitions',
   BUDGET: 'budget',
   CASHBOX_HISTORY: 'cashboxHistory',
   CUSTOMERS: 'customers',
+  CUSTOMERS_STATS: 'customersStats',
   USERS: 'users',
   USERS_STATS: 'usersStats',
   GROUPS: 'groups',
   SUPPLIERS: 'suppliers',
   SUPPLIERS_STATS: 'suppliersStats',
   STATS: 'stats',
+  STICKERS: 'stickers',
   LOGS: 'logs',
   EVENTS: 'events',
   ERRORS: 'errors',
@@ -25,6 +31,7 @@ export const INDEX_NAME = {
   __CART_ID__: '__cartId__',
   CART_PARTICIPANTS: 'cartParticipants',
   ACTIVE_CART_ID: 'activeCartId',
+  STICKERS_SELECTION_ID: 'stickersSelectionId',
   EVENT_DATETIME: 'eventDatetime',
   ERROR_DATETIME: 'errorDatetime',
   NAME: 'name',

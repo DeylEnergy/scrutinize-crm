@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import TextInputField from './TextInputField'
+import {getTestId} from '../utilities'
 
 const CELL_WRAPPER_STYLE = {
   pointerEvents: 'all',
@@ -22,7 +23,7 @@ const CELL_INPUT_STYLE = {
   top: -1,
 }
 
-function CellInput({anchor}: any) {
+function CellInput({anchor, inputTestId = 'popover-input'}: any) {
   const [value, setValue] = React.useState(anchor.value)
 
   const handleSave = () => {
@@ -49,6 +50,7 @@ function CellInput({anchor}: any) {
         }}
         onBlur={handleSave}
         style={CELL_INPUT_STYLE}
+        {...getTestId(inputTestId)}
       />
     </div>
   )

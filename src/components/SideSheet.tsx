@@ -1,6 +1,6 @@
 import React from 'react'
 import {SideSheet, Pane, Heading, Button} from 'evergreen-ui'
-
+import {getTestId} from '../utilities'
 interface SideSheetComponentProps {
   title: string
   isShown: boolean
@@ -9,6 +9,13 @@ interface SideSheetComponentProps {
   onOpenComplete?: () => void
   onCloseComplete: () => void
   canSave?: boolean
+  containerProps?: any
+}
+
+const CONTAINER_PROPS_STYLE = {
+  display: 'flex',
+  flex: '1',
+  flexDirection: 'column',
 }
 
 export default function SideSheetComponent({
@@ -19,6 +26,7 @@ export default function SideSheetComponent({
   onOpenComplete,
   onCloseComplete,
   canSave = true,
+  containerProps = {},
 }: SideSheetComponentProps) {
   return (
     <SideSheet
@@ -26,9 +34,8 @@ export default function SideSheetComponent({
       onOpenComplete={onOpenComplete}
       onCloseComplete={onCloseComplete}
       containerProps={{
-        display: 'flex',
-        flex: '1',
-        flexDirection: 'column',
+        ...CONTAINER_PROPS_STYLE,
+        ...containerProps,
       }}
       preventBodyScrolling
       width={500}
@@ -38,7 +45,13 @@ export default function SideSheetComponent({
           <Heading size={600}>{title}</Heading>
         </Pane>
       </Pane>
-      <Pane flex="1" overflowY="auto" background="tint1" padding={16}>
+      <Pane
+        flex="1"
+        overflowY="auto"
+        background="tint1"
+        padding={16}
+        {...getTestId('sidesheet-scroll-area')}
+      >
         {children}
       </Pane>
       <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
@@ -47,6 +60,7 @@ export default function SideSheetComponent({
             appearance="primary"
             onClick={onSaveButtonClick}
             disabled={!canSave}
+            {...getTestId('sidesheet-save-btn')}
           >
             Save
           </Button>

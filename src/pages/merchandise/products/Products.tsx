@@ -25,7 +25,9 @@ import {
   useDatabase,
   useUpdate,
   useLocalStorage,
+  useCancellablePromise,
   getLocaleTimeString,
+  clipLongId,
 } from '../../../utilities'
 
 interface Supplier {
@@ -92,6 +94,8 @@ const SIDE_SHEET_DEFAULT = {
   isShown: false,
 }
 
+const CELL_TEST_ID_PREFIX = 'product'
+
 function Products() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.PRODUCTS
@@ -99,7 +103,11 @@ function Products() {
   const [{permissions, user}] = useAccount()
   const db = useDatabase()
 
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
+
+  const loaderRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -133,6 +141,15 @@ function Products() {
         })
       }
 
+      const shortProductId = clipLongId(item.id)
+
+      const [name, model] = item.nameModel
+
+      const nameCell = {
+        value: name,
+        testId: `${CELL_TEST_ID_PREFIX}-name-cell_${shortProductId}`,
+      }
+
       const canEditProducts = permissions.includes(RIGHTS.CAN_EDIT_PRODUCTS)
 
       const realPriceCell = Number(item.realPrice).toLocaleString(STRING_FORMAT)
@@ -150,8 +167,8 @@ function Products() {
         id: item.id,
         isDisabled: item.inStockCount <= 0,
         cells: [
-          item.nameModel[0],
-          item.nameModel[1],
+          nameCell,
+          model,
           realPriceCell,
           salePriceCell,
           item.inStockCount,
@@ -159,7 +176,7 @@ function Products() {
           lastSoldTimeCell,
           new Date(item.lastAcquiredDatetime).toLocaleDateString(STRING_FORMAT), // last acquisition
           item.lowestBoundCount,
-          item.id.split('-')[0],
+          shortProductId,
         ],
         onDoubleClick: (canEditProducts && editSideSheet) || null,
         optionsMenu: canEditProducts && (
@@ -192,14 +209,18 @@ function Products() {
 
   const fetchItems = React.useCallback(
     ({lastKey, searchQuery = ''}: any) => {
-      db.getRows({
-        storeName: SN.PRODUCTS,
-        indexName: IN.NAME_MODEL,
-        limit: FETCH_ITEM_LIMIT,
-        lastKey,
-        filterBy,
-        filterParams: {searchQuery},
-      }).then((newItems: any) => {
+      const queryFetch = makeCancellablePromise(
+        db.getRows({
+          storeName: SN.PRODUCTS,
+          indexName: IN.NAME_MODEL,
+          limit: FETCH_ITEM_LIMIT,
+          lastKey,
+          filterBy,
+          filterParams: {searchQuery},
+        }),
+      )
+
+      queryFetch.then((newItems: any) => {
         if (!newItems) {
           return
         }
@@ -212,13 +233,14 @@ function Products() {
         })
       })
     },
-    [db, filterBy, serializeItem, loadedItems],
+    [makeCancellablePromise, db, filterBy, serializeItem, loadedItems],
   )
 
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
     fetchItems({lastKey, searchQuery})
+    loaderRef.current?.resetloadMoreItemsCache()
   }, [fetchItems, lastKey, searchQuery])
 
   useUpdate(() => {
@@ -277,6 +299,7 @@ function Products() {
         hasNextPage={loadedItems.hasNextPage}
         isItemLoaded={isItemLoaded}
         loadMoreItems={loadMoreItems}
+        loaderRef={loaderRef}
       />
       {sideSheet.value && (
         <UpdateProduct

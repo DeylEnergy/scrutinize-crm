@@ -18,18 +18,17 @@ export default function filters({searchQuery}: any) {
         searchValues.push(userName)
       }
 
-      const consumerName = salesItem?._consumer?.name
-      if (consumerName) {
-        searchValues.push(consumerName)
+      const customerName = salesItem?._customer?.name
+      if (customerName) {
+        searchValues.push(customerName)
       }
 
-      for (const searchValue of searchValues) {
-        if (isSearchValueIncluded(searchValue, searchQuery)) {
-          return true
-        }
+      const note = salesItem.note
+      if (note) {
+        searchValues.push(note)
       }
 
-      return false
+      return isSearchValueIncluded(searchValues, searchQuery)
     },
   }
 }

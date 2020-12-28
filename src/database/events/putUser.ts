@@ -2,7 +2,7 @@ import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import saveEvent from './saveEvent'
 import {PUT_USER} from '../../constants/events'
 
@@ -42,7 +42,7 @@ export default async function putUser({
 
   if (consumer === 'client') {
     const [group, groupError] = await handleAsync(
-      getRowFromStore(SN.GROUPS, updatedUser._groupId, store),
+      getRow({store, storeName: SN.GROUPS, key: updatedUser._groupId}),
     )
 
     if (groupError) {

@@ -1,9 +1,15 @@
 import React from 'react'
-import {Pane} from 'evergreen-ui'
 import Table from '../../components/Table'
 import {STORE_NAME as SN} from '../../constants'
-import {useLocale, useDatabase, withErrorBoundary} from '../../utilities'
-import {PageWrapper} from '../../layouts'
+import {
+  useLocale,
+  useDatabase,
+  useCancellablePromise,
+  reversePeriodView,
+  withErrorBoundary,
+} from '../../utilities'
+import {PageWrapper, ControlWrapper} from '../../layouts'
+import ProductsOutlinePanel from './ProductsOutlinePanel'
 
 const FETCH_ITEM_LIMIT = 20
 
@@ -13,12 +19,16 @@ const LOADED_ITEMS_DEFAULT = {
   lastKey: null,
 }
 
+const CELL_TEST_ID_PREFIX = 'stats'
+
 function Stats() {
   const [locale] = useLocale()
   const PAGE_CONST = locale.vars.PAGES.STATS
   const {STRING_FORMAT} = locale.vars.GENERAL
   const db = useDatabase()
   const itemsRef = React.useRef<any>([])
+
+  const makeCancellablePromise = useCancellablePromise()
 
   const [loadedItems, setLoadedItems] = React.useReducer(
     // @ts-ignore
@@ -32,16 +42,32 @@ function Stats() {
 
   const serializeItem = React.useCallback(
     item => {
-      const soldSumCell = Number(item.soldSum).toLocaleString(STRING_FORMAT)
+      const reversedPeriod = reversePeriodView(item.period)
 
-      const incomeSumCell = Number(item.incomeSum).toLocaleString(STRING_FORMAT)
+      const soldSumCell = {
+        value: Number(item.soldSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-sold-sum_${reversedPeriod}`,
+      }
 
-      const spentSumCell =
-        item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT)
+      const incomeSumCell = {
+        value: Number(item.incomeSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-income-sum_${reversedPeriod}`,
+      }
+
+      const spentSumCell = {
+        value:
+          item.spentSum && Number(item.spentSum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-spent-sum_${reversedPeriod}`,
+      }
 
       return {
         id: item.id,
-        cells: [item.period, soldSumCell, incomeSumCell, spentSumCell || ''],
+        cells: [
+          reversedPeriod,
+          soldSumCell,
+          incomeSumCell,
+          spentSumCell || '0',
+        ],
       }
     },
     [STRING_FORMAT],
@@ -57,12 +83,16 @@ function Stats() {
   const {lastKey} = loadedItems
 
   const loadMoreItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.STATS,
-      direction: 'prev',
-      limit: FETCH_ITEM_LIMIT,
-      lastKey,
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.STATS,
+        direction: 'prev',
+        limit: FETCH_ITEM_LIMIT,
+        lastKey,
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       if (!newItems) {
         return
       }
@@ -74,7 +104,7 @@ function Stats() {
         lastKey: newItems.length && newItems[newItems.length - 1].period,
       })
     })
-  }, [db, lastKey, serializeItem])
+  }, [db, lastKey, serializeItem, makeCancellablePromise])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = PAGE_CONST.TABLE
@@ -100,15 +130,18 @@ function Stats() {
 
   return (
     <PageWrapper>
-      <Pane flex={1}>
-        <Table
-          columns={columns}
-          rows={loadedItems.items}
-          hasNextPage={loadedItems.hasNextPage}
-          isItemLoaded={isItemLoaded}
-          loadMoreItems={loadMoreItems}
-        />
-      </Pane>
+      <ControlWrapper>
+        <ProductsOutlinePanel />
+      </ControlWrapper>
+      {/* <Pane flex={1}>, */}
+      <Table
+        columns={columns}
+        rows={loadedItems.items}
+        hasNextPage={loadedItems.hasNextPage}
+        isItemLoaded={isItemLoaded}
+        loadMoreItems={loadMoreItems}
+      />
+      {/* </Pane> */}
     </PageWrapper>
   )
 }

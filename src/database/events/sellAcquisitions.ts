@@ -1,5 +1,5 @@
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import {STORE_NAME as SN} from '../../constants'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
@@ -12,11 +12,11 @@ export default async function sellAcquisitions({
   emitEvent = true,
 }: any) {
   for (const selectedAcquisition of payload.selectedAcquisitions) {
-    const acquisition: any = await getRowFromStore(
-      SN.ACQUISITIONS,
-      selectedAcquisition._acquisitionId,
+    const acquisition: any = await getRow({
       store,
-    )
+      storeName: SN.ACQUISITIONS,
+      key: selectedAcquisition._acquisitionId,
+    })
 
     if (!acquisition.hasOwnProperty('inStockCount')) {
       acquisition.inStockCount = acquisition.count

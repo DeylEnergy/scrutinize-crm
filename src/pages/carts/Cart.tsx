@@ -10,22 +10,23 @@ import {
 import {
   useLocale,
   useDatabase,
+  useCancellablePromise,
   useTasksAfterUpdate,
   useScannerListener,
+  clipLongId,
   withErrorBoundary,
-  recognizeQRCode,
 } from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
 import {PUT_SALE, DELETE_SALE_ITEM} from '../../constants/events'
-import codePrefixes from '../../constants/codePrefixes'
 import Table from '../../components/Table'
 import CellCheckbox from '../../components/CellCheckbox'
 import EditableCellInput from '../../components/EditableCellInput'
 import Popover from '../../components/Popover'
-import {PageWrapper, ControlWrapper} from '../../layouts'
+import {PageWrapper} from '../../layouts'
 import DeleteCart from './DeleteCart'
-import AddProduct from './AddProduct'
-import SelectCount from './SelectCount'
+import SelectProduct from '../common/select-product'
+import SelectProductCount from '../common/select-product-count'
+import careOfScannedQRCode from '../common/care-of-scanned-qr-code'
 
 const LOADED_ITEMS_DEFAULT = {
   hasNextPage: true,
@@ -37,14 +38,25 @@ interface CartProps {
   cartId: string
   fetchComputedCartSum: () => void
   completeCartDelete: () => void
+  setControlPanel: (comp: React.ReactNode) => void
 }
 
-function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
+const CELL_TEST_ID_PREFIX = 'cart-item'
+
+function Cart({
+  cartId,
+  fetchComputedCartSum,
+  completeCartDelete,
+  setControlPanel,
+}: CartProps) {
   const [locale] = useLocale()
   const {STRING_FORMAT} = locale.vars.GENERAL
   const PAGE_CONST = locale.vars.PAGES.CARTS
   const {TABLE} = PAGE_CONST
   const db = useDatabase()
+
+  const makeCancellablePromise = useCancellablePromise()
+
   const itemsRef = React.useRef<any>(null)
 
   const [loadedItems, setLoadedItems] = React.useReducer(
@@ -161,6 +173,8 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
         })
       }
 
+      const shortProductId = clipLongId(item._productId)
+
       const doneCell = {
         value: (
           <CellCheckbox
@@ -205,6 +219,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
             {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
+        testId: `cart-item-price_${shortProductId}`,
       }
 
       const sumCell = {
@@ -215,6 +230,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
             {Number(item.income).toLocaleString(STRING_FORMAT)}
           </>
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-sum_${shortProductId}`,
       }
 
       const noteCell = {
@@ -224,6 +240,21 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
           'note',
           item.note,
           'string',
+        ),
+      }
+
+      const countCellTestId = `count-dropdown_${clipLongId(item._productId)}`
+
+      const countCell = {
+        value: (
+          <SelectProductCount
+            selectedAcquisitions={item.selectedAcquisitions}
+            updateSelectedAcquisitions={updateItem}
+            gridOuterRef={gridOuterRef}
+            dropdownTestId={countCellTestId}
+          >
+            {item.count}
+          </SelectProductCount>
         ),
       }
 
@@ -257,19 +288,9 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
           nameCell,
           modelCell,
           salePriceCell,
-          {
-            value: (
-              <SelectCount
-                selectedAcquisitions={item.selectedAcquisitions}
-                updateSelectedAcquisitions={updateItem}
-                gridOuterRef={gridOuterRef}
-              >
-                {item.count}
-              </SelectCount>
-            ),
-          },
+          countCell,
           sumCell,
-          item._productId.split('-')[0],
+          shortProductId,
           noteCell,
         ],
         optionsMenu,
@@ -286,12 +307,16 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
   )
 
   const fetchCartItems = React.useCallback(() => {
-    db.getRows({
-      storeName: SN.SALES,
-      indexName: IN.__CART_ID__,
-      matchProperties: {__cartId__: cartId},
-      sort: 'asc',
-    }).then((newItems: any) => {
+    const queryFetch = makeCancellablePromise(
+      db.getRows({
+        storeName: SN.SALES,
+        indexName: IN.__CART_ID__,
+        matchProperties: {__cartId__: cartId},
+        sort: 'asc',
+      }),
+    )
+
+    queryFetch.then((newItems: any) => {
       const newItemsSerialized = newItems.map(serializeItem)
 
       const updatedLoadedItems = {
@@ -301,7 +326,7 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
       setLoadedItems(updatedLoadedItems)
     })
-  }, [cartId, db, serializeItem])
+  }, [makeCancellablePromise, cartId, db, serializeItem])
 
   const refetchAll = React.useCallback(() => {
     fetchCartItems()
@@ -326,23 +351,41 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
     [cartId, db, refetchAll],
   )
 
-  const handleNewScannedProduct = React.useCallback(
-    (scanResult: any) => {
-      const [prefix, data] = recognizeQRCode(scanResult?.value)
-      if (prefix === codePrefixes.acquisitions) {
-        db.getRow({storeName: SN.ACQUISITIONS, key: data}).then((aq: any) => {
-          handleSelectedProduct({productId: aq._productId, acquisitionId: data})
-        })
-      } else {
-        toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE)
-      }
+  const handleNewScannedCode = React.useCallback(
+    (scannedCode: any) => {
+      careOfScannedQRCode({
+        db,
+        scannedCode,
+        cartId,
+        onProductScanned: refetchAll,
+        onUnknownScanned: () =>
+          toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_QR_CODE),
+        onUnknownAcquisitionScanned: () =>
+          toaster.warning(PAGE_CONST.TOASTER.UNKNOWN_ACQUISITION),
+      })
     },
-    [PAGE_CONST, db, handleSelectedProduct],
+    [PAGE_CONST, db, cartId, refetchAll],
   )
 
   useScannerListener({
-    onChange: handleNewScannedProduct,
+    onChange: handleNewScannedCode,
   })
+
+  React.useEffect(() => {
+    setControlPanel(
+      <>
+        <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
+        <SelectProduct
+          key={cartId}
+          handleSelectedProduct={handleSelectedProduct}
+        />
+      </>,
+    )
+
+    return () => {
+      setControlPanel(null)
+    }
+  }, [cartId, setControlPanel, completeCartDelete, handleSelectedProduct])
 
   const columns = React.useMemo(() => {
     const {COLUMNS} = TABLE
@@ -361,10 +404,6 @@ function Cart({cartId, fetchComputedCartSum, completeCartDelete}: CartProps) {
 
   return (
     <PageWrapper>
-      <ControlWrapper>
-        <DeleteCart cartId={cartId} completeCartDelete={completeCartDelete} />
-        <AddProduct handleSelectedProduct={handleSelectedProduct} />
-      </ControlWrapper>
       <Table
         columns={columns}
         rows={loadedItems.items}

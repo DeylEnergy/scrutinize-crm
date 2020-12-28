@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 import {handleAsync} from '../../utilities'
-import {getRowFromStore} from '../queries'
+import {getRow} from '../queries'
 import putRow from '../putRow'
 import saveEvent from './saveEvent'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../constants'
@@ -20,7 +20,7 @@ export default async function putProduct({
   if (productId) {
     // update product's info
     const [storedProduct, isStoredProductError] = await handleAsync(
-      getRowFromStore(SN.PRODUCTS, productId, store),
+      getRow({store, storeName: SN.PRODUCTS, key: productId}),
     )
 
     if (isStoredProductError) {

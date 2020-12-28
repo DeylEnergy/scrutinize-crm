@@ -19,13 +19,7 @@ export default function filters({searchQuery}: any) {
         searchValues.push(note)
       }
 
-      for (const searchValue of searchValues) {
-        if (isSearchValueIncluded(searchValue, searchQuery)) {
-          return true
-        }
-      }
-
-      return false
+      return isSearchValueIncluded(searchValues, searchQuery)
     },
   }
 }

@@ -7,14 +7,15 @@ import {
   Avatar,
   Heading,
   Button,
+  EyeOpenIcon,
   RefreshIcon,
   toaster,
 } from 'evergreen-ui'
 import TextInputField from '../../../components/TextInputField'
 import SideSheet from '../../../components/SideSheet'
 import {STORE_NAME as SN, SPACING} from '../../../constants'
-import SeeSecretKeyPopover from './SeeSecretKeyPopover'
-import {useLocale, useAccount, useDatabase} from '../../../utilities'
+import SeeSecretKeyPopover from '../../../components/SeeSecretKeyPopover'
+import {useLocale, useAccount, useDatabase, getTestId} from '../../../utilities'
 import RIGHTS from '../../../constants/rights'
 import UserStats from './UserStats'
 
@@ -126,6 +127,20 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
     user?.id === doc.id ||
     permissions.includes(RIGHTS.CAN_SEE_OTHER_USER_SECRET_KEYS)
 
+  const giveDefaultGroupId = React.useCallback(() => {
+    if (groups.length) {
+      const [defaultGroup]: any = groups
+      setGroupId(defaultGroup.id)
+    }
+  }, [groups])
+
+  React.useEffect(() => {
+    if (!groupId) {
+      // this condition should execute once
+      giveDefaultGroupId()
+    }
+  }, [groupId, giveDefaultGroupId])
+
   React.useEffect(() => {
     if (!doc.id) {
       setInput({futureId: uuidv4()})
@@ -140,6 +155,7 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
       onOpenComplete={handleStatsDisplay}
       onCloseComplete={onCloseComplete}
       canSave={canBeSaved}
+      containerProps={getTestId('update-user-sidesheet')}
     >
       <input
         ref={avatarUploadRef}
@@ -211,10 +227,20 @@ function UpdateUser({sideSheet, onCloseComplete, handleUpdateUser}: any) {
             marginBottom={SPACING * 1.5}
           >
             <SeeSecretKeyPopover
-              userId={doc.id ?? doc.futureId}
+              userId={doc.id ?? input.futureId}
               secretKey={secretKey}
               disabled={!canBeSaved}
-            />
+            >
+              <Button
+                intent="success"
+                iconBefore={EyeOpenIcon}
+                justifyContent="center"
+                width="49%"
+                disabled={!canBeSaved}
+              >
+                {DRAWER.BUTTONS.SEE_AUTHORIZATION_KEY}
+              </Button>
+            </SeeSecretKeyPopover>
             <Button
               intent="warning"
               iconBefore={RefreshIcon}

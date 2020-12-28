@@ -174,7 +174,7 @@ function CashboxHistory() {
       >
         <Pane>
           <strong>{PAGE_CONST.CONTROLS.CURRENT_BALANCE.TITLE}: </strong>{' '}
-          {currentBalance}
+          {Number(currentBalance).toLocaleString(STRING_FORMAT)}
         </Pane>
         {permissions?.includes(RIGHTS.CAN_PERFORM_CASHBOX_OPERATIONS) && (
           <NewCashboxOperation

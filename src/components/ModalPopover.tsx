@@ -7,8 +7,9 @@ import {
   IconButton,
   CrossIcon,
 } from 'evergreen-ui'
+import {getTestId} from '../utilities'
 
-function Header({title, close}: any) {
+function Header({title, close, closeBtnTestId}: any) {
   return (
     <Pane
       display="flex"
@@ -26,6 +27,7 @@ function Header({title, close}: any) {
         appearance="minimal"
         height={24}
         onClick={() => close()}
+        {...getTestId(closeBtnTestId)}
       />
     </Pane>
   )
@@ -37,7 +39,9 @@ function ModalPopover({
   title,
   width,
   height,
+  closeBtnTestId,
   popoverProps = {},
+  testId,
 }: any) {
   return (
     <Popover
@@ -49,8 +53,9 @@ function ModalPopover({
           flexDirection="column"
           width={width}
           height={height}
+          {...getTestId(testId)}
         >
-          <Header title={title} close={close} />
+          <Header title={title} close={close} closeBtnTestId={closeBtnTestId} />
           {component}
         </Pane>
       )}
