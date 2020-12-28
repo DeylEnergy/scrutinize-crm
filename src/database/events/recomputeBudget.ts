@@ -5,9 +5,7 @@ import sendEvent from './index'
 import {PUT_BUDGET} from '../../constants/events'
 
 export default async function recomputeBudget({store = null, payload}: any) {
-  const [budget, budgetError] = await handleAsync(
-    getRow({store: SN.BUDGET, key: 1}),
-  )
+  const [budget, budgetError] = await handleAsync(getRow({store, key: 1}))
 
   if (budgetError) {
     return Promise.reject(`Error fetching budget`)
