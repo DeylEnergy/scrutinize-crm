@@ -5,7 +5,7 @@ export function checkProductNumbers({
   currentMonth,
 }) {
   cy.getByTestId(`product-name-cell_${shortProductId}`)
-    .dblclick()
+    .dblclick({force: true})
     .get('input[name=inStockCount]')
     .should('has.value', inStockCount)
     .get('input[name=soldCount]')

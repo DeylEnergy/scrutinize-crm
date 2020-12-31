@@ -1,6 +1,11 @@
 import React from 'react'
 import {SelectField} from 'evergreen-ui'
-import {useLocale, useDatabase, reversePeriodView} from '../../../utilities'
+import {
+  useLocale,
+  useDatabase,
+  reversePeriodView,
+  getTestId,
+} from '../../../utilities'
 import {STORE_NAME as SN} from '../../../constants'
 
 export const FILTER_PARAMS_DEFAULT = {
@@ -9,7 +14,7 @@ export const FILTER_PARAMS_DEFAULT = {
   to: null,
 }
 
-function PickPeriod({period, onChange}: any) {
+function PickPeriod({period, onChange, selectTestId = 'select-period'}: any) {
   const [locale] = useLocale()
   const {PICK_PERIOD} = locale.vars.PAGES.COMMON
 
@@ -36,6 +41,7 @@ function PickPeriod({period, onChange}: any) {
           options.find((x: any) => x.label === selectedPeriod) || {}
         onChange({from, to, period: selectedPeriod})
       }}
+      {...getTestId(selectTestId)}
     >
       <option value="all">{PICK_PERIOD.OPTION_ALL_TIME}</option>
       {options.map((x: any) => (
