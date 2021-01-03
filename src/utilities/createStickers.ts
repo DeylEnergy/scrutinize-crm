@@ -5,7 +5,7 @@ const PAPER_SIZE = {
   width: 794,
   height: 1123,
 }
-const COLUMN_SPACE = 5
+const COLUMN_SPACE = 3
 const ROW_SPACE = COLUMN_SPACE
 
 async function createStickers(products?: any) {
@@ -44,7 +44,8 @@ async function createStickers(products?: any) {
       font-size: 10px;
     }
     @page {
-      margin: 7mm;
+      margin: 4mm;
+      size: A4;
     }
   `
 
