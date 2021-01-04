@@ -31,7 +31,6 @@ function enableDevToolsInProduction() {
   })
 
   window.addEventListener('beforeunload', () => {
-    console.log('stop it')
     remote.globalShortcut.unregisterAll()
   })
 }
@@ -66,7 +65,7 @@ const dbWorker = (() => {
   }, {})
 })()
 
-console.log(dbWorker)
+// console.log(dbWorker)
 
 const APP_WRAPPER_STYLE: any = {
   display: 'flex',
@@ -205,7 +204,6 @@ function AppProvider() {
   const [scannerListener, setScannerListener] = React.useState<any>(null)
 
   React.useEffect(() => {
-    console.log(window)
     import(`./locales/${language}`).then(({default: _, ...vars}: any) => {
       setLocale({language, vars})
     })
