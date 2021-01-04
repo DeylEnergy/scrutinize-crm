@@ -83,7 +83,8 @@ context('ACQUIRE PRODUCTS', () => {
   })
 
   describe('Manually changes count', () => {
-    const label = getLabel(productsMap.computerFan)
+    const {name, model} = productsMap.computerFan
+    const label = getLabel(name, model)
     it(`sets "${label}" count to 8`, () => {
       cy.changeAcquiringProductCount({
         shortProductId: productsMap.computerFan.shortProductId,
@@ -121,7 +122,9 @@ context('ACQUIRE PRODUCTS', () => {
     })
 
     productKeys.reverse().forEach(key => {
-      const {label, shortProductId} = productsMap[key]
+      const {name, model, shortProductId} = productsMap[key]
+
+      const label = getLabel(name, model)
 
       it(`selects ${supplierName} as supplier for "${label}"`, () => {
         cy.selectAcquiringProductParticipant({
