@@ -34,6 +34,7 @@ import {
   useAccount,
   useDatabase,
   useCancellablePromise,
+  getTestId,
   withErrorBoundary,
 } from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
@@ -236,6 +237,10 @@ function ToBuy() {
 
       const {CELLS, TOOLTIP} = TABLE
 
+      const shortProductId = clipLongId(
+        item._productId ?? `new_${item.futureProductId}`,
+      )
+
       const doneCell = {
         value: (
           <CellCheckbox
@@ -246,9 +251,8 @@ function ToBuy() {
             disabled={item.isFrozen || !canEditCells}
           />
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-checkbox_${shortProductId}`,
       }
-
-      const shortProductId = item._productId ? clipLongId(item._productId) : '-'
 
       const nameModel =
         item?._product?.nameModel || item?._legacyProductNameModel
@@ -274,6 +278,7 @@ function ToBuy() {
             <b>{TOOLTIP.MODEL_BEFORE}:</b> {item._product.nameModel[1]}
           </>
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-model_${shortProductId}`,
       }
 
       const price = item.price
@@ -286,6 +291,7 @@ function ToBuy() {
             {Number(item._product.realPrice).toLocaleString(STRING_FORMAT)}
           </>
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-price_${shortProductId}`,
       }
 
       const count = item.count
@@ -297,9 +303,13 @@ function ToBuy() {
             <b>{TOOLTIP.IN_STOCK}:</b> {item._product.inStockCount}
           </>
         ),
+        testId: `${CELL_TEST_ID_PREFIX}-count_${shortProductId}`,
       }
 
-      const sumCell = Number(item.sum).toLocaleString(STRING_FORMAT)
+      const sumCell = {
+        value: Number(item.sum).toLocaleString(STRING_FORMAT),
+        testId: `${CELL_TEST_ID_PREFIX}-sum_${shortProductId}`,
+      }
 
       const salePrice =
         item.salePrice || (item._productId && item._product.salePrice)
@@ -345,7 +355,13 @@ function ToBuy() {
             onSelect={handleSupplierPick}
             storeName="suppliers"
           >
-            <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
+            <Button
+              style={SELECT_MENU_STYLE}
+              disabled={!canEditCells}
+              {...getTestId(
+                `${CELL_TEST_ID_PREFIX}-select-supplier_${shortProductId}`,
+              )}
+            >
               {item._supplier
                 ? item._supplier.name
                 : CELLS.SUPPLIER.BUTTON_TITLE}
@@ -364,7 +380,13 @@ function ToBuy() {
             onSelect={handleExecutorPick}
             storeName="users"
           >
-            <Button style={SELECT_MENU_STYLE} disabled={!canEditCells}>
+            <Button
+              style={SELECT_MENU_STYLE}
+              disabled={!canEditCells}
+              {...getTestId(
+                `${CELL_TEST_ID_PREFIX}-select-executor_${shortProductId}`,
+              )}
+            >
               {item._user ? item._user.name : CELLS.EXECUTOR.BUTTON_TITLE}
             </Button>
           </AsyncSelectMenu>
@@ -387,6 +409,8 @@ function ToBuy() {
       const toggleFrozen = () => {
         updateItem({isFrozen: !item.isFrozen})
       }
+
+      const shortProductIdCell = item._productId ? shortProductId : '-'
 
       const optionsMenu = (
         <Popover
@@ -452,7 +476,7 @@ function ToBuy() {
           executorCell,
           frozenCell,
           new Date(item.neededSinceDatetime).toLocaleDateString(STRING_FORMAT),
-          shortProductId,
+          shortProductIdCell,
         ],
         optionsMenu,
       }

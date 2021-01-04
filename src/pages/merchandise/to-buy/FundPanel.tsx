@@ -9,7 +9,7 @@ import {
   TintIcon,
 } from 'evergreen-ui'
 import EditablePopoverInput from '../../../components/EditablePopoverInput'
-import {useLocale, useDatabase} from '../../../utilities'
+import {useLocale, useDatabase, getTestId} from '../../../utilities'
 import {PUT_BUDGET} from '../../../constants/events'
 
 const FundPanelItemWrapper = styled.span`
@@ -78,7 +78,9 @@ function FundPanel({computedBuyList, fetchComputedOfToBuyList}: any) {
           ({icon, label, value}: any, id: number) =>
             (label === FUND_PANEL.BUDGET || Boolean(value)) && (
               <Tooltip content={label} key={id} showDelay={500}>
-                <FundPanelItemWrapper>
+                <FundPanelItemWrapper
+                  {...getTestId(`to-buy-funds_${label.toLowerCase()}`)}
+                >
                   {icon} {value}
                 </FundPanelItemWrapper>
               </Tooltip>

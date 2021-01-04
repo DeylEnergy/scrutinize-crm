@@ -1,7 +1,12 @@
 import React from 'react'
 // @ts-ignore
 import scannerWorker from 'workerize-loader!../scanner' // eslint-disable-line import/no-webpack-loader-syntax
-import {useVideoDeviceId, debounce, throttle} from '../utilities'
+import {
+  useVideoDeviceLabel,
+  getDeviceInfo,
+  debounce,
+  throttle,
+} from '../utilities'
 
 let scanner: any
 let rId: any
@@ -37,7 +42,7 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
   const canvasRef = React.useRef<any>(null)
   const scanCanvasRef = React.useRef<any>(null)
 
-  const [videoDeviceId] = useVideoDeviceId()
+  const [deviceLabel] = useVideoDeviceLabel()
 
   React.useEffect(() => {
     scanner = scannerWorker()
@@ -55,20 +60,22 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
     }
 
     if (canvasRef.current && scanCanvasRef.current) {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: {
-            facingMode: 'environment',
-            deviceId: videoDeviceId,
-          },
-        })
-        .then(function(stream) {
-          video.srcObject = stream
-          // @ts-ignore
-          video.setAttribute('playsinline', true) // required to tell iOS safari we don't want fullscreen
-          video.play()
-          requestAnimationFrame(tick)
-        })
+      getDeviceInfo(deviceLabel).then((deviceInfo: any) => {
+        navigator.mediaDevices
+          .getUserMedia({
+            video: {
+              facingMode: 'environment',
+              deviceId: deviceInfo?.deviceId,
+            },
+          })
+          .then(function(stream) {
+            video.srcObject = stream
+            // @ts-ignore
+            video.setAttribute('playsinline', true) // required to tell iOS safari we don't want fullscreen
+            video.play()
+            requestAnimationFrame(tick)
+          })
+      })
 
       const offscreen = canvasRef.current.transferControlToOffscreen()
       const scanAreaCanvas = scanCanvasRef.current.transferControlToOffscreen()
@@ -84,7 +91,7 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
       clearSt()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoDeviceId])
+  }, [deviceLabel])
 
   const {camera, scanArea} = cameraSize
 

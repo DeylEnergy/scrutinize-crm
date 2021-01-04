@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {Pane, Button, Position, FilterListIcon} from 'evergreen-ui'
 import Popover from './Popover'
 import {SPACING} from '../constants'
-import {useLocale} from '../utilities'
+import {useLocale, getTestId} from '../utilities'
 
 const FiltersIndicator = styled.div`
   height: 6px;
@@ -19,6 +19,7 @@ const FiltersIndicator = styled.div`
 function FiltersPopoverButton({
   content,
   isIndicatorShown = true,
+  buttonTestId = 'filters-popover-btn',
   ...props
 }: any) {
   const [locale] = useLocale()
@@ -35,6 +36,7 @@ function FiltersPopoverButton({
           appearance="primary"
           intent="none"
           iconBefore={FilterListIcon}
+          {...getTestId(buttonTestId)}
         >
           {FILTERS_POPOVER.BUTTON_TITLE}
         </Button>

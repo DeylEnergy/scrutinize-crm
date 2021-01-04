@@ -11,7 +11,7 @@ import Popover from '../../../components/Popover'
 import ProcessAcquisitionsDialog from './ProcessAcquisitionsDialog'
 import print from './print'
 import RIGHTS from '../../../constants/rights'
-import {useLocale, useAccount, useDatabase} from '../../../utilities'
+import {useLocale, useAccount, useDatabase, getTestId} from '../../../utilities'
 
 interface OptionsProps {
   refetchAll: () => void
@@ -51,6 +51,7 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
                       close()
                       setIsShown(true)
                     }}
+                    {...getTestId('process-bought-items-btn')}
                   >
                     {OPTIONS.PROCESS_BOUGHT_ITEMS.TITLE}
                   </Menu.Item>
@@ -59,7 +60,11 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
           </Menu>
         )}
       >
-        <Button height={20} iconBefore={CogIcon}>
+        <Button
+          height={20}
+          iconBefore={CogIcon}
+          {...getTestId('to-buy-list-options-btn')}
+        >
           {OPTIONS.BUTTON_TITLE}
         </Button>
       </Popover>

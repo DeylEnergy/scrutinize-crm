@@ -14,6 +14,7 @@ import {
   useDatabase,
   handleAsync,
   createStickers,
+  getTestId,
 } from '../../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 import {PROCESS_ACQUISITIONS} from '../../../constants/events'
@@ -48,7 +49,13 @@ const ProcessIndicator = ({isProcessing, success}: ProcessIndicatorProps) => {
   }
 
   if (success) {
-    indicator = <TickCircleIcon color="success" {...ICON_STYLE} />
+    indicator = (
+      <TickCircleIcon
+        color="success"
+        {...ICON_STYLE}
+        {...getTestId('to-buy-list-processing-success')}
+      />
+    )
   }
 
   if (success === false) {
@@ -178,6 +185,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
                       },
                     )
                   }}
+                  {...getTestId('to-buy-list-continue-processing-btn')}
                 >
                   {PROCESS_BOUGHT_ITEMS.MODAL_BUTTON_CONTINUE}
                 </Button>
@@ -185,6 +193,7 @@ export default function DialogCustom({isShown, setIsShown, refetchAll}: any) {
             </>
           )
         }}
+        containerProps={{...getTestId('to-buy-list-process-dialog')}}
       >
         <Pane height={100}>
           {' '}

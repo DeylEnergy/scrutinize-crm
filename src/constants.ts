@@ -1,6 +1,8 @@
 export const IS_CYPRESS_ENVIRONMENT =
   process.env.REACT_APP_WRAPPER === 'cypress'
 
+export const TEST_DATA_ATTR = 'data-cy'
+
 export const SPACING = 8
 
 export const STORE_NAME = {

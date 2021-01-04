@@ -12,39 +12,39 @@ import {
 
 context('RETURN PRODUCTS', () => {
   describe('Sets up db', () => {
-    it('Reimports IndexedDB stores', () => {
+    it('reimports IndexedDB stores', () => {
       cy.reImportDb()
     })
   })
 
   describe('Opens carts and create one', () => {
-    it('Opens carts', () => {
+    it('opens carts', () => {
       cy.openCartsDialog()
     })
-    it('Adds new cart', () => {
+    it('adds new cart', () => {
       cy.addNewCart()
     })
   })
 
   describe('Selects cart participants', () => {
-    it(`Sets "${salespersonName}" as the salesperson`, () => {
+    it(`sets "${salespersonName}" as the salesperson`, () => {
       cy.setCartSalesperson(salespersonName)
     })
 
-    it(`Sets "${customerName}" as the customer`, () => {
+    it(`sets "${customerName}" as the customer`, () => {
       cy.setCartCustomer(customerName)
     })
   })
 
   describe('Adds items to the cart', () => {
-    it('Opens product select', () => {
+    it('opens product select', () => {
       cy.getByTestId('select-cart-product').click()
     })
 
     productKeys.forEach(key => {
       const {label, ...product} = productsMap[key]
 
-      it(`Selects "${label}"`, () => {
+      it(`selects "${label}"`, () => {
         if (key !== 'charger') {
           cy.scrollCartProductSelect({x: 0, y: 200})
         }
@@ -52,7 +52,7 @@ context('RETURN PRODUCTS', () => {
       })
     })
 
-    it('Closes "Select Product"', () => {
+    it('closes "Select Product"', () => {
       cy.getByTestId('close-select-product')
         .should('be.visible')
         .click()
@@ -60,15 +60,15 @@ context('RETURN PRODUCTS', () => {
   })
 
   describe('Checkout', () => {
-    it('Opens checkout dialog', () => {
+    it('opens checkout dialog', () => {
       cy.openCartCheckoutDialog()
     })
 
-    it('Switches to "Return" tab', () => {
+    it('switches to "Return" tab', () => {
       cy.getByTestId('cart-checkout-tab_Return').click()
     })
 
-    it('Should finish correctly', () => {
+    it('should finish correctly', () => {
       cy.getByTestId('cart-checkout-dialog').within(() => {
         cy.contains('button', /finish/i).click()
       })
@@ -76,34 +76,34 @@ context('RETURN PRODUCTS', () => {
   })
 
   describe('Finishes cart side', () => {
-    it('Closes carts dialog', () => {
+    it('closes carts dialog', () => {
       cy.closeCartsDialog()
     })
   })
 
   describe('Checks products page', () => {
-    it('Goes to products page', () => {
+    it('goes to products page', () => {
       cy.visit('/merchandise/products')
     })
 
     productKeys.forEach(key => {
       const {label, shortProductId, finalProduct} = productsMap[key]
 
-      it(`Inspects ${label}`, () => {
+      it(`inspects ${label}`, () => {
         cy.checkProductNumbers({shortProductId, ...finalProduct})
       })
     })
   })
 
   describe('Checks acquisitions page', () => {
-    it('Goes to acquisitions page', () => {
+    it('goes to acquisitions page', () => {
       cy.visit('/merchandise/acquisitions')
     })
 
     productKeys.forEach(key => {
       const {label, shortAcquisitionId, finalProduct} = productsMap[key]
 
-      it(`Inspects ${label}`, () => {
+      it(`inspects ${label}`, () => {
         cy.getByTestId(
           `acquisition-in-stock-count_${shortAcquisitionId}`,
         ).contains(finalProduct.inStockCount)
@@ -112,14 +112,14 @@ context('RETURN PRODUCTS', () => {
   })
 
   describe('Checks sales page', () => {
-    it('Goes to sales page', () => {
+    it('goes to sales page', () => {
       cy.visit('/sales')
     })
 
     productKeys.forEach(key => {
       const {label, shortProductId, ...product} = productsMap[key]
       const finalShape = product.finalCart
-      it(`Inspects ${label}`, () => {
+      it(`inspects ${label}`, () => {
         cy.checkSaleItemCount({
           shortProductId,
           salespersonName,
@@ -131,43 +131,43 @@ context('RETURN PRODUCTS', () => {
   })
 
   describe('Checks stats', () => {
-    it('Goes to stats page', () => {
+    it('goes to stats page', () => {
       cy.visit('/stats')
     })
 
-    it(`Inspects ${currentMonthStats.value}`, () => {
+    it(`inspects ${currentMonthStats.value}`, () => {
       cy.checkStats(currentMonthStats)
     })
   })
 
   describe('Checks user stats', () => {
-    it('Goes to users page', () => {
+    it('goes to users page', () => {
       cy.visit('/persons-control/users')
     })
 
-    it(`Inspects ${userStats.name}`, () => {
+    it(`inspects ${userStats.name}`, () => {
       cy.checkUserStats(userStats)
     })
   })
 
   describe('Checks suppliers', () => {
-    it('Goes to suppliers page', () => {
+    it('goes to suppliers page', () => {
       cy.visit('/persons-control/suppliers')
     })
 
     suppliersStats.forEach(supplierStats => {
-      it(`Inspects ${supplierStats.name}`, () => {
+      it(`inspects ${supplierStats.name}`, () => {
         cy.checkSupplierStats(supplierStats)
       })
     })
   })
 
   describe('Checks customer stats', () => {
-    it('Goes to customer page', () => {
+    it('goes to customer page', () => {
       cy.visit('/persons-control/customers')
     })
 
-    it(`Inspects ${customerStats.name}`, () => {
+    it(`inspects ${customerStats.name}`, () => {
       cy.checkCustomerStats(customerStats)
     })
   })
