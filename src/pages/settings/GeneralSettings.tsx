@@ -66,9 +66,9 @@ function GeneralSettings() {
         value={selectedDeviceId}
         onChange={handleSelectedDeviceIdChange}
       >
-        {videoDevices.map((device: any) => (
-          <option key={device.deviceId} value={device.deviceId}>
-            {device.label}
+        {videoDevices.map(({label}: any) => (
+          <option key={label} value={label}>
+            {label}
           </option>
         ))}
       </SelectField>
