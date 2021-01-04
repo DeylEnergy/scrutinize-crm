@@ -1,7 +1,12 @@
 import React from 'react'
 // @ts-ignore
 import scannerWorker from 'workerize-loader!../scanner' // eslint-disable-line import/no-webpack-loader-syntax
-import {useVideoDeviceId, getDeviceInfo, debounce, throttle} from '../utilities'
+import {
+  useVideoDeviceLabel,
+  getDeviceInfo,
+  debounce,
+  throttle,
+} from '../utilities'
 
 let scanner: any
 let rId: any
@@ -37,7 +42,7 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
   const canvasRef = React.useRef<any>(null)
   const scanCanvasRef = React.useRef<any>(null)
 
-  const [deviceLabel] = useVideoDeviceId()
+  const [deviceLabel] = useVideoDeviceLabel()
 
   React.useEffect(() => {
     scanner = scannerWorker()
