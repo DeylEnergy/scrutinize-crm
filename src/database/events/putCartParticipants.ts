@@ -15,6 +15,7 @@ export default async function putCartParticipants({
 
   const [cartParticipants, cartParticipantsError] = await handleAsync(
     getRow({
+      store,
       storeName: SN.SALES,
       indexName: IN.CART_PARTICIPANTS,
       key: __cartId__,
