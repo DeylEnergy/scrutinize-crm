@@ -77,6 +77,10 @@ function QRScanner({cameraSize, postponeInactive, onResult}: any) {
           })
       })
 
+      if (!window.OffscreenCanvas) {
+        return clearSt()
+      }
+
       const offscreen = canvasRef.current.transferControlToOffscreen()
       const scanAreaCanvas = scanCanvasRef.current.transferControlToOffscreen()
       scanner.postMessage({offscreen, scanAreaCanvas}, [

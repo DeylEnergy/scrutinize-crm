@@ -178,13 +178,15 @@ function Setup() {
       })
     }
 
-    const [, budgetStoreError] = await handleAsync(createBudgetStore())
+    if (!isDummyData) {
+      const [, budgetStoreError] = await handleAsync(createBudgetStore())
 
-    if (budgetStoreError) {
-      return handleDelay({
-        isProgressing: false,
-        cb: () => toaster.danger(budgetStoreError),
-      })
+      if (budgetStoreError) {
+        return handleDelay({
+          isProgressing: false,
+          cb: () => toaster.danger(budgetStoreError),
+        })
+      }
     }
 
     if (isDummyData) {
