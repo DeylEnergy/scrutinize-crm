@@ -1,7 +1,7 @@
 The app built for the management of a store that sells electronics. The basic
 premise of the app scanning QR Code stickers on the items, which technically
-allows to keep the track of sales. The app in the first release will work fully
-only in **Chrome**. Other platforms may be added later.
+allows to keep the track of sales. This version is tested only on Google Chrome,
+it may not fully work on Firefox.
 
 **Tech used:**
 
@@ -13,10 +13,10 @@ only in **Chrome**. Other platforms may be added later.
 - IndexedDB
 - Web workers
 - Electron
+- Cypress for e2e tests
 
 **Try in production:**
 
-_Go to settings → Select import → pick dummyData.json file downloaded from the
-root of the repository → Click import button_
-
-_...more details just before the first release (December 2020)_
+1. Go to https://scrutinize-crm.netlify.app/
+2. In the setup wizard select "Generate dummy data" checkbox to get quick
+   overview of the app in the real world
