@@ -39,6 +39,10 @@ function makePage(items: any) {
   const style = document.createElement('style')
   style.type = 'text/css'
   style.innerHTML = `
+    @page {
+      margin: 4mm;
+      size: A4;
+    }
     body {
       font-size: 10px;
       display: flex;
