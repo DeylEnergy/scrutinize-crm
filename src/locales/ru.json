@@ -429,9 +429,9 @@
         "TABLE": {
           "COLUMNS": {
             "PERIOD": "Период",
-            "SOLD_SUM": "Продано на сумму",
-            "INCOME_SUM": "Доход на сумму",
-            "SPENT_SUM": "Расходы на сумму"
+            "SOLD_SUM": "Продано",
+            "INCOME_SUM": "Доход",
+            "SPENT_SUM": "Расходы"
           }
         }
       }
