@@ -25,21 +25,14 @@ type ActionsContainerProps = {
 }
 const ActionsContainer = styled.div<ActionsContainerProps>`
   display: flex;
-  width: 45%;
-  ${({last = false}) =>
-    last &&
-    `
-    justify-content: flex-end;
-    flex-grow: 1;
-  `};
+  flex: 1;
+  ${({last = false}) => last && `justify-content: flex-end;`};
   a:not(:last-child) {
     margin-right: 16px;
   }
 `
 
-const Logo = styled.div`
-  width: 5%;
-`
+const Logo = styled.div``
 
 export default function Header() {
   const [locale] = useLocale()
