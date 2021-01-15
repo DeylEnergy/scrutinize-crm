@@ -3039,7 +3039,7 @@
         "type": "putGroup",
         "eventDatetime": 1605441262142,
         "payload": {
-          "name": "Owner",
+          "name": "Wizard",
           "id": "654d3121-c5cb-48ea-88af-1b4a7bb90dc7",
           "permissions": [
             "canSeeProducts",
