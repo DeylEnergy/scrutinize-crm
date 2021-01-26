@@ -65,7 +65,7 @@ export default function getRelativeDateTime({
 
   // @ts-ignore
   const relativeLib = new Intl.RelativeTimeFormat(locale, options)
-  const relativeDayWord = relativeLib.format(daysPassed, 'day')
+  const relativeDayWord = relativeLib.format(-daysPassed, 'day')
 
   return `${relativeDayWord}, ${time}`
 }
