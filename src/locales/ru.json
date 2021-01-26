@@ -234,8 +234,38 @@
             "MODAL_PRODUCTS": "Товары",
             "MODAL_STICKERS": "Стикеры"
           },
-
-          "PRINT_DOCUMENT": "Печать списка"
+          "PRINT_DOCUMENT": {
+            "TITLE": "Печать списка",
+            "HEADLINE": "Список закупок. Создан",
+            "TABLE": {
+              "COLUMNS": {
+                "DONE": {
+                  "TITLE": "OK",
+                  "WIDTH": 50
+                },
+                "PRODUCT": {
+                  "TITLE": "Товар",
+                  "WIDTH": 260
+                },
+                "PRICE": {
+                  "TITLE": "Цена"
+                },
+                "COUNT": {
+                  "TITLE": "Кол-во"
+                },
+                "SUM": {
+                  "TITLE": "Сумма"
+                },
+                "SUPPLIER": {
+                  "TITLE": "Поставщик",
+                  "WIDTH": 100
+                },
+                "EXTRA": {
+                  "TITLE": "Заметка"
+                }
+              }
+            }
+          }
         }
       }
     },

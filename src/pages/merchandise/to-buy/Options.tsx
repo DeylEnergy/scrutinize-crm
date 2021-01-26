@@ -36,11 +36,15 @@ function Options({refetchAll, hasBoughtItems}: OptionsProps) {
                 <Menu.Item
                   icon={PrintIcon}
                   onSelect={() => {
-                    print(db)
+                    print({
+                      db,
+                      stringFormat: locale.vars.GENERAL.STRING_FORMAT,
+                      localeVars: OPTIONS.PRINT_DOCUMENT,
+                    })
                     close()
                   }}
                 >
-                  {OPTIONS.PRINT_DOCUMENT}
+                  {OPTIONS.PRINT_DOCUMENT.TITLE}
                 </Menu.Item>
               )}
               {hasBoughtItems &&
