@@ -9,6 +9,7 @@ import {
   useAccount,
   useCancellablePromise,
   getTestId,
+  getTabLabel,
 } from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../constants'
 import {ADD_CART} from '../../constants/events'
@@ -26,8 +27,9 @@ export default function CartsTabs({
   isDialogOpenCompleted,
 }: any) {
   const [locale] = useLocale()
+  const {GENERAL} = locale.vars
   const PAGE_CONST = locale.vars.PAGES.CARTS
-  const {CARTS_LIST, ADD_NEW_CART} = PAGE_CONST.CONTROLS
+  const {ADD_NEW_CART} = PAGE_CONST.CONTROLS
 
   const [{user}] = useAccount()
 
@@ -63,8 +65,6 @@ export default function CartsTabs({
   }, [])
 
   const handleNewCart = React.useCallback(() => {
-    const lastTabId = tabs.length
-
     const datetime = Date.now()
     const uId = uuidv4()
     const cartId = `${datetime}_${uId}`
@@ -72,7 +72,7 @@ export default function CartsTabs({
       ...tabs,
       {
         cartId,
-        label: `${CARTS_LIST.CART_TITLE} #${lastTabId + 1}`,
+        label: getTabLabel(cartId, GENERAL.STRING_FORMAT),
       },
     ]
     setState({
@@ -104,7 +104,7 @@ export default function CartsTabs({
         setState(stateUpdate)
       }, 1000)
     })
-  }, [tabs, CARTS_LIST, setState, db, user.id, excludeCart])
+  }, [tabs, GENERAL, setState, db, user.id, excludeCart])
 
   const completeCartDelete = React.useCallback(() => {
     const stateUpdate = excludeCart(tabs, selectedCartId)
@@ -124,8 +124,8 @@ export default function CartsTabs({
     queryFetch.then((rows: any) => {
       setState({
         selectedCartId: rows[0],
-        tabs: rows.map((cartId: string, index: number) => ({
-          label: `${CARTS_LIST.CART_TITLE} #${index + 1}`,
+        tabs: rows.map((cartId: string) => ({
+          label: getTabLabel(cartId, GENERAL.STRING_FORMAT),
           cartId,
         })),
       })
@@ -140,8 +140,8 @@ export default function CartsTabs({
           <HorizontallyScrollable ref={horizontallyScrollableRef}>
             {tabs.map(({label, cartId}: any) => (
               <Tab
-                key={label}
-                id={label}
+                key={cartId}
+                id={cartId}
                 onSelect={() => {
                   setState({selectedCartId: cartId})
                 }}
