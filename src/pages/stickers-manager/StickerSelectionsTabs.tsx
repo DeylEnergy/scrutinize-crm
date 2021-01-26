@@ -3,7 +3,7 @@ import {Pane, Tab, AddIcon} from 'evergreen-ui'
 import {v4 as uuidv4} from 'uuid'
 import Block from '../../components/Block'
 import StickersSelection from './StickersSelection'
-import {useLocale, useDatabase} from '../../utilities'
+import {useLocale, useDatabase, getTabLabel} from '../../utilities'
 import {STORE_NAME as SN, INDEX_NAME as IN, SPACING} from '../../constants'
 import {PUT_STICKER} from '../../constants/events'
 import {
@@ -19,8 +19,9 @@ export default function StickerSelectionsTabs({
   isDialogOpenCompleted,
 }: any) {
   const [locale] = useLocale()
+  const {GENERAL} = locale.vars
   const PAGE_CONST = locale.vars.PAGES.STICKERS_MANAGER
-  const {STICKERS_SELECTIONS_LIST, ADD_STICKERS_SELECTION} = PAGE_CONST.CONTROLS
+  const {ADD_STICKERS_SELECTION} = PAGE_CONST.CONTROLS
 
   const db = useDatabase()
 
@@ -61,8 +62,6 @@ export default function StickerSelectionsTabs({
   )
 
   const handleNewStickersSelection = React.useCallback(() => {
-    const lastTabId = tabs.length
-
     const datetime = Date.now()
     const uId = uuidv4()
     const newStickersSelectionId = `${datetime}_${uId}`
@@ -70,7 +69,7 @@ export default function StickerSelectionsTabs({
       ...tabs,
       {
         stickersSelectionId: newStickersSelectionId,
-        label: `${STICKERS_SELECTIONS_LIST.TAB_TITLE} #${lastTabId + 1}`,
+        label: getTabLabel(newStickersSelectionId, GENERAL.STRING_FORMAT),
       },
     ]
     setState({
@@ -104,7 +103,7 @@ export default function StickerSelectionsTabs({
         setState(stateUpdate)
       }, 1000)
     })
-  }, [tabs, STICKERS_SELECTIONS_LIST, setState, db, excludeStickersSelection])
+  }, [tabs, GENERAL, setState, db, excludeStickersSelection])
 
   const completeStickersSelectionDelete = React.useCallback(() => {
     const stateUpdate = excludeStickersSelection(
@@ -123,8 +122,8 @@ export default function StickerSelectionsTabs({
     }).then((rows: any) => {
       setState({
         selectedStickersSelectionId: rows[0],
-        tabs: rows.map((stickersSelectionId: string, index: number) => ({
-          label: `${STICKERS_SELECTIONS_LIST.TAB_TITLE} #${index + 1}`,
+        tabs: rows.map((stickersSelectionId: string) => ({
+          label: getTabLabel(stickersSelectionId, GENERAL.STRING_FORMAT),
           stickersSelectionId,
         })),
       })
@@ -139,8 +138,8 @@ export default function StickerSelectionsTabs({
           <HorizontallyScrollable ref={horizontallyScrollableRef}>
             {tabs.map(({label, stickersSelectionId}: any) => (
               <Tab
-                key={label}
-                id={label}
+                key={stickersSelectionId}
+                id={stickersSelectionId}
                 onSelect={() => {
                   setState({selectedStickersSelectionId: stickersSelectionId})
                 }}

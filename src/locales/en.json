@@ -234,8 +234,38 @@
             "MODAL_PRODUCTS": "Products",
             "MODAL_STICKERS": "Stickers"
           },
-
-          "PRINT_DOCUMENT": "Print document"
+          "PRINT_DOCUMENT": {
+            "TITLE": "Print document",
+            "HEADLINE": "To Buy List. Created",
+            "TABLE": {
+              "COLUMNS": {
+                "DONE": {
+                  "TITLE": "OK",
+                  "WIDTH": 50
+                },
+                "PRODUCT": {
+                  "TITLE": "Product",
+                  "WIDTH": 260
+                },
+                "PRICE": {
+                  "TITLE": "Price"
+                },
+                "COUNT": {
+                  "TITLE": "Count"
+                },
+                "SUM": {
+                  "TITLE": "Sum"
+                },
+                "SUPPLIER": {
+                  "TITLE": "Supplier",
+                  "WIDTH": 100
+                },
+                "EXTRA": {
+                  "TITLE": "Extra"
+                }
+              }
+            }
+          }
         }
       }
     },

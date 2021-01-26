@@ -36,7 +36,7 @@ function tick() {
   }, 1000 / 10)
 }
 
-const CONSECUTIVE_SCAN_DELAY_MS = 1000
+const CONSECUTIVE_SCAN_DELAY_MS = 3000
 
 function QRScanner({cameraSize, postponeInactive, onResult}: any) {
   const canvasRef = React.useRef<any>(null)

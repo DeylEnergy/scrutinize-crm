@@ -1,16 +1,19 @@
 import {STORE_NAME as SN, INDEX_NAME as IN} from '../../../constants'
 
-const columns = [
-  {title: 'OK', width: 50},
-  {title: 'Product', width: 260},
-  {title: 'Price'},
-  {title: 'Count'},
-  {title: 'Sum'},
-  {title: 'Supplier', width: 150},
-  {title: 'Extra'},
-]
+function makePage({items, stringFormat, localeVars}: any) {
+  const {HEADLINE, TABLE} = localeVars
+  const {COLUMNS} = TABLE
 
-function makePage(items: any) {
+  const columns = [
+    {title: COLUMNS.DONE.TITLE, width: COLUMNS.DONE.WIDTH},
+    {title: COLUMNS.PRODUCT.TITLE, width: COLUMNS.PRODUCT.WIDTH},
+    {title: COLUMNS.PRICE.TITLE},
+    {title: COLUMNS.COUNT.TITLE},
+    {title: COLUMNS.SUM.TITLE},
+    {title: COLUMNS.SUPPLIER.TITLE, width: COLUMNS.SUPPLIER.WIDTH},
+    {title: COLUMNS.EXTRA.TITLE},
+  ]
+
   const iframeWrapperEl = document.createElement('div')
   iframeWrapperEl.style.display = 'none'
   const iframeWrapper = document
@@ -70,7 +73,9 @@ function makePage(items: any) {
   iframeHead?.appendChild(style)
 
   const headlineEl = document.createElement('h1')
-  headlineEl.innerText = `To Buy List. Created ${new Date().toLocaleDateString()}`
+  headlineEl.innerText = `${HEADLINE} ${new Date().toLocaleDateString(
+    stringFormat,
+  )}`
 
   const tableEl = document.createElement('table')
 
@@ -108,8 +113,8 @@ function makePage(items: any) {
   }
 }
 
-async function print(worker: any) {
-  const items = await worker.getRows({
+async function print({db, stringFormat, localeVars}: any) {
+  const items = await db.getRows({
     storeName: SN.ACQUISITIONS,
     indexName: IN.NEEDED_SINCE_DATETIME,
     direction: 'prev',
@@ -117,7 +122,7 @@ async function print(worker: any) {
     format: 'printToBuyList',
   })
 
-  makePage(items)
+  makePage({items, stringFormat, localeVars})
 }
 
 export default print
